@@ -1,17 +1,17 @@
 
 
 ```bash
-sudo ./cli_controller_39_480x128_EVE3_TPC <command> <params>
+sudo ./cli_controller_39_480x128_EVE3_TPC
 ```
 
 ### text
 
 ```bash
-sudo ./cli_controller_39_480x128_EVE3_TPC text 250 100 30 "AC/DC"
+echo "text 10 0 21 AC/DC" > /tmp/eve_pipe
 ```
 
 ### clear
 
 ```bash
-sudo ./cli_controller_39_480x128_EVE3_TPC clear
+echo "clear" > /tmp/eve_pipe
 ```
