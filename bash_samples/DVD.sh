@@ -22,6 +22,8 @@ generate_random_color() {
 
 generate_random_color
 
+echo "clear" > "$PIPE"
+
 while true; do
     echo "custText $X $Y $FONT_SIZE $R $G $B $TEXT" > "$PIPE"
     sleep 0.01

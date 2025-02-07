@@ -21,7 +21,7 @@ echo "text <start_x> <start_y> <text>" > /tmp/eve_pipe
 ```
 Example:
 ```bash
-echo "text 10 0 AC/DC" > /tmp/eve_pipe
+echo "text 10 0 AC/DC" > /dev/eve_pipe
 ```
 
 ### Formated Text

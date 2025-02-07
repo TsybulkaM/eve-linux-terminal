@@ -240,6 +240,32 @@ void ClearScreen(void) {
     staticTextCount = 0;
 }
 
+void ProcessCommand(char* buffer) {
+    int x, y, font;
+    uint8_t r, g, b;
+    char text[MAX_LENGTH];
+
+    if (sscanf(buffer, "custText %d %d %d %hhu %hhu %hhu %[^\n]", &x, &y, &font, &r, &g, &b, text) == 7) {
+        printf("Received text command: x=%d, y=%d, font=%d, color=(%d, %d, %d), text=%s\n", x, y, font, r, g, b, text);
+        DisplayFormatText(x, y, font, r, g, b, text);
+    } else if (sscanf(buffer, "text %d %d %[^\n]", &x, &y, text) == 3) {
+        printf("Received text command: x=%d, y=%d, text=%s\n", x, y, text);
+        DisplayText(x, y, text);
+    } else if (sscanf(buffer, "staticText %d %d %d %hhu %hhu %hhu %[^\n]", &x, &y, &font, &r, &g, &b, text) == 7) {
+        printf("Received static text command: static=%d x=%d, y=%d, font=%d, color=(%d, %d, %d), text=%s\n", staticTextCount, x, y, font, r, g, b, text);
+        AddStaticText(x, y, font, r, g, b, text);
+    } else if (strcmp(buffer, "clear\n") == 0) {
+        printf("Received clear command\n");
+        ClearScreen();
+    } else if (strcmp(buffer, "exit\n") == 0) {
+        printf("Received exit command\n");
+        HAL_Close();
+        exit(0);
+    } else {
+        printf("Unknown command: %s\n", buffer);
+    }
+}
+
 void ListenToFIFO() {
     char buffer[512];
 
@@ -254,32 +280,18 @@ void ListenToFIFO() {
         if (bytesRead > 0) {
             buffer[bytesRead] = '\0';
 
-            int x, y, font;
-            uint8_t r, g, b;
-            char text[MAX_LENGTH];
-
             PrepareSceen();
 
-            if (sscanf(buffer, "custText %d %d %d %hhu %hhu %hhu %[^\n]", &x, &y, &font, &r, &g, &b, text) == 7) {
-                printf("Received text command: x=%d, y=%d, font=%d, color=(%d, %d, %d), text=%s\n", x, y, font, r, g, b, text);
-                DisplayFormatText(x, y, font, r, g, b, text);
-            } else if (sscanf(buffer, "text %d %d %[^\n]", &x, &y, text) == 3) {
-                printf("Received text command: x=%d, y=%d, text=%s\n", x, y, text);
-                DisplayText(x, y, text);
-            } else if (sscanf(buffer, "staticText %d %d %d %hhu %hhu %hhu %[^\n]", &x, &y, &font, &r, &g, &b, text) == 7) {
-                printf("Received static text command: static=%d x=%d, y=%d, font=%d, color=(%d, %d, %d), text=%s\n", staticTextCount, x, y, font, r, g, b, text);
-                AddStaticText(x, y, font, r, g, b, text);
-            } else if (strcmp(buffer, "clear\n") == 0) {
-                printf("Received clear command\n");
-                ClearScreen();
-            } else if (strcmp(buffer, "exit\n") == 0) {
-                printf("Received exit command\n");
-                break;
-            } else {
-                printf("Unknown command: %s\n", buffer);
+            char *command = strtok(buffer, "&");
+            while (command != NULL) {
+                while (*command == ' ') command++;
+                printf("Processing: '%s'\n", command);
+                ProcessCommand(command);
+                command = strtok(NULL, "&");
             }
             
             DrawStaticTexts();
+
         } else if (bytesRead == 0) {
             printf("FIFO closed, reopening...\n");
             sleep(1);
@@ -297,8 +309,7 @@ int main() {
             return -1;
         }
     }
-
-    exit_loop:
+    
     ListenToFIFO();
 
     HAL_Close();
