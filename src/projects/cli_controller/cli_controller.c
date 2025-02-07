@@ -20,6 +20,46 @@
 #define DEFAULT_COLOR_G 255
 #define DEFAULT_COLOR_B 255
 
+#define MAX_STATIC_TEXTS 400
+#define MAX_STATIC_TEXTS 400
+
+bool isEveInitialized = false;
+
+typedef struct {
+    int x, y, font;
+    uint8_t r, g, b;
+    char text[MAX_LENGTH];
+} StaticText;
+
+StaticText staticTexts[MAX_STATIC_TEXTS];
+int staticTextCount = 0;
+
+int InitializeScreen(int fd) {
+    while (!check_ftdi_device(0x1b3d, 0x0200)) {
+        printf("Monitor disconnected! Waiting...\n");
+        isEveInitialized = false;
+        sleep(1);
+    }
+
+    if (!isEveInitialized) {
+        EVE_Init(DEMO_DISPLAY, DEMO_BOARD, DEMO_TOUCH) <= 1;
+        isEveInitialized = true;
+        printf("Monitor connected! Initializing EVE...\n");
+    }
+
+    return OpenPipe();
+}
+
+int OpenPipe() {
+    int fd = open(FIFO_PATH, O_RDONLY);
+    if (fd == -1) {
+        perror("Error opening FIFO");
+        sleep(1);
+    }
+
+    return fd;
+}
+
 int GetCharWidth(uint16_t font) {
     return 16;
 }
@@ -39,6 +79,64 @@ int GetTextWidth(const char* text, int font) {
     return width;
 }
 
+
+void DrawStaticTexts() {
+    for (int i = 0; i < staticTextCount; i++) {
+        Send_CMD(COLOR_RGB(
+            staticTexts[i].r, 
+            staticTexts[i].g, 
+            staticTexts[i].b
+        ));
+        
+        Cmd_Text(
+            staticTexts[i].x, staticTexts[i].y, 
+            staticTexts[i].font, 0, 
+            staticTexts[i].text
+        );
+    }
+
+    Send_CMD(DISPLAY());
+    Send_CMD(CMD_SWAP);
+    UpdateFIFO();
+    Wait4CoProFIFOEmpty();
+}
+
+
+void AddStaticText(int x, int y, int font, uint8_t r, uint8_t g, uint8_t b, const char* text) {
+    if (staticTextCount >= MAX_STATIC_TEXTS) {
+        printf("Maximum number of static texts reached\n");
+        return;
+    }
+
+    if (font > 32 || font < 15) {
+        printf("Error during add static text: invalid font size\n");
+        return;
+    }
+
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+        printf("Error during add static text: invalid color\n");
+        return;
+    }
+
+    if (y + GetFontHeight(DEFAULT_FONT) >= Display_Height()) {
+        y = Display_Height() - GetFontHeight(DEFAULT_FONT);
+    }
+
+    if (x + GetTextWidth(text, font) >= Display_Width()) {
+        x = Display_Width() - GetTextWidth(text, font);
+    }
+
+    staticTexts[staticTextCount].x = x;
+    staticTexts[staticTextCount].y = y;
+    staticTexts[staticTextCount].font = font;
+    staticTexts[staticTextCount].r = r;
+    staticTexts[staticTextCount].g = g;
+    staticTexts[staticTextCount].b = b;
+    strncpy(staticTexts[staticTextCount].text, text, MAX_LENGTH);
+    staticTextCount++;
+}
+
+
 void DisplayText(int x, int y, const char* text) {
     int lineHeight = GetFontHeight(DEFAULT_FONT);
     int yOffset = 0;
@@ -46,8 +144,6 @@ void DisplayText(int x, int y, const char* text) {
     char line[256] = "";
     char tempLine[256] = "";
 
-    Send_CMD(CMD_DLSTART);
-    Send_CMD(CLEAR(1, 1, 1));
     Send_CMD(COLOR_RGB(
         DEFAULT_COLOR_R, 
         DEFAULT_COLOR_G, 
@@ -83,12 +179,6 @@ void DisplayText(int x, int y, const char* text) {
     if (lineLength > 0) {
         Cmd_Text(x, y + yOffset, DEFAULT_FONT, 0, line);
     }
-
-    Send_CMD(DISPLAY());
-    Send_CMD(CMD_SWAP);
-    UpdateFIFO();
-    Wait4CoProFIFOEmpty();
-    HAL_Delay(10);
 }
 
 
@@ -99,8 +189,6 @@ void DisplayFormatText(int x, int y, int font, uint8_t r, uint8_t g, uint8_t b, 
     char line[256] = "";
     char tempLine[256] = "";
 
-    Send_CMD(CMD_DLSTART);
-    Send_CMD(CLEAR(1, 1, 1));
     Send_CMD(COLOR_RGB(r, g, b));
 
     if (x < 0) x = 0;
@@ -132,36 +220,33 @@ void DisplayFormatText(int x, int y, int font, uint8_t r, uint8_t g, uint8_t b, 
     if (lineLength > 0) {
         Cmd_Text(x, y + yOffset, font, 0, line);
     }
-
-    Send_CMD(DISPLAY());
-    Send_CMD(CMD_SWAP);
-    UpdateFIFO();
-    Wait4CoProFIFOEmpty();
-    HAL_Delay(10);
 }
 
-
-void ClearScreen(void) {
+void PrepareSceen() {
     Send_CMD(CMD_DLSTART);
     Send_CMD(CLEAR_COLOR_RGB(0, 0, 0));
     Send_CMD(CLEAR(1, 1, 1));
+}
+
+void Display() {
     Send_CMD(DISPLAY());
     Send_CMD(CMD_SWAP);
     UpdateFIFO();
     Wait4CoProFIFOEmpty();
-    HAL_Delay(10);
+}
+
+void ClearScreen(void) {
+    Display();
+    staticTextCount = 0;
 }
 
 void ListenToFIFO() {
     char buffer[512];
 
+    int fd = -1;
+
     while (1) {
-        int fd = open(FIFO_PATH, O_RDONLY);
-        if (fd == -1) {
-            perror("Error opening FIFO");
-            sleep(1);
-            continue;
-        }
+        int fd = InitializeScreen(fd);
 
         ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
         close(fd);
@@ -173,12 +258,17 @@ void ListenToFIFO() {
             uint8_t r, g, b;
             char text[MAX_LENGTH];
 
+            PrepareSceen();
+
             if (sscanf(buffer, "custText %d %d %d %hhu %hhu %hhu %[^\n]", &x, &y, &font, &r, &g, &b, text) == 7) {
                 printf("Received text command: x=%d, y=%d, font=%d, color=(%d, %d, %d), text=%s\n", x, y, font, r, g, b, text);
                 DisplayFormatText(x, y, font, r, g, b, text);
             } else if (sscanf(buffer, "text %d %d %[^\n]", &x, &y, text) == 3) {
                 printf("Received text command: x=%d, y=%d, text=%s\n", x, y, text);
                 DisplayText(x, y, text);
+            } else if (sscanf(buffer, "staticText %d %d %d %hhu %hhu %hhu %[^\n]", &x, &y, &font, &r, &g, &b, text) == 7) {
+                printf("Received static text command: static=%d x=%d, y=%d, font=%d, color=(%d, %d, %d), text=%s\n", staticTextCount, x, y, font, r, g, b, text);
+                AddStaticText(x, y, font, r, g, b, text);
             } else if (strcmp(buffer, "clear\n") == 0) {
                 printf("Received clear command\n");
                 ClearScreen();
@@ -188,13 +278,13 @@ void ListenToFIFO() {
             } else {
                 printf("Unknown command: %s\n", buffer);
             }
+            
+            DrawStaticTexts();
         } else if (bytesRead == 0) {
             printf("FIFO closed, reopening...\n");
-            Eve_Reset();
             sleep(1);
         } else if (bytesRead == -1) {
-            perror("Error reading from FIFO");
-            Eve_Reset();
+            printf("FIFO error, reopening...\n");
             sleep(1);
         }
     }
@@ -208,11 +298,7 @@ int main() {
         }
     }
 
-    if (EVE_Init(DEMO_DISPLAY, DEMO_BOARD, DEMO_TOUCH) <= 1) {
-        printf("ERROR: Eve not detected.\n");
-        return -1;
-    }
-
+    exit_loop:
     ListenToFIFO();
 
     HAL_Close();

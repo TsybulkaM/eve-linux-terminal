@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "types.h": "c",
-        "eve.h": "c"
+        "eve.h": "c",
+        "stdbool.h": "c",
+        "stdint.h": "c"
     }
 }
