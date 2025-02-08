@@ -240,6 +240,59 @@ void ClearScreen(void) {
     staticTextCount = 0;
 }
 
+void parse_ansi_color(const char *seq, uint8_t *r, uint8_t *g, uint8_t *b) {
+    int code = atoi(seq);
+    switch (code) {
+        case 30: *r = 0; *g = 0; *b = 0; break;       // Black
+        case 31: *r = 255; *g = 0; *b = 0; break;     // Red
+        case 32: *r = 0; *g = 255; *b = 0; break;     // Grean
+        case 33: *r = 255; *g = 255; *b = 0; break;   // Yellow
+        case 34: *r = 0; *g = 0; *b = 255; break;     // Dark Blue
+        case 35: *r = 255; *g = 0; *b = 255; break;   // Purple
+        case 36: *r = 0; *g = 255; *b = 255; break;   // Blue
+        case 37: *r = 255; *g = 255; *b = 255; break; // White
+        default: *r = 255; *g = 255; *b = 255; break; // Default
+    }
+}
+
+void parse_ansi() {
+    char buffer[1024];
+    uint16_t x = 0, y = 0;
+    uint16_t font = 25, options = 0;
+    uint8_t r = 255, g = 255, b = 255;
+
+    while (1) {
+        char *ptr = buffer;
+        while (*ptr) {
+             if (strncmp(ptr, "\033[H\033[2J", 6) == 0) {
+                ClearScreen();
+                ptr += 6;
+            } else if (*ptr == '\033' && *(ptr + 1) == '[') {
+                ptr += 2;
+                char seq[10] = {0};
+                int i = 0;
+                
+                while (isdigit(*ptr) || *ptr == ';') {
+                    seq[i++] = *ptr++;
+                }
+
+                if (*ptr == 'm') {
+                    parse_ansi_color(seq, &r, &g, &b);
+                    Send_CMD((r << 16) | (g << 8) | b);
+                }
+                ptr++;
+            } else {
+                char text[2] = {*ptr, '\0'};
+                Cmd_Text(x, y, font, options, text);
+                x += 10;
+                ptr++;
+            }
+        }
+        y += 15;
+        x = 0;
+    }
+}
+
 void ProcessCommand(char* buffer) {
     int x, y, font;
     uint8_t r, g, b;
