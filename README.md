@@ -4,43 +4,68 @@ This guide provides commands for interacting with the EVE controller to display 
 
 ---
 
+## Precondiution
+
+Run all comand from root user!
+
 ## Start the Pipe
 
 To start the application, run:
 
 ```bash
-sudo ./cli_controller_43_480x272_EVE3_TPC
+./cli_controller_43_480x272_EVE3_TPC
 ```
 
 ## Commands
 
 ### Text
-By default, the text will be printed with a font size of 30 and in white color.
+
 ```bash
-echo "text <start_x> <start_y> <text>" > /tmp/eve_pipe
+echo "AC/DC" | cat -v > /dev/eve_pipe
 ```
-Example:
+
 ```bash
-echo "text 10 0 AC/DC" > /dev/eve_pipe
+echo {A..Z} | tr -d ' ' > /tmp/eve_pipe
+```
+
+```bash
+echo {a..z} | tr -d ' ' > /tmp/eve_pipe
 ```
 
 ### Formated Text
-You can print text with a custom font size and color.
+
 ```bash
-echo "custText <start_x> <start_y> <font_size> <COLOR_R> <COLOR_G> <COLOR_B> <text>" > /tmp/eve_pipe
+echo "Hello, Eve!" | pv -qL 10 | cat -v > /tmp/eve_pipe
 ```
-Example:
+This will print "Hello, World!" with delay.
+
 ```bash
-echo "custText 10 0 21 159 31 39 AC/DC" > /tmp/eve_pipe
+cowsay "Hello, Eve!" | lolcat | sed '1d' | cat -v > /tmp/eve_pipe
 ```
-This will print "AC/DC" in red color with a font size of 30 at coordinates (10, 0).
+Cowsay ASCII-art
 
 ### Clear Screen
 To clear the screen:
 ```bash
-echo "clear" > /tmp/eve_pipe
+clear | cat -v > /tmp/eve_pipe
 ```
 
 ---
 
-This version is more organized with headings and explanations for each command. It also includes an example with the formatted text and color, which should make it clearer for users.
+### TODO 
+
+```bash
+top | head -n 1 | cat -v > /tmp/eve_pipe
+```
+
+```bash
+TERM=linux stty cols 54 rows 10; top | cat -v > /tmp/eve_pipe
+```
+
+```bash
+htop | head -n 1 | cat -v > /tmp/eve_pipe
+```
+
+```bash
+TERM=linux stty cols 54 rows 10; htop | cat -v > /tmp/eve_pipe
+```
