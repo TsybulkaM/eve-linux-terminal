@@ -21,7 +21,7 @@ To start the application, run:
 ### Text
 
 ```bash
-echo "AC/DC" | cat -v > /dev/eve_pipe
+echo "AC/DC" | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
@@ -44,6 +44,14 @@ cowsay "Hello, Eve!" | lolcat | sed '1d' | cat -v > /tmp/eve_pipe
 ```
 Cowsay ASCII-art
 
+### System commands 
+
+```bash
+clear | cat -v > /tmp/eve_pipe && df -h | cat -v > /tmp/eve_pipe
+```
+Disks usage
+
+
 ### Clear Screen
 To clear the screen:
 ```bash
@@ -59,7 +67,7 @@ top | head -n 1 | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
-TERM=linux stty cols 54 rows 10; top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 54 rows 15; top | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
@@ -67,5 +75,5 @@ htop | head -n 1 | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
-TERM=linux stty cols 54 rows 10; htop | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 54 rows 15; htop | cat -v > /tmp/eve_pipe
 ```
