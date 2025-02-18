@@ -35,12 +35,16 @@ echo {a..z} | tr -d ' ' > /tmp/eve_pipe
 ### Formated Text
 
 ```bash
+echo -e "\e[31mRed\e[m\e[31mStandart." | cat -v > /tmp/eve_pipe
+```
+
+```bash
 echo "Hello, Eve!" | pv -qL 10 | cat -v > /tmp/eve_pipe
 ```
 This will print "Hello, World!" with delay.
 
 ```bash
-cowsay "Hello, Eve!" | lolcat | sed '1d' | cat -v > /tmp/eve_pipe
+cowsay "Hello, Eve!" | lolcat | cat -v > /tmp/eve_pipe
 ```
 Cowsay ASCII-art
 
@@ -67,7 +71,7 @@ top | head -n 1 | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
-TERM=linux stty cols 54 rows 15; top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 57 rows 10; top | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
@@ -75,5 +79,7 @@ htop | head -n 1 | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
-TERM=linux stty cols 54 rows 15; htop | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 49 rows 10; htop | cat -v > /tmp/eve_pipe
 ```
+
+TERM=linux stty cols 55 rows 10; while true; do clear | cat -v > /tmp/eve_pipe; top -n 3 | cat -v > /tmp/eve_pipe; sleep 1; done

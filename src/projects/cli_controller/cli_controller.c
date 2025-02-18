@@ -11,6 +11,7 @@
 #endif
 #include "eve.h"
 #include "hw_api.h"
+#include "logo.h"
 
 #define FIFO_PATH "/tmp/eve_pipe"
 #define MAX_LINES 20
@@ -21,7 +22,7 @@
 #define DEFAULT_COLOR_G 255
 #define DEFAULT_COLOR_B 255
 
-#define MAX_STATIC_TEXTS 160
+#define MAX_STATIC_TEXTS 150
 
 bool isEveInitialized = false;
 
@@ -84,6 +85,8 @@ int InitializeScreen(int fd) {
         }
         isEveInitialized = true;
         printf("Monitor connected! Initializing EVE...\n");
+        DrawLogoPNG();
+        ClearScreen();   
     }
 
     return OpenPipe();
@@ -163,6 +166,7 @@ void DrawStaticTexts() {
             staticTexts[i].font, 0, 
             staticTexts[i].text
         );
+        Wait4CoProFIFOEmpty();
     }
 
     Display();
@@ -219,6 +223,9 @@ void AddStaticText(int x, int y, int font, uint8_t r, uint8_t g, uint8_t b, uint
         x = Display_Width() - GetTextWidth(text, font);
     }
 
+    printf("DEBUG: Adding word: '%s' at %d, %d\n", text, x, y);
+    printf("DEBUG: staticTextCount: %d\n", staticTextCount);
+
     staticTexts[staticTextCount].x = x;
     staticTexts[staticTextCount].y = y;
     staticTexts[staticTextCount].font = font;
@@ -248,12 +255,10 @@ void parse_ansi(const char* buffer) {
 
         is_nl = x + GetTextWidth(word, font) >= Display_Width();
 
-        if (*ptr == '\n' || *ptr == ' ' || *ptr == '\0' || *ptr == '\t' || is_nl) {
+        if (*ptr == '\n' || *ptr == '\t' || is_nl) {
             if (word_len > 0) {
                 word[word_len] = '\0';
                 AddStaticText(x, y, font, r, g, b, bg, word);
-                printf("DEBUG: Adding word: '%s' at %d, %d\n", word, x, y);
-                printf("DEBUG: staticTextCount: %d\n", staticTextCount);
                 x += GetTextWidth(word, font);
                 word_len = 0;
             }
@@ -261,8 +266,6 @@ void parse_ansi(const char* buffer) {
             if (*ptr == '\n' || is_nl) {
                 y += GetFontHeight(font);
                 x = 0;
-            } else if (*ptr == ' ') {
-                x += GetCharWidth(font, ' ');
             } else if (*ptr == '\t') {
                 x += GetCharWidth(font, ' ') * 4;
             }
@@ -295,6 +298,8 @@ void parse_ansi(const char* buffer) {
                 seq[i] = '\0';
 
                 if (*ptr == 'H') {  // ESC [ H - move cursor to (0,0)
+                    ClearScreen(); 
+                    PrepareScreen();
                     x = 0;
                     y = 0;
                 } else if (*ptr == 'J') {  // ESC [ n J - clearing the screen
@@ -313,7 +318,16 @@ void parse_ansi(const char* buffer) {
                         // Clear entire line
                     }
                 } else if (*ptr == 'm') { // ESC [ n m - colour and style
+                    /*if (word_len > 0) {
+                        word[word_len] = '\0';
+                        AddStaticText(x, y, font, r, g, b, bg, word);
+                        x += GetTextWidth(word, font);
+                        word_len = 0;
+                    }*/
+                    
+                    printf("DEBUG: ANSI sequence: ptr - %d, word - %s\n", *ptr, word);
                     char* token = strtok(seq, ";");
+
                     while (token) {
                         int code = atoi(token);
                         switch (code) {
@@ -339,6 +353,7 @@ void parse_ansi(const char* buffer) {
                             case 46: bg = 0x00FFFF; break; // Cyan background
                             case 47: bg = 0xFFFFFF; break; // White background
                             case 49: bg = 0xFFFFFF; break; // Reset background
+                            default: r = 255; g = 255; b = 255; bg = 0x000000; options = 0; break;
                         }
                         token = strtok(NULL, ";");
                     }
@@ -428,8 +443,7 @@ void parse_ansi(const char* buffer) {
         word[word_len] = '\0';
         AddStaticText(x, y, font, r, g, b, bg, word);
         x += GetTextWidth(word, font);
-        printf("DEBUG: Adding word: '%s' at %d, %d\n", word, x, y);
-        printf("DEBUG: staticTextCount: %d\n", staticTextCount);
+        word_len = 0;
     }
 }
 
