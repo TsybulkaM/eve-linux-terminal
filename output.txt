@@ -1,0 +1,1554 @@
+[32mINFO:[m Monitor connected! Initializing EVE...
+[35mDEBUG:[m Parsing ANSI: '^[[?1h^[=^[[?25l'
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'h=l' with color 255, 255, 255 at 0, 0 position
+[35mDEBUG:[m staticTextCount: 0
+[35mDEBUG:[m Parsing ANSI: '^[[H^[[2J^[(B^[[mtop - 19:28:35 up  6:46,  4 users,  load average: 0.69, 0^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+Tasks:^[(B^[[m^[[39;49m^[[1m 401 ^[(B^[[m^[[39;49mtotal,^[(B^[[m^[[39;49m^[[1m   1 ^[(B^[[m^[[39;49mrunning,^[(B^[[m^[[39;49m^[[1m 381 ^[(B^[[m^[[39;49msleeping,^[(B^[[m^[[39;49m^[[1m  19 ^[(B^[[m^[[39;49mstopped,^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+%Cpu(s):^[(B^[[m^[[39;49m^[[1m  2.2 ^[(B^[[m^[[39;49mus,^[(B^[[m^[[39;49m^[[1m  1.3 ^[(B^[[m^[[39;49msy,^[(B^[[m^[[39;49m^[[1m  0.0 ^[(B^[[m^[[39;'
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: 'h=l' with color 255, 255, 255 at 0, 0 position
+[35mDEBUG:[m staticTextCount: 0
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'top - 19:28:35 up  6:46,  4 users,  load average: 0.69, 0' with color 255, 255, 255 at 0, 0 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'top - 19:28:35 up  6:46,  4 users,  load average: 0.69, 0' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 0
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'Tasks:19:28:35 up  6:46,  4 users,  load average: 0.69, 0' with color 255, 255, 255 at 0, 16 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'Tasks:' with color 255, 255, 255 at 52, 16 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 52, 16 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ' 401 :' with color 255, 255, 255 at 52, 16 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ' 401 ' with color 255, 255, 255 at 92, 16 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 92, 16 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 124, 16 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 124, 16 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   1 ,' with color 255, 255, 255 at 124, 16 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   1 ' with color 255, 255, 255 at 164, 16 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'running,:28:35 up  6:46,  4 users,  load average: 0.69, 0' with color 255, 255, 255 at 164, 16 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'running,' with color 255, 255, 255 at 217, 16 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 217, 16 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ' 381 ng,' with color 255, 255, 255 at 217, 16 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ' 381 ' with color 255, 255, 255 at 257, 16 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'sleeping,28:35 up  6:46,  4 users,  load average: 0.69, 0' with color 255, 255, 255 at 257, 16 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'sleeping,' with color 255, 255, 255 at 318, 16 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 318, 16 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  19 ing,' with color 255, 255, 255 at 318, 16 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  19 ' with color 255, 255, 255 at 358, 16 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'stopped,,' with color 255, 255, 255 at 358, 16 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'stopped,' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '%Cpu(s):' with color 255, 255, 255 at 0, 32 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '%Cpu(s):' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  2.2 ):' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  2.2 ' with color 255, 255, 255 at 113, 32 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'us,.2 ' with color 255, 255, 255 at 113, 32 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'us,' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  1.3 ' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  1.3 ' with color 255, 255, 255 at 177, 32 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'sy,.3 ' with color 255, 255, 255 at 177, 32 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'sy,' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.0 ' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[31mERROR:[m Unknown ANSI sequence: ESC [ 39;  
+[31mERROR:[m Invalid UTF-8 encoding
+[35mDEBUG:[m Parsing ANSI: '49mni,^[(B^[[m^[[39;49m^[[1m 96.0 ^[(B^[[m^[[39;49mid,^[(B^[[m^[[39;49m^[[1m  0.4 ^[(B^[[m^[[39;49mwa,^[(B^[[m^[[39;49m^[[1m  0.^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+MiB Mem :^[(B^[[m^[[39;49m^[[1m  31602.0 ^[(B^[[m^[[39;49mtotal,^[(B^[[m^[[39;49m^[[1m  22938.4 ^[(B^[[m^[[39;49mfree,^[(B^[[m^[[39;49m^[[1m   4126.3 ^[(B^[[m^[[39;49mused,^[(B^[[m^[[39;49m^[[1m  ^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+MiB Swap:^[(B^[[m^[[39;49m^[[1m   2048.0 ^[(B^[[m^[[39;49mtotal,^[(B^[[m^[[39;49m^[[1m   2048.0 ^[(B^[[m^[[39'
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '49mni,' with color 255, 255, 255 at 241, 32 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '49mni,' with color 255, 255, 255 at 285, 32 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 285, 32 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ' 96.0 ' with color 255, 255, 255 at 285, 32 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ' 96.0 ' with color 255, 255, 255 at 329, 32 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'id,.0 ' with color 255, 255, 255 at 329, 32 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'id,' with color 255, 255, 255 at 345, 32 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 345, 32 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.4 ' with color 255, 255, 255 at 345, 32 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.4 ' with color 255, 255, 255 at 389, 32 position
+[35mDEBUG:[m staticTextCount: 25
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'wa,.4 ' with color 255, 255, 255 at 389, 32 position
+[35mDEBUG:[m staticTextCount: 26
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'wa,' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 27
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 28
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.4 ' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 29
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.' with color 255, 255, 255 at 441, 32 position
+[35mDEBUG:[m staticTextCount: 30
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 441, 32 position
+[35mDEBUG:[m staticTextCount: 31
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 441, 32 position
+[35mDEBUG:[m staticTextCount: 32
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 441, 32 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'MiB Mem :' with color 255, 255, 255 at 0, 48 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'MiB Mem :' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  31602.0 8:35 up  6:46,  4 users,  load average: 0.69, 0' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  31602.0 ' with color 255, 255, 255 at 168, 48 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'total,2.0 ' with color 255, 255, 255 at 168, 48 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  22938.4 ' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  22938.4 ' with color 255, 255, 255 at 276, 48 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'free,38.4 ' with color 255, 255, 255 at 276, 48 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'free,' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   4126.3 ' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   4126.3 ' with color 255, 255, 255 at 381, 48 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'used,26.3 ' with color 255, 255, 255 at 381, 48 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'used,' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  ed,' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  ' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'MiB Swap: ' with color 255, 255, 255 at 0, 64 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'MiB Swap:' with color 255, 255, 255 at 89, 64 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 89, 64 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   2048.0 ' with color 255, 255, 255 at 89, 64 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   2048.0 ' with color 255, 255, 255 at 165, 64 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'total,8.0 ' with color 255, 255, 255 at 165, 64 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 197, 64 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 197, 64 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   2048.0 ' with color 255, 255, 255 at 197, 64 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[31mERROR:[m Unknown ANSI sequence: ESC [ 39  
+[31mERROR:[m Invalid UTF-8 encoding
+[35mDEBUG:[m Parsing ANSI: ';49mfree,^[(B^[[m^[[39;49m^[[1m      0.0 ^[(B^[[m^[[39;49mused.^[(B^[[m^[[39;49m^[[1m  ^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+^[[K
+^[[7m    PID USER      PR  NI    VIRT    RES    SHR S  %CPU ^[(B^[[m^[[39;49m^[[K
+^[(B^[[m   1143 root      20   0 3843268  90456  11760 S   6.7 ^[(B^[[m^[[39;49m^[[K
+^[(B^[[m   3173 mikita    20   0  391596  11792   6912 S   6.7 ^[(B^[[m^[[39;49m^[[K
+^[(B^[[m   4477 mikita    20   0 1163.2g 725372  83900 S   6.7 ^[(B^[[m^[[39;49m^[[K'
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ';49mfree, ' with color 255, 255, 255 at 273, 64 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ';49mfree,' with color 255, 255, 255 at 338, 64 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 338, 64 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '      0.0 ' with color 255, 255, 255 at 338, 64 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '      0.0 ' with color 255, 255, 255 at 414, 64 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'used. 0.0 ' with color 255, 255, 255 at 414, 64 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'used.' with color 255, 255, 255 at 450, 64 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 450, 64 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  ed.' with color 255, 255, 255 at 450, 64 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  ' with color 255, 255, 255 at 466, 64 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 466, 64 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 466, 64 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 466, 64 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 80 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 96 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '    PID USER      PR  NI    VIRT    RES    SHR S  %CP9, 0' with color 255, 255, 255 at -4, 96 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'U   PID USER      PR  NI    VIRT    RES    SHR S  %CP' with color 255, 255, 255 at 0, 112 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'U ' with color 255, 255, 255 at 20, 112 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 20, 112 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 128 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   1143 root      20   0 3843268  90456  11760 S   6.7  0' with color 255, 255, 255 at 0, 128 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   1143 root      20   0 3843268  90456  11760 S   6.7 ' with color 255, 255, 255 at 433, 128 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 128 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 144 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   3173 mikita    20   0  391596  11792   6912 S   6.7 ' with color 255, 255, 255 at 0, 144 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   3173 mikita    20   0  391596  11792   6912 S   6.7 ' with color 255, 255, 255 at 432, 144 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 432, 144 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 160 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   4477 mikita    20   0 1163.2g 725372  83900 S   6.7 ' with color 255, 255, 255 at 0, 160 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   4477 mikita    20   0 1163.2g 725372  83900 S   6.7 ' with color 255, 255, 255 at 428, 160 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 428, 160 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Parsing ANSI: '^[[H^[(B^[[mtop - 19:28:38 up  6:46,  4 users,  load average: 0.63, 0^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+Tasks:^[(B^[[m^[[39;49m^[[1m 401 ^[(B^[[m^[[39;49mtotal,^[(B^[[m^[[39;49m^[[1m   2 ^[(B^[[m^[[39;49mrunning,^[(B^[[m^[[39;49m^[[1m 380 ^[(B^[[m^[[39;49msleeping,^[(B^[[m^[[39;49m^[[1m  19 ^[(B^[[m^[[39;49mstopped,^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+%Cpu(s):^[(B^[[m^[[39;49m^[[1m  0.7 ^[(B^[[m^[[39;49mus,^[(B^[[m^[[39;49m^[[1m  0.3 ^[(B^[[m^[[39;49msy,^[(B^[[m^[[39;49m^[[1m  0.0 ^[(B^[[m^[[39;49mni'
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 0 position
+[35mDEBUG:[m staticTextCount: 0
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'top - 19:28:38 up  6:46,  4 users,  load average: 0.63, 0' with color 255, 255, 255 at 0, 0 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'top - 19:28:38 up  6:46,  4 users,  load average: 0.63, 0' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 0
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'Tasks:19:28:38 up  6:46,  4 users,  load average: 0.63, 0' with color 255, 255, 255 at 0, 16 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'Tasks:' with color 255, 255, 255 at 52, 16 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 52, 16 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ' 401 :' with color 255, 255, 255 at 52, 16 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ' 401 ' with color 255, 255, 255 at 92, 16 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 92, 16 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 124, 16 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 124, 16 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   2 ,' with color 255, 255, 255 at 124, 16 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   2 ' with color 255, 255, 255 at 164, 16 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'running,:28:38 up  6:46,  4 users,  load average: 0.63, 0' with color 255, 255, 255 at 164, 16 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'running,' with color 255, 255, 255 at 217, 16 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 217, 16 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ' 380 ng,' with color 255, 255, 255 at 217, 16 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ' 380 ' with color 255, 255, 255 at 257, 16 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'sleeping,28:38 up  6:46,  4 users,  load average: 0.63, 0' with color 255, 255, 255 at 257, 16 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'sleeping,' with color 255, 255, 255 at 318, 16 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 318, 16 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  19 ing,' with color 255, 255, 255 at 318, 16 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  19 ' with color 255, 255, 255 at 358, 16 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'stopped,,' with color 255, 255, 255 at 358, 16 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'stopped,' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '%Cpu(s):' with color 255, 255, 255 at 0, 32 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '%Cpu(s):' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.7 ):' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.7 ' with color 255, 255, 255 at 113, 32 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'us,.7 ' with color 255, 255, 255 at 113, 32 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'us,' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.3 ' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.3 ' with color 255, 255, 255 at 177, 32 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'sy,.3 ' with color 255, 255, 255 at 177, 32 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'sy,' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.0 ' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.0 ' with color 255, 255, 255 at 241, 32 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'ni0.0 ' with color 255, 255, 255 at 241, 32 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Parsing ANSI: ',^[(B^[[m^[[39;49m^[[1m 99.0 ^[(B^[[m^[[39;49mid,^[(B^[[m^[[39;49m^[[1m  0.0 ^[(B^[[m^[[39;49mwa,^[(B^[[m^[[39;49m^[[1m  0.^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+MiB Mem :^[(B^[[m^[[39;49m^[[1m  31602.0 ^[(B^[[m^[[39;49mtotal,^[(B^[[m^[[39;49m^[[1m  22947.9 ^[(B^[[m^[[39;49mfree,^[(B^[[m^[[39;49m^[[1m   4132.8 ^[(B^[[m^[[39;49mused,^[(B^[[m^[[39;49m^[[1m  ^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+
+^[[K
+
+^[(B^[[m   7595 mikita    20   0 1393.9g 722072 147532 S   6.0 ^[(B^[[m^[[39;49m^[[K
+^[(B^[[m   1143 root  '
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ',i' with color 255, 255, 255 at 253, 32 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ',' with color 255, 255, 255 at 257, 32 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 257, 32 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ' 99.0 ' with color 255, 255, 255 at 257, 32 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ' 99.0 ' with color 255, 255, 255 at 301, 32 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'id,.0 ' with color 255, 255, 255 at 301, 32 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'id,' with color 255, 255, 255 at 317, 32 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 317, 32 position
+[35mDEBUG:[m staticTextCount: 25
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.0 ' with color 255, 255, 255 at 317, 32 position
+[35mDEBUG:[m staticTextCount: 26
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.0 ' with color 255, 255, 255 at 361, 32 position
+[35mDEBUG:[m staticTextCount: 27
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'wa,.0 ' with color 255, 255, 255 at 361, 32 position
+[35mDEBUG:[m staticTextCount: 28
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'wa,' with color 255, 255, 255 at 385, 32 position
+[35mDEBUG:[m staticTextCount: 29
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 385, 32 position
+[35mDEBUG:[m staticTextCount: 30
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.0 ' with color 255, 255, 255 at 385, 32 position
+[35mDEBUG:[m staticTextCount: 31
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 32
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 33
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 34
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'MiB Mem :' with color 255, 255, 255 at 0, 48 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'MiB Mem :' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  31602.0 8:38 up  6:46,  4 users,  load average: 0.63, 0' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  31602.0 ' with color 255, 255, 255 at 168, 48 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'total,2.0 ' with color 255, 255, 255 at 168, 48 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  22947.9 ' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  22947.9 ' with color 255, 255, 255 at 276, 48 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'free,47.9 ' with color 255, 255, 255 at 276, 48 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'free,' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   4132.8 ' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   4132.8 ' with color 255, 255, 255 at 381, 48 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'used,32.8 ' with color 255, 255, 255 at 381, 48 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'used,' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  ed,' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  ' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 64 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 80 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 96 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 112 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   7595 mikita    20   0 1393.9g 722072 147532 S   6.0  0' with color 255, 255, 255 at 0, 112 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   7595 mikita    20   0 1393.9g 722072 147532 S   6.0 ' with color 255, 255, 255 at 428, 112 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 428, 112 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 128 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   1143 root      20   0 1393.9g 722072 147532 S   6.0 ' with color 255, 255, 255 at 0, 128 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Parsing ANSI: '    20   0 3843268  90456  11760 S   2.0 ^[(B^[[m^[[39;49m^[[K
+^[(B^[[m   7379 mikita    20   0   33.1g 187704 120408 S   1.7 ^[(B^[[m^[[39;49m^[[K'
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '    20   0 3843268  90456  11760 S   2.0 47532 S   6.0 ' with color 255, 255, 255 at 105, 128 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '    20   0 3843268  90456  11760 S   2.0 ' with color 255, 255, 255 at 433, 128 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 128 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 144 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   7379 mikita    20   0   33.1g 187704 120408 S   1.7 ' with color 255, 255, 255 at 0, 144 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   7379 mikita    20   0   33.1g 187704 120408 S   1.7 ' with color 255, 255, 255 at 428, 144 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 428, 144 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Parsing ANSI: '^[[H^[(B^[[mtop - 19:28:41 up  6:46,  4 users,  load average: 0.58, 0^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+
+%Cpu(s):^[(B^[[m^[[39;49m^[[1m  1.6 ^[(B^[[m^[[39;49mus,^[(B^[[m^[[39;49m^[[1m  0.7 ^[(B^[[m^[[39;49msy,^[(B^[[m^[[39;49m^[[1m  0.0 ^[(B^[[m^[[39;49mni,^[(B^[[m^[[39;49m^[[1m 97.5 ^[(B^[[m^[[39;49mid,^[(B^[[m^[[39;49m^[[1m  0.1 ^[(B^[[m^[[39;49mwa,^[(B^[[m^[[39;49m^[[1m  0.^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+MiB Mem :^[(B^[[m^[[39;49m^[[1m  31602.0 ^[(B^[[m^[[39;49mtotal,^[(B^[[m^[[39;49m^[[1m  2'
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 0 position
+[35mDEBUG:[m staticTextCount: 0
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'top - 19:28:41 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 0, 0 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'top - 19:28:41 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 0
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 16 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '%Cpu(s)::28:41 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 0, 32 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '%Cpu(s):' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  1.6 ):' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  1.6 ' with color 255, 255, 255 at 113, 32 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'us,.6 ' with color 255, 255, 255 at 113, 32 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'us,' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.7 ' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.7 ' with color 255, 255, 255 at 177, 32 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'sy,.7 ' with color 255, 255, 255 at 177, 32 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'sy,' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.0 ' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.0 ' with color 255, 255, 255 at 241, 32 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'ni,.0 ' with color 255, 255, 255 at 241, 32 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'ni,' with color 255, 255, 255 at 257, 32 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 257, 32 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ' 97.5 ' with color 255, 255, 255 at 257, 32 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ' 97.5 ' with color 255, 255, 255 at 301, 32 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'id,.5 ' with color 255, 255, 255 at 301, 32 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'id,' with color 255, 255, 255 at 317, 32 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 317, 32 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.1 ' with color 255, 255, 255 at 317, 32 position
+[35mDEBUG:[m staticTextCount: 25
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.1 ' with color 255, 255, 255 at 361, 32 position
+[35mDEBUG:[m staticTextCount: 26
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'wa,.1 ' with color 255, 255, 255 at 361, 32 position
+[35mDEBUG:[m staticTextCount: 27
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'wa,' with color 255, 255, 255 at 385, 32 position
+[35mDEBUG:[m staticTextCount: 28
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 385, 32 position
+[35mDEBUG:[m staticTextCount: 29
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.1 ' with color 255, 255, 255 at 385, 32 position
+[35mDEBUG:[m staticTextCount: 30
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 31
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 32
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 33
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'MiB Mem :28:41 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 0, 48 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'MiB Mem :' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  31602.0 8:41 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  31602.0 ' with color 255, 255, 255 at 168, 48 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'total,2.0 ' with color 255, 255, 255 at 168, 48 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  2al,' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Parsing ANSI: '2932.5 ^[(B^[[m^[[39;49mfree,^[(B^[[m^[[39;49m^[[1m   4148.0 ^[(B^[[m^[[39;49mused,^[(B^[[m^[[39;49m^[[1m  ^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+
+^[[K
+
+^[(B^[[m   1143 root      20   0 3843268  90456  11760 S  12.6 ^[(B^[[m^[[39;49m^[[K
+^[(B^[[m^[[1m   7595 mikita    20   0 1393.9g 722072 147532 R   5.3 ^[(B^[[m^[[39;49m^[[K
+^[(B^[[m   4411 mikita    20   0 1160.0g 891576 200324 S   4.0 ^[(B^[[m^[[39;49m^[[K'
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '2932.5 .0 ' with color 255, 255, 255 at 224, 48 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '2932.5 ' with color 255, 255, 255 at 276, 48 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'free,5 ' with color 255, 255, 255 at 276, 48 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'free,' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   4148.0 ' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   4148.0 ' with color 255, 255, 255 at 381, 48 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'used,48.0 ' with color 255, 255, 255 at 381, 48 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'used,' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  ed,' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  ' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 25
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 64 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 80 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 96 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 112 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   1143 root      20   0 3843268  90456  11760 S  12.6  0' with color 255, 255, 255 at 0, 112 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   1143 root      20   0 3843268  90456  11760 S  12.6 ' with color 255, 255, 255 at 433, 112 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 112 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 128 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 128 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   7595 mikita    20   0 1393.9g 722072 147532 R   5.3 ' with color 255, 255, 255 at 0, 128 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   7595 mikita    20   0 1393.9g 722072 147532 R   5.3 ' with color 255, 255, 255 at 428, 128 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 428, 128 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 144 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   4411 mikita    20   0 1160.0g 891576 200324 S   4.0 ' with color 255, 255, 255 at 0, 144 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   4411 mikita    20   0 1160.0g 891576 200324 S   4.0 ' with color 255, 255, 255 at 428, 144 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 428, 144 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Parsing ANSI: '^[[H^[(B^[[mtop - 19:28:44 up  6:46,  4 users,  load average: 0.58, 0^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+Tasks:^[(B^[[m^[[39;49m^[[1m 401 ^[(B^[[m^[[39;49mtotal,^[(B^[[m^[[39;49m^[[1m   1 ^[(B^[[m^[[39;49mrunning,^[(B^[[m^[[39;49m^[[1m 381 ^[(B^[[m^[[39;49msleeping,^[(B^[[m^[[39;49m^[[1m  19 ^[(B^[[m^[[39;49mstopped,^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+%Cpu(s):^[(B^[[m^[[39;49m^[[1m  1.5 ^[(B^[[m^[[39;49mus,^[(B^[[m^[[39;49m^[[1m  0.7 ^[(B^[[m^[[39;49msy,^[(B^[[m^[[39;49m^[[1m  0.0 ^[(B^[[m^[[39;49mni'
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 0 position
+[35mDEBUG:[m staticTextCount: 0
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'top - 19:28:44 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 0, 0 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'top - 19:28:44 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 429, 0 position
+[35mDEBUG:[m staticTextCount: 0
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'Tasks:19:28:44 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 0, 16 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'Tasks:' with color 255, 255, 255 at 52, 16 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 52, 16 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ' 401 :' with color 255, 255, 255 at 52, 16 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ' 401 ' with color 255, 255, 255 at 92, 16 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 92, 16 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 124, 16 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 124, 16 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   1 ,' with color 255, 255, 255 at 124, 16 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   1 ' with color 255, 255, 255 at 164, 16 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'running,:28:44 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 164, 16 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'running,' with color 255, 255, 255 at 217, 16 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 217, 16 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ' 381 ng,' with color 255, 255, 255 at 217, 16 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ' 381 ' with color 255, 255, 255 at 257, 16 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'sleeping,28:44 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 257, 16 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'sleeping,' with color 255, 255, 255 at 318, 16 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 318, 16 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  19 ing,' with color 255, 255, 255 at 318, 16 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  19 ' with color 255, 255, 255 at 358, 16 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'stopped,,' with color 255, 255, 255 at 358, 16 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'stopped,' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 416, 16 position
+[35mDEBUG:[m staticTextCount: 1
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '%Cpu(s):' with color 255, 255, 255 at 0, 32 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '%Cpu(s):' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  1.5 ):' with color 255, 255, 255 at 69, 32 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  1.5 ' with color 255, 255, 255 at 113, 32 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'us,.5 ' with color 255, 255, 255 at 113, 32 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'us,' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.7 ' with color 255, 255, 255 at 133, 32 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.7 ' with color 255, 255, 255 at 177, 32 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'sy,.7 ' with color 255, 255, 255 at 177, 32 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'sy,' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.0 ' with color 255, 255, 255 at 197, 32 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.0 ' with color 255, 255, 255 at 241, 32 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'ni0.0 ' with color 255, 255, 255 at 241, 32 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Parsing ANSI: ',^[(B^[[m^[[39;49m^[[1m 97.6 ^[(B^[[m^[[39;49mid,^[(B^[[m^[[39;49m^[[1m  0.1 ^[(B^[[m^[[39;49mwa,^[(B^[[m^[[39;49m^[[1m  0.^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+MiB Mem :^[(B^[[m^[[39;49m^[[1m  31602.0 ^[(B^[[m^[[39;49mtotal,^[(B^[[m^[[39;49m^[[1m  22944.7 ^[(B^[[m^[[39;49mfree,^[(B^[[m^[[39;49m^[[1m   4136.9 ^[(B^[[m^[[39;49mused,^[(B^[[m^[[39;49m^[[1m  ^[(B^[[m^[[39;49m^[(B^[[m^[[39;49m^[[K
+
+^[[K
+
+^[(B^[[m   1143 root      20   0 3843268  90456  11760 S  12.3 ^[(B^[[m^[[39;49m^[[K
+^[(B^[[m   7595 mikita'
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ',i' with color 255, 255, 255 at 253, 32 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ',' with color 255, 255, 255 at 257, 32 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 257, 32 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: ' 97.6 ' with color 255, 255, 255 at 257, 32 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: ' 97.6 ' with color 255, 255, 255 at 301, 32 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'id,.6 ' with color 255, 255, 255 at 301, 32 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'id,' with color 255, 255, 255 at 317, 32 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 317, 32 position
+[35mDEBUG:[m staticTextCount: 25
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.1 ' with color 255, 255, 255 at 317, 32 position
+[35mDEBUG:[m staticTextCount: 26
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.1 ' with color 255, 255, 255 at 361, 32 position
+[35mDEBUG:[m staticTextCount: 27
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'wa,.1 ' with color 255, 255, 255 at 361, 32 position
+[35mDEBUG:[m staticTextCount: 28
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'wa,' with color 255, 255, 255 at 385, 32 position
+[35mDEBUG:[m staticTextCount: 29
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 385, 32 position
+[35mDEBUG:[m staticTextCount: 30
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  0.1 ' with color 255, 255, 255 at 385, 32 position
+[35mDEBUG:[m staticTextCount: 31
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  0.' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 32
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 33
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 34
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 413, 32 position
+[35mDEBUG:[m staticTextCount: 2
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'MiB Mem :' with color 255, 255, 255 at 0, 48 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'MiB Mem :' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  31602.0 8:44 up  6:46,  4 users,  load average: 0.58, 0' with color 255, 255, 255 at 92, 48 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  31602.0 ' with color 255, 255, 255 at 168, 48 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'total,2.0 ' with color 255, 255, 255 at 168, 48 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'total,' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  22944.7 ' with color 255, 255, 255 at 200, 48 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  22944.7 ' with color 255, 255, 255 at 276, 48 position
+[35mDEBUG:[m staticTextCount: 12
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'free,44.7 ' with color 255, 255, 255 at 276, 48 position
+[35mDEBUG:[m staticTextCount: 13
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'free,' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 14
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 15
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   4136.9 ' with color 255, 255, 255 at 305, 48 position
+[35mDEBUG:[m staticTextCount: 16
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   4136.9 ' with color 255, 255, 255 at 381, 48 position
+[35mDEBUG:[m staticTextCount: 17
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: 'used,36.9 ' with color 255, 255, 255 at 381, 48 position
+[35mDEBUG:[m staticTextCount: 18
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: 'used,' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 19
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 20
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '  ed,' with color 255, 255, 255 at 417, 48 position
+[35mDEBUG:[m staticTextCount: 21
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '  ' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 22
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 23
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 24
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 48 position
+[35mDEBUG:[m staticTextCount: 3
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 64 position
+[35mDEBUG:[m staticTextCount: 4
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 80 position
+[35mDEBUG:[m staticTextCount: 5
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 96 position
+[35mDEBUG:[m staticTextCount: 6
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 112 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   1143 root      20   0 3843268  90456  11760 S  12.3  0' with color 255, 255, 255 at 0, 112 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   1143 root      20   0 3843268  90456  11760 S  12.3 ' with color 255, 255, 255 at 433, 112 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 433, 112 position
+[35mDEBUG:[m staticTextCount: 7
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 128 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set new color: 255 255 255
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   7595 mikita    20   0 3843268  90456  11760 S  12.3 ' with color 255, 255, 255 at 0, 128 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Parsing ANSI: '    20   0 1393.9g 721944 147532 S   6.3 ^[(B^[[m^[[39;49m^[[K
+^[(B^[[m   4411 mikita    20   0 1160.0g 880372 200324 S   3.0 ^[(B^[[m^[[39;49m^[[K'
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '    20   0 1393.9g 721944 147532 S   6.3 11760 S  12.3 ' with color 255, 255, 255 at 104, 128 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '    20   0 1393.9g 721944 147532 S   6.3 ' with color 255, 255, 255 at 428, 128 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 428, 128 position
+[35mDEBUG:[m staticTextCount: 8
+[35mDEBUG:[m Set character set to ASCII
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 0, 144 position
+[35mDEBUG:[m staticTextCount: 9
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Set character set to ASCII
+[31mERROR:[m Error during add static text: invalid word length
+[35mDEBUG:[m Adding word: '   4411 mikita    20   0 1160.0g 880372 200324 S   3.0 ' with color 255, 255, 255 at 0, 144 position
+[35mDEBUG:[m staticTextCount: 10
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '   4411 mikita    20   0 1160.0g 880372 200324 S   3.0 ' with color 255, 255, 255 at 428, 144 position
+[35mDEBUG:[m staticTextCount: 11
+[35mDEBUG:[m Set new color: 255 255 255
+[35mDEBUG:[m Adding word: '' with color 255, 255, 255 at 428, 144 position
+[35mDEBUG:[m staticTextCount: 9

@@ -3,6 +3,10 @@
         "types.h": "c",
         "eve.h": "c",
         "stdbool.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "logo.h": "c",
+        "random": "c",
+        "algorithm": "c",
+        "array": "c"
     }
 }

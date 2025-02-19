@@ -34,3 +34,12 @@ For Fedora:
 ```bash
 sudo dnf install libftdi-devel
 ```
+
+## Run binary for usual user
+
+```bash
+sudo nano /etc/udev/rules.d/99-spi2usb.rules
+SUBSYSTEM=="usb", ATTRS{idVendor}=="1b3d", ATTRS{idProduct}=="0200", MODE="0666"
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
