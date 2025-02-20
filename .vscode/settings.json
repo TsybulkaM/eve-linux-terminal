@@ -7,6 +7,10 @@
         "logo.h": "c",
         "random": "c",
         "algorithm": "c",
-        "array": "c"
+        "array": "c",
+        "stat.h": "c",
+        "eveld.h": "c",
+        "string.h": "c",
+        "hw_api.h": "c"
     }
 }

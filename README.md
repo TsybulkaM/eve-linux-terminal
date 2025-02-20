@@ -71,7 +71,7 @@ top | head -n 1 | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
-TERM=linux stty cols 57 rows 15; top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 56 rows 15; top | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
@@ -79,7 +79,7 @@ htop | head -n 1 | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
-TERM=linux stty cols 57 rows 15; htop | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 56 rows 15; htop | cat -v > /tmp/eve_pipe
 ```
 
 TERM=linux stty cols 55 rows 10; while true; do clear | cat -v > /tmp/eve_pipe; top -n 3 | cat -v > /tmp/eve_pipe; sleep 1; done

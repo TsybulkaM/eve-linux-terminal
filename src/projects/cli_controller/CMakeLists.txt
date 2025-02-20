@@ -1,5 +1,10 @@
-set(SRC cli_controller.c)
+set(SRC 
+  eveld_main.c
+  eveld_fb.c
+  eveld_ops.c
+  logo.c
+)
 add_eve_ececutable(
-  NAME cli_controller
+  NAME eveld
   SRC ${SRC}
 )
