@@ -528,7 +528,7 @@ unsigned char logo_png[] = {
     0x26, 0xF8, 0x22, 0x25, 0xF0, 0xFF, 0x00, 0xC0, 0x80, 0xEA, 0xF1, 0x9D, 0x0E, 0xD7, 0x20, 0x00,
     0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82, 0x00};
 
-void DrawLogoPNG() {
+void DrawLogoPNG(void) {
     uint32_t Reference = 0;
 
     // Loading the Image
@@ -584,5 +584,6 @@ void DrawLogoPNG() {
 
     UpdateFIFO();          // Trigger the CoProcessor to start processing commands out of the FIFO
     Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
-    HAL_Delay(2000);
+
+    sleep(2);
 }

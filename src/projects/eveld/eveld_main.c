@@ -13,6 +13,7 @@ StaticText actual_word = {
     .line = 0,
     .bg = DEFAULT_BG_COLOR,
 };
+
 uint16_t actual_word_len = 0;
 uint32_t actual_word_width = 0;
 uint16_t staticTextCount = 0;

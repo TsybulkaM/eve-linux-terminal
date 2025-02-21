@@ -1,5 +1,16 @@
 #include "eveld.h"
 
+
+int OpenPipe(void) {
+    int fd = open(FIFO_PATH, O_RDONLY);
+    if (fd == -1) {
+        perror("Error opening FIFO");
+        sleep(1);
+    }
+
+    return fd;
+}
+
 int InitializeScreen(int fd) {
     while (!check_ftdi_device()) {
         INFO_PRINT("Monitor disconnected! Waiting...\n");
@@ -15,26 +26,16 @@ int InitializeScreen(int fd) {
         isEveInitialized = true;
         INFO_PRINT("Monitor connected! Initializing EVE...\n");
         DrawLogoPNG();
-        ClearScreen();   
+        ResetScreen();
     }
 
     return OpenPipe();
 }
 
-int OpenPipe() {
-    int fd = open(FIFO_PATH, O_RDONLY);
-    if (fd == -1) {
-        perror("Error opening FIFO");
-        sleep(1);
-    }
-
-    return fd;
-}
-
 void handle_escape_sequence(const char **ptr) {
     if (**ptr == '(' && *(*ptr + 1) == 'B') {
         (*ptr) += 2;
-        DEBUG_PRINT("Set character set to ASCII\n");
+        TODO_PRINT("Set character set to ASCII\n");
         return;
     }
 
@@ -72,9 +73,9 @@ void handle_escape_sequence(const char **ptr) {
             (*ptr)++;
         } else if (strcmp(seq, "?1") == 0) { 
             if (**ptr == 'h') {
-                DEBUG_PRINT("Set cursor keys to application mode\n");
+                TODO_PRINT("Set cursor keys to application mode\n");
             } else if (**ptr == 'l') {
-                DEBUG_PRINT("Set cursor keys to cursor mode\n");
+                TODO_PRINT("Set cursor keys to cursor mode\n");
             }
             (*ptr)++;
         }
@@ -94,9 +95,16 @@ void handle_escape_sequence(const char **ptr) {
 
     switch (**ptr) {
         case 'H':
-            actual_word.x = 0; 
-            actual_word.y = 0;
-            actual_word.line = 0;
+            int row = 0, col = 0;
+
+            if (seq[0] != '\0') {
+                sscanf(seq, "%d;%d", &row, &col);
+            }
+
+            actual_word.y = (row > 0) ? row - 1 : 0;
+            actual_word.x = (col > 0) ? col - 1 : 0;
+
+            actual_word.line = actual_word.y/GetFontHeight(actual_word.font);
             break;
         case 'J':
             if (atoi(seq) == 2) {
@@ -107,15 +115,12 @@ void handle_escape_sequence(const char **ptr) {
             int code = atoi(seq);
             switch (code) {
                 case 0:
-                    DEBUG_PRINT("Clear from cursor to end of line\n");
                     ClearLineAfterX();
                     break;
                 case 1:
-                    DEBUG_PRINT("Clear from cursor to beginning of line\n");
                     ClearLineBeforeX();
                     break;
-                case 2: 
-                    DEBUG_PRINT("Clear entire line\n");
+                case 2:
                     ClearLine();
                     break;
                 default:
@@ -127,7 +132,8 @@ void handle_escape_sequence(const char **ptr) {
         case '?':  
             break;
         case 'm': {
-            AddActualTextStatic();
+            StaticText prev_word = actual_word;
+
             char *token = strtok(seq, ";");
             while (token) {
                 int code = atoi(token);
@@ -183,10 +189,19 @@ void handle_escape_sequence(const char **ptr) {
                 }
                 token = strtok(NULL, ";");
             }
+
+            if (actual_word.r != prev_word.r ||
+                actual_word.g != prev_word.g ||
+                actual_word.b != prev_word.b ||
+                actual_word.bg != prev_word.bg) {
+                AddActualTextStatic();
+            }
+
             break;
         }
         default:
             ERROR_PRINT("Unknown ANSI sequence: ESC [ %s %c\n", seq, **ptr);
+            break;
     }
     (*ptr)++;
 }
@@ -229,7 +244,7 @@ void parse_ansi(const char* buffer) {
         if (is_valid_utf8(ptr)) {
             AppendCharToActualWord(*ptr);
         } else {
-            ERROR_PRINT("Invalid UTF-8 encoding\n");
+            ERROR_PRINT("Invalid UTF-8 encoding %c\n", *ptr);
             return;
         }
 
@@ -240,7 +255,7 @@ void parse_ansi(const char* buffer) {
     DrawStaticTexts();
 }
 
-void ListenToFIFO() {
+void ListenToFIFO(void) {
     char buffer[MAX_LENGTH];
 
     int fd = -1;
@@ -249,15 +264,13 @@ void ListenToFIFO() {
         fd = InitializeScreen(fd);
 
         size_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
+
         close(fd);
 
         if (bytesRead > 0) {
             buffer[bytesRead] = '\0';
-
             PrepareScreen();
-
             parse_ansi(buffer);
-
         } else if (bytesRead == 0) {
             INFO_PRINT("FIFO closed, reopening...\n");
             sleep(1);

@@ -11,6 +11,7 @@
         "stat.h": "c",
         "eveld.h": "c",
         "string.h": "c",
-        "hw_api.h": "c"
+        "hw_api.h": "c",
+        "eve_export.h": "c"
     }
 }

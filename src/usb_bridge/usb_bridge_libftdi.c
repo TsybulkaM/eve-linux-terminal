@@ -25,7 +25,7 @@
 
 struct ftdi_context *ftdi;
 
-bool check_ftdi_device() {
+bool check_ftdi_device(void) {
     struct ftdi_context *ftdi;
     struct ftdi_device_list *devlist;
     int ret;

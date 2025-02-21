@@ -24,6 +24,14 @@
     #define DEBUG_PRINT(fmt, ...)
 #endif
 
+// need TODO ansi commands
+#define TODO 0
+#if TODO
+    #define TODO_PRINT(fmt, ...) fprintf(stderr, "\x1B[33mTODO:\x1B[m " fmt , ##__VA_ARGS__)
+#else
+    #define TODO_PRINT(fmt, ...)
+#endif
+
 #define INFO_PRINT(fmt, ...) fprintf(stderr, "\x1B[32mINFO:\x1B[m " fmt , ##__VA_ARGS__)
 #define ERROR_PRINT(fmt, ...) fprintf(stderr, "\x1B[31mERROR:\x1B[m " fmt , ##__VA_ARGS__)
 
@@ -64,20 +72,20 @@ extern uint16_t savedStaticTextCount;
 extern uint16_t saved_x, saved_y;
 
 
-int check_ftdi_device();
+int check_ftdi_device(void);
 
 // eveld_ops.c
 int InitializeScreen(int fd);
-int OpenPipe();
+int OpenPipe(void);
 void handle_escape_sequence(const char **ptr);
 void parse_ansi(const char* buffer);
 void ListenToFIFO();
 
 // eveld_fb.c
-void PrepareScreen();
-void ClearScreen();
-void Display();
-void ResetScreen();
+void PrepareScreen(void);
+void ClearScreen(void);
+void DisplayFrame(void);
+void ResetScreen(void);
 
 int GetCharWidth(uint16_t, char);
 int GetTextWidth(const char*, int);
@@ -85,15 +93,19 @@ int GetFontHeight(int font);
 bool is_valid_utf8(const char *str);
 
 void AppendCharToActualWord(char ch);
-void AddActualTextStatic();
+void AddActualTextStatic(void);
 
-void DrawStaticTexts();
+void DrawStaticTexts(void);
 
-void ClearLineBeforeX();
-void ClearLineAfterX();
-void ClearLine();
+void ClearLineBeforeX(void);
+void ClearLineAfterX(void);
+void ClearLine(void);
+
+// eveld_mem.c
+uint32_t monitor_display_list_memory(void);
+void check_display_list_memory(void);
 
 // logo.c
-void DrawLogoPNG();
+void DrawLogoPNG(void);
 
 #endif // EVELD_H

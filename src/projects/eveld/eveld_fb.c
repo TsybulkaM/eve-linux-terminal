@@ -2,11 +2,12 @@
 
 void PrepareScreen() {
     Send_CMD(CMD_DLSTART);
+    Send_CMD(VERTEXFORMAT(0));
     Send_CMD(CLEAR_COLOR_RGB(0, 0, 0));
     Send_CMD(CLEAR(1, 1, 1));
 }
 
-void Display() {
+void DisplayFrame() {
     Send_CMD(DISPLAY());
     Send_CMD(CMD_SWAP);
     UpdateFIFO();
@@ -14,7 +15,7 @@ void Display() {
 }
 
 void ClearScreen(void) {
-    Display();
+    DisplayFrame();
     staticTextCount = 0;
 }
 
@@ -92,25 +93,24 @@ void AppendCharToActualWord(char ch) {
         actual_word.text[actual_word_len] = '\0';
         actual_word_width += GetCharWidth(actual_word.font, ch);
     } else {
-        ERROR_PRINT("actual_word.text overflow!\n");
+        ERROR_PRINT("Error during append char: maximum length reached\n");
     }
 }
 
-void AddActualTextStatic() {
-    if (tmp_flag_nl) {
-        ClearLine();
-        tmp_flag_nl = false;
-    }
-
+void AddActualTextStatic(void) {
     if (actual_word_len <= 0) {
         return;
     }
 
     if (staticTextCount >= MAX_STATIC_TEXTS) {
         DEBUG_PRINT("Maximum number of static texts reached\n");
-        ResetScreen();
-        DrawStaticTexts();
+        ClearLine();
         return;
+    }
+
+    if (tmp_flag_nl) {
+        ClearLine();
+        tmp_flag_nl = false;
     }
 
     if (actual_word.font > 32 || actual_word.font < 15) {
@@ -134,7 +134,6 @@ void AddActualTextStatic() {
     DEBUG_PRINT("Adding word: '%s' with color %d, %d, %d at %d, %d position\n", actual_word.text, 
         actual_word.r, actual_word.g, actual_word.b, 
         actual_word.x, actual_word.y);
-    DEBUG_PRINT("staticTextCount: %d\n", staticTextCount);
 
     actual_word.text[actual_word_len] = '\0';
 
@@ -146,7 +145,7 @@ void AddActualTextStatic() {
 }
 
 
-void DrawStaticTexts() {
+void DrawStaticTexts(void) {
     for (int i = 0; i < staticTextCount; i++) {
         Send_CMD(COLOR_RGB(
             staticTexts[i].r, 
@@ -162,41 +161,43 @@ void DrawStaticTexts() {
             staticTexts[i].text
         );
     }
-    Display();
+
+    DEBUG_PRINT("staticTextCount: %d\n", staticTextCount);
+    DisplayFrame();
 }
 
 
-void ClearLine() {
+void ClearLine(void) {
     int j = 0;
     for (int i = 0; i < staticTextCount; i++) {
         if (staticTexts[i].line != actual_word.line) {
             staticTexts[j++] = staticTexts[i];
         } else {
-            DEBUG_PRINT("Cleared Line %d: %s\n", staticTexts[i].line, staticTexts[i].text);
+            //DEBUG_PRINT("Cleared Line %d: %s\n", staticTexts[i].line, staticTexts[i].text);
         }
     }
     staticTextCount = j;
 }
 
-void ClearLineAfterX() {
+void ClearLineAfterX(void) {
     int j = 0;
     for (int i = 0; i < staticTextCount; i++) {
         if (staticTexts[i].line != actual_word.line || staticTexts[i].x <= actual_word.x) {
             staticTexts[j++] = staticTexts[i];
         } else {
-            DEBUG_PRINT("Cleared After X=%d: %s\n", actual_word.x, staticTexts[i].text);
+            //DEBUG_PRINT("Cleared After X=%d: %s\n", actual_word.x, staticTexts[i].text);
         }
     }
     staticTextCount = j;
 }
 
-void ClearLineBeforeX() {
+void ClearLineBeforeX(void) {
     int j = 0;
     for (int i = 0; i < staticTextCount; i++) {
         if (staticTexts[i].line != actual_word.line || staticTexts[i].x > actual_word.x) {
             staticTexts[j++] = staticTexts[i];
         } else {
-            DEBUG_PRINT("Cleared Before X=%d: %s\n", actual_word.x, staticTexts[i].text);
+            //DEBUG_PRINT("Cleared Before X=%d: %s\n", actual_word.x, staticTexts[i].text);
         }
     }
     staticTextCount = j;

@@ -6,7 +6,14 @@ This guide provides commands for interacting with the EVE controller to display 
 
 ## Precondiution
 
-Run all comand from root user!
+Run all comand from root user or run following commands:
+
+```bash
+sudo nano /etc/udev/rules.d/99-spi2usb.rules
+SUBSYSTEM=="usb", ATTRS{idVendor}=="1b3d", ATTRS{idProduct}=="0200", MODE="0666"
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
 
 ## Start the Pipe
 
@@ -71,7 +78,7 @@ top | head -n 1 | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
-TERM=linux stty cols 56 rows 15; top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 55 rows 15; top | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
@@ -79,7 +86,5 @@ htop | head -n 1 | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
-TERM=linux stty cols 56 rows 15; htop | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 55 rows 15; htop | cat -v > /tmp/eve_pipe
 ```
-
-TERM=linux stty cols 55 rows 10; while true; do clear | cat -v > /tmp/eve_pipe; top -n 3 | cat -v > /tmp/eve_pipe; sleep 1; done
