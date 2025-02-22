@@ -29,19 +29,17 @@ int GetCharWidth(uint16_t font_size, char ch) {
     int baseWidth = font_size * 0.5;
     
     switch (ch) {
-        case 'M': return baseWidth * 2;
-        case 'W': return baseWidth * 3;
+        case 'M': return baseWidth * 1.4;
+        case 'W': return baseWidth * 1.5;
         case 'I': return baseWidth * 0.1;
-        case 'i': case 'j': case 'l': case '!': case '|': case '.': case ',': case '\'': case '"':
-            return baseWidth * 0.5;
-        case 'f': case 't': return baseWidth * 0.6;
-        case 'r': return baseWidth * 0.7;
-        case 'b': case 'p': case 'v': return baseWidth * 1.2;
-        case 'm': case 'w': return baseWidth * 1.5;
+        case 'i': case 'l': case '!': case '|': case '.': case ',': case '\'': case '"':
+            return baseWidth * 0.8;
+        case 'f': case 't': case 'j': return baseWidth * 0.9;
+        case 'b': case 'p': case 'v': case 'm': case 'w': return baseWidth * 1.2;
         case ' ': return baseWidth;
     }
     
-    if (ch >= 'A' && ch <= 'Z') return baseWidth * 1.5;
+    if (ch >= 'A' && ch <= 'Z') return baseWidth * 1.2;
     
     return baseWidth;
 }
@@ -86,12 +84,18 @@ bool is_valid_utf8(const char *str) {
 }
 
 
+void SetActualNewLine(uint16_t line) {
+    actual_word.line = line;
+    mutex_newline = true;
+}
+
+
 void AppendCharToActualWord(char ch) {
     if (actual_word_len < MAX_LENGTH - 1) {
         actual_word.text[actual_word_len] = ch;
         actual_word_len++;
         actual_word.text[actual_word_len] = '\0';
-        actual_word_width += GetCharWidth(actual_word.font, ch);
+        actual_word.width += GetCharWidth(actual_word.font, ch);
     } else {
         ERROR_PRINT("Error during append char: maximum length reached\n");
     }
@@ -108,9 +112,9 @@ void AddActualTextStatic(void) {
         return;
     }
 
-    if (tmp_flag_nl) {
+    if (mutex_newline) {
         ClearLine();
-        tmp_flag_nl = false;
+        mutex_newline = false;
     }
 
     if (actual_word.font > 32 || actual_word.font < 15) {
@@ -123,12 +127,20 @@ void AddActualTextStatic(void) {
         return;
     }
 
+    if (actual_word.y < 0) {
+        actual_word.y = 0;
+    }
+
     if (actual_word.y + GetFontHeight(actual_word.font) >= Display_Height()) {
         actual_word.y = Display_Height() - GetFontHeight(actual_word.font);
     }
 
-    if (actual_word.x + actual_word_width >= Display_Width()) {
-        actual_word.x = Display_Width() - actual_word_width;
+    if (actual_word.x < 0) {
+        actual_word.x = 0;
+    }
+
+    if (actual_word.x + actual_word.width >= Display_Width()) {
+        actual_word.x = Display_Width() - actual_word.width;
     }
 
     DEBUG_PRINT("Adding word: '%s' with color %d, %d, %d at %d, %d position\n", actual_word.text, 
@@ -139,21 +151,40 @@ void AddActualTextStatic(void) {
 
     staticTexts[staticTextCount++] = actual_word;
 
-    actual_word.x += actual_word_width;
+    actual_word.x += actual_word.width;
     actual_word_len = 0;
-    actual_word_width = 0;
+    actual_word.width = 0;
 }
 
 
 void DrawStaticTexts(void) {
     for (int i = 0; i < staticTextCount; i++) {
+
+        if (staticTexts[i].bg_r != DEFAULT_COLOR_BG_R && 
+            staticTexts[i].bg_g != DEFAULT_COLOR_BG_G && 
+            staticTexts[i].bg_b != DEFAULT_COLOR_BG_B) {
+            Send_CMD(COLOR_RGB(
+                staticTexts[i].bg_r, 
+                staticTexts[i].bg_g, 
+                staticTexts[i].bg_b
+            ));
+            Send_CMD(BEGIN(RECTS));
+            Send_CMD(VERTEX2F(
+                staticTexts[i].x, 
+                staticTexts[i].y
+            ));
+            Send_CMD(VERTEX2F(
+                staticTexts[i].x + GetTextWidth(staticTexts[i].text, staticTexts[i].font) - 5, 
+                staticTexts[i].y + GetFontHeight(staticTexts[i].font) - 10
+            ));
+            Send_CMD(END());
+        }
+
         Send_CMD(COLOR_RGB(
             staticTexts[i].r, 
             staticTexts[i].g, 
             staticTexts[i].b
         ));
-
-        Cmd_BGcolor(staticTexts[i].bg);
         
         Cmd_Text(
             staticTexts[i].x, staticTexts[i].y, 
@@ -167,13 +198,22 @@ void DrawStaticTexts(void) {
 }
 
 
+void DeleteChatH(uint16_t count) {
+    for (int i = 0; i < staticTextCount; i++) {
+        if (staticTexts[i].line != actual_word.line || staticTexts[i].x <= actual_word.x) {
+            staticTexts[i].x -= count*GetCharWidth(staticTexts[i].font, ' ');
+        }
+    }
+} 
+
+
 void ClearLine(void) {
     int j = 0;
     for (int i = 0; i < staticTextCount; i++) {
         if (staticTexts[i].line != actual_word.line) {
             staticTexts[j++] = staticTexts[i];
         } else {
-            //DEBUG_PRINT("Cleared Line %d: %s\n", staticTexts[i].line, staticTexts[i].text);
+            DEBUG_PRINT("Cleared Line %d: %s\n", staticTexts[i].line, staticTexts[i].text);
         }
     }
     staticTextCount = j;
@@ -185,7 +225,7 @@ void ClearLineAfterX(void) {
         if (staticTexts[i].line != actual_word.line || staticTexts[i].x <= actual_word.x) {
             staticTexts[j++] = staticTexts[i];
         } else {
-            //DEBUG_PRINT("Cleared After X=%d: %s\n", actual_word.x, staticTexts[i].text);
+            DEBUG_PRINT("Cleared After X=%d: %s\n", actual_word.x, staticTexts[i].text);
         }
     }
     staticTextCount = j;
@@ -197,7 +237,7 @@ void ClearLineBeforeX(void) {
         if (staticTexts[i].line != actual_word.line || staticTexts[i].x > actual_word.x) {
             staticTexts[j++] = staticTexts[i];
         } else {
-            //DEBUG_PRINT("Cleared Before X=%d: %s\n", actual_word.x, staticTexts[i].text);
+            DEBUG_PRINT("Cleared Before X=%d: %s\n", actual_word.x, staticTexts[i].text);
         }
     }
     staticTextCount = j;

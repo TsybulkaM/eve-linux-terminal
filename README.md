@@ -4,9 +4,9 @@ This guide provides commands for interacting with the EVE controller to display 
 
 ---
 
-## Precondiution
+## Precondition
 
-Run all comand from root user or run following commands:
+Run **all comand from root** user or run following commands:
 
 ```bash
 sudo nano /etc/udev/rules.d/99-spi2usb.rules
@@ -20,7 +20,7 @@ sudo udevadm trigger
 To start the application, run:
 
 ```bash
-./cli_controller_43_480x272_EVE3_TPC
+./eveld_43_480x272_EVE3_TPC
 ```
 
 ## Commands
@@ -58,10 +58,9 @@ Cowsay ASCII-art
 ### System commands 
 
 ```bash
-clear | cat -v > /tmp/eve_pipe && df -h | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 57 rows 15; df -h | cat -v > /tmp/eve_pipe
 ```
 Disks usage
-
 
 ### Clear Screen
 To clear the screen:
@@ -71,20 +70,26 @@ clear | cat -v > /tmp/eve_pipe
 
 ---
 
+### Realised 
+
+```bash
+TERM=linux stty cols 57 rows 16; top | cat -v > /tmp/eve_pipe
+```
+
 ### TODO 
 
 ```bash
-top | head -n 1 | cat -v > /tmp/eve_pipe
-```
-
-```bash
-TERM=linux stty cols 55 rows 15; top | cat -v > /tmp/eve_pipe
-```
-
-```bash
-htop | head -n 1 | cat -v > /tmp/eve_pipe
-```
-
-```bash
 TERM=linux stty cols 55 rows 15; htop | cat -v > /tmp/eve_pipe
+```
+
+```bash
+TERM=linux stty cols 55 rows 15; sl | cat -v > /tmp/eve_pipe
+```
+
+```bash
+TERM=linux stty cols 55 rows 15; cmatrix | cat -v > /tmp/eve_pipe
+```
+
+```bash
+TERM=linux stty cols 55 rows 15; mc | cat -v > /tmp/eve_pipe
 ```

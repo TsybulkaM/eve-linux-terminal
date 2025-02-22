@@ -17,13 +17,13 @@ colors=(31 32 33 34 35 36 91 92 93 94 95 96)
 color_index=0
 
 while true; do
-    echo -ne "\e[${y};${x}H"
+    echo -e "\e[${y};${x}H"
 
-    echo -ne "\e[1;${colors[$color_index]}mDVD\e[0m"
+    echo -e "\e[1;${colors[$color_index]}mDVD\e[0m"
 
     sleep 0.05
 
-    echo -ne "\e[${y};${x}H   "
+    echo -e "\e[${y};${x}H   "
 
     ((x += dx))
     ((y += dy))

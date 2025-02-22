@@ -39,14 +39,19 @@
 #define MAX_LENGTH 512
 #define DEFAULT_FONT 16
 #define DEFAULT_OPTION 0
+
 #define DEFAULT_COLOR_R 255
 #define DEFAULT_COLOR_G 255
 #define DEFAULT_COLOR_B 255
-#define DEFAULT_BG_COLOR 0x000000
+
+#define DEFAULT_COLOR_BG_R 0
+#define DEFAULT_COLOR_BG_G 0
+#define DEFAULT_COLOR_BG_B 0
+
 #define MAX_STATIC_TEXTS 60
 
 extern bool isEveInitialized;
-extern bool tmp_flag_nl;
+extern bool mutex_newline;
 
 typedef struct {
     uint16_t x;
@@ -55,14 +60,16 @@ typedef struct {
     uint8_t r;
     uint8_t g;
     uint8_t b;
+    uint8_t bg_r;
+    uint8_t bg_g;
+    uint8_t bg_b;
     uint16_t line;
-    uint32_t bg;
+    uint16_t width;
     char text[MAX_LENGTH];
 } StaticText;
 
 extern StaticText actual_word;
 extern uint16_t actual_word_len;
-extern uint32_t actual_word_width;
 
 extern StaticText staticTexts[MAX_STATIC_TEXTS];
 extern uint16_t staticTextCount;
@@ -92,10 +99,14 @@ int GetTextWidth(const char*, int);
 int GetFontHeight(int font);
 bool is_valid_utf8(const char *str);
 
+void SetActualNewLine(uint16_t line);
+
 void AppendCharToActualWord(char ch);
 void AddActualTextStatic(void);
 
 void DrawStaticTexts(void);
+
+void DeleteChatH(uint16_t count);
 
 void ClearLineBeforeX(void);
 void ClearLineAfterX(void);

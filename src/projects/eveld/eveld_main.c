@@ -1,7 +1,7 @@
 #include "eveld.h"
 
 bool isEveInitialized = false;
-bool tmp_flag_nl = false;
+bool mutex_newline = false;
 
 StaticText actual_word = {
     .x = 0,
@@ -10,12 +10,14 @@ StaticText actual_word = {
     .r = DEFAULT_COLOR_R,
     .g = DEFAULT_COLOR_G,
     .b = DEFAULT_COLOR_B,
+    .bg_r = 0,
+    .bg_g = 0,
+    .bg_b = 0,
     .line = 0,
-    .bg = DEFAULT_BG_COLOR,
+    .width = 0,
 };
 
 uint16_t actual_word_len = 0;
-uint32_t actual_word_width = 0;
 uint16_t staticTextCount = 0;
 uint16_t savedStaticTextCount = 0;
 uint16_t saved_x = 0;
