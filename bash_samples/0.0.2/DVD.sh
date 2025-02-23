@@ -1,9 +1,7 @@
 #!/bin/bash
 
-trap "" SIGPIPE
-
-rows=480
-cols=272
+rows=$(tput lines)
+cols=$(tput cols)
 
 fifo=/tmp/eve_pipe
 
@@ -17,13 +15,13 @@ colors=(31 32 33 34 35 36 91 92 93 94 95 96)
 color_index=0
 
 while true; do
-    echo -e "\e[${y};${x}H"
+    echo -ne "\e[${y};${x}H"
 
-    echo -e "\e[1;${colors[$color_index]}mDVD\e[0m"
+    echo -ne "\e[1;${colors[$color_index]}mDVD\e[0m"
 
     sleep 0.05
 
-    echo -e "\e[${y};${x}H   "
+    echo -ne "\e[${y};${x}H   "
 
     ((x += dx))
     ((y += dy))

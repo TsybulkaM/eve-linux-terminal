@@ -83,6 +83,9 @@ bool is_valid_utf8(const char *str) {
     return true;
 }
 
+bool colors_are_equal(Color a, Color b) {
+    return a.r == b.r && a.g == b.g && a.b == b.b;
+}
 
 void SetActualNewLine(uint16_t line) {
     actual_word.line = line;
@@ -122,17 +125,14 @@ void AddActualTextStatic(void) {
         return;
     }
 
-    if (actual_word.r < 0 || actual_word.r > 255 || actual_word.g < 0 || actual_word.g > 255 || actual_word.b < 0 || actual_word.b > 255) {
-        ERROR_PRINT("Error during add static text: invalid color\n");
-        return;
-    }
-
     if (actual_word.y < 0) {
+        DEBUG_PRINT("Y position is too low, setting to 0\n");
         actual_word.y = 0;
     }
 
     if (actual_word.y + GetFontHeight(actual_word.font) >= Display_Height()) {
         actual_word.y = Display_Height() - GetFontHeight(actual_word.font);
+        DEBUG_PRINT("Y position is too high, setting to %d\n", actual_word.y);
     }
 
     if (actual_word.x < 0) {
@@ -143,9 +143,13 @@ void AddActualTextStatic(void) {
         actual_word.x = Display_Width() - actual_word.width;
     }
 
-    DEBUG_PRINT("Adding word: '%s' with color %d, %d, %d at %d, %d position\n", actual_word.text, 
-        actual_word.r, actual_word.g, actual_word.b, 
-        actual_word.x, actual_word.y);
+    DEBUG_PRINT("Adding word: '%s' with width %d fg color " COLOR_FMT " and bg color " COLOR_FMT " at %d, %d position\n", 
+        actual_word.text, 
+        actual_word.width,
+        COLOR_ARGS(actual_word.text_color),
+        COLOR_ARGS(actual_word.bg_color),
+        actual_word.x, actual_word.y
+    );
 
     actual_word.text[actual_word_len] = '\0';
 
@@ -160,14 +164,15 @@ void AddActualTextStatic(void) {
 void DrawStaticTexts(void) {
     for (int i = 0; i < staticTextCount; i++) {
 
-        if (staticTexts[i].bg_r != DEFAULT_COLOR_BG_R && 
-            staticTexts[i].bg_g != DEFAULT_COLOR_BG_G && 
-            staticTexts[i].bg_b != DEFAULT_COLOR_BG_B) {
+        if (!colors_are_equal(staticTexts[i].bg_color, 
+            (Color){DEFAULT_COLOR_BG_R, DEFAULT_COLOR_BG_G, DEFAULT_COLOR_BG_B})) {
+
             Send_CMD(COLOR_RGB(
-                staticTexts[i].bg_r, 
-                staticTexts[i].bg_g, 
-                staticTexts[i].bg_b
+                staticTexts[i].bg_color.r,
+                staticTexts[i].bg_color.g,
+                staticTexts[i].bg_color.b
             ));
+
             Send_CMD(BEGIN(RECTS));
             Send_CMD(VERTEX2F(
                 staticTexts[i].x, 
@@ -181,9 +186,9 @@ void DrawStaticTexts(void) {
         }
 
         Send_CMD(COLOR_RGB(
-            staticTexts[i].r, 
-            staticTexts[i].g, 
-            staticTexts[i].b
+            staticTexts[i].text_color.r,
+            staticTexts[i].text_color.g,
+            staticTexts[i].text_color.b
         ));
         
         Cmd_Text(
@@ -238,6 +243,19 @@ void ClearLineBeforeX(void) {
             staticTexts[j++] = staticTexts[i];
         } else {
             DEBUG_PRINT("Cleared Before X=%d: %s\n", actual_word.x, staticTexts[i].text);
+        }
+    }
+    staticTextCount = j;
+}
+
+void ClearPlaceForActual(void) {
+    int j = 0;
+    for (int i = 0; i < staticTextCount; i++) {
+        if (staticTexts[i].line != actual_word.line || 
+            !(staticTexts[i].x <= actual_word.x && staticTexts[i].x + staticTexts[i].width >= actual_word.x + actual_word.width)) {
+            staticTexts[j++] = staticTexts[i];
+        } else {
+            DEBUG_PRINT("Cleared Place X=%d: %s\n", actual_word.x, staticTexts[i].text);
         }
     }
     staticTextCount = j;

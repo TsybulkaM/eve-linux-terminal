@@ -48,7 +48,16 @@
 #define DEFAULT_COLOR_BG_G 0
 #define DEFAULT_COLOR_BG_B 0
 
-#define MAX_STATIC_TEXTS 60
+typedef struct { 
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+} Color;
+
+#define COLOR_FMT "%d, %d, %d"
+#define COLOR_ARGS(c) (c).r, (c).g, (c).b
+
+#define MAX_STATIC_TEXTS 100
 
 extern bool isEveInitialized;
 extern bool mutex_newline;
@@ -57,12 +66,8 @@ typedef struct {
     uint16_t x;
     uint16_t y;
     uint16_t font;
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t bg_r;
-    uint8_t bg_g;
-    uint8_t bg_b;
+    Color text_color;
+    Color bg_color;
     uint16_t line;
     uint16_t width;
     char text[MAX_LENGTH];
@@ -97,7 +102,9 @@ void ResetScreen(void);
 int GetCharWidth(uint16_t, char);
 int GetTextWidth(const char*, int);
 int GetFontHeight(int font);
+
 bool is_valid_utf8(const char *str);
+bool colors_are_equal(Color a, Color b);
 
 void SetActualNewLine(uint16_t line);
 
@@ -111,6 +118,7 @@ void DeleteChatH(uint16_t count);
 void ClearLineBeforeX(void);
 void ClearLineAfterX(void);
 void ClearLine(void);
+void ClearPlaceForActual(void);
 
 // eveld_mem.c
 uint32_t monitor_display_list_memory(void);

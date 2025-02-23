@@ -73,13 +73,13 @@ clear | cat -v > /tmp/eve_pipe
 ### Realised 
 
 ```bash
-TERM=linux stty cols 57 rows 16; top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 57 rows 15; top | cat -v > /tmp/eve_pipe
 ```
 
 ### TODO 
 
 ```bash
-TERM=linux stty cols 55 rows 15; htop | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 53 rows 14; htop | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
@@ -88,8 +88,4 @@ TERM=linux stty cols 55 rows 15; sl | cat -v > /tmp/eve_pipe
 
 ```bash
 TERM=linux stty cols 55 rows 15; cmatrix | cat -v > /tmp/eve_pipe
-```
-
-```bash
-TERM=linux stty cols 55 rows 15; mc | cat -v > /tmp/eve_pipe
 ```

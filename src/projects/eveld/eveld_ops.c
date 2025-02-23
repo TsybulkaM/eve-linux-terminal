@@ -15,6 +15,7 @@ int InitializeScreen(int fd) {
     while (!check_ftdi_device()) {
         INFO_PRINT("Monitor disconnected! Waiting...\n");
         isEveInitialized = false;
+        close(fd);
         sleep(1);
     }
 
@@ -121,38 +122,57 @@ void handle_escape_sequence(const char **ptr) {
                 sscanf(seq, "%d;%d", &row, &col);
             }
 
+            AddActualTextStatic();
+
             actual_word.y = (row > 0) ? row*GetFontHeight(actual_word.font)  : 0;
             actual_word.x = (col > 0) ? col*GetCharWidth(actual_word.font, ' ') : 0;
 
             SetActualNewLine(actual_word.y/GetFontHeight(actual_word.font));
+            DEBUG_PRINT("Sequence: %s, Move to row %d, column %d, X = %d, Y = %d\n", seq, row, col, actual_word.x, actual_word.y);
             break;
         case 'd':
-            uint16_t line = (seq[0] != '\0') ? atoi(seq) : 0;
-            SetActualNewLine(line);
-            actual_word.y = line * GetFontHeight(actual_word.font);
+            AddActualTextStatic();
+            actual_word.y = (seq[0] != '\0') ? atoi(seq)*GetFontHeight(actual_word.font) : 0;
+            SetActualNewLine(atoi(seq));
+            DEBUG_PRINT("Move to line: %d, Y = %d\n", atoi(seq), actual_word.y);
             break;
         case 'A':
+            AddActualTextStatic();
             actual_word.y -= (seq[0] != '\0') ? atoi(seq)*GetFontHeight(actual_word.font) : GetFontHeight(actual_word.font);
+            SetActualNewLine(atoi(seq));
+            DEBUG_PRINT("Move up %d lines, Y = %d\n", atoi(seq), actual_word.y);
             break;
         case 'B':
+            AddActualTextStatic();
             actual_word.y += (seq[0] != '\0') ? atoi(seq)*GetFontHeight(actual_word.font) : GetFontHeight(actual_word.font);
+            SetActualNewLine(atoi(seq));
+            DEBUG_PRINT("Move down %d lines, Y = %d\n", atoi(seq), actual_word.y);
             break;
         case 'C':
+            AddActualTextStatic();
             actual_word.x += (seq[0] != '\0') ? atoi(seq)*GetCharWidth(actual_word.font, ' ') : GetCharWidth(actual_word.font, ' ');
+            DEBUG_PRINT("Move right %d spaces, X = %d\n", atoi(seq), actual_word.x);
             break;
         case 'D':
+            AddActualTextStatic();
             actual_word.x -= (seq[0] != '\0') ? atoi(seq)*GetCharWidth(actual_word.font, ' ') : GetCharWidth(actual_word.font, ' ');
+            DEBUG_PRINT("Move left %d spaces, X = %d\n", atoi(seq), actual_word.x);
             break;
         case 'P':
+            AddActualTextStatic();
             uint16_t count = (seq[0] != '\0') ? atoi(seq) : 0;
             DeleteChatH(count);
+            DEBUG_PRINT("Delete %d characters\n", count);
             break;
         case 'G':
+            AddActualTextStatic();
             actual_word.x = (seq[0] != '\0') ? atoi(seq)*GetCharWidth(actual_word.font, ' ') : 0;
+            DEBUG_PRINT("Move to column %d, X = %d\n", atoi(seq), actual_word.x);
             break;
         case 'J':
             if (atoi(seq) == 2) {
                 ResetScreen();
+                DEBUG_PRINT("Clear screen\n");
             }
             break;
         case 'K': {
@@ -177,12 +197,8 @@ void handle_escape_sequence(const char **ptr) {
             break;
         case 'm': {
             StaticText next_word = {
-                .r = actual_word.r,
-                .g = actual_word.g,
-                .b = actual_word.b,
-                .bg_r = actual_word.bg_r,
-                .bg_g = actual_word.bg_g,
-                .bg_b = actual_word.bg_b,
+                .text_color = actual_word.text_color,
+                .bg_color = actual_word.bg_color,
                 .font = actual_word.font,
             };
         
@@ -191,30 +207,36 @@ void handle_escape_sequence(const char **ptr) {
             char *token = strtok(seq, ";");
 
             if (!token) {
-                next_word.r = DEFAULT_COLOR_R;
-                next_word.g = DEFAULT_COLOR_G;
-                next_word.b = DEFAULT_COLOR_B;
-                next_word.bg_r = DEFAULT_COLOR_BG_R;
-                next_word.bg_g = DEFAULT_COLOR_BG_G;
-                next_word.bg_b = DEFAULT_COLOR_BG_B;
-                reverse = false;
+                next_word.text_color = (Color){DEFAULT_COLOR_R, DEFAULT_COLOR_G, DEFAULT_COLOR_B};
+                next_word.bg_color = (Color){DEFAULT_COLOR_BG_R, DEFAULT_COLOR_BG_G, DEFAULT_COLOR_BG_B};
             }
 
             while (token) {
                 int code = atoi(token);
                 switch (code) {
                     case 0:
-                        next_word.r = DEFAULT_COLOR_R;
-                        next_word.g = DEFAULT_COLOR_G;
-                        next_word.b = DEFAULT_COLOR_B;
-                        next_word.bg_r = DEFAULT_COLOR_BG_R;
-                        next_word.bg_g = DEFAULT_COLOR_BG_G;
-                        next_word.bg_b = DEFAULT_COLOR_BG_B;
+                        next_word.text_color = (Color){DEFAULT_COLOR_R, DEFAULT_COLOR_G, DEFAULT_COLOR_B};
+                        next_word.bg_color = (Color){DEFAULT_COLOR_BG_R, DEFAULT_COLOR_BG_G, DEFAULT_COLOR_BG_B};
                         reverse = false;
                         break;
                     case 1:
                         //next_word.font = 18;
                         TODO_PRINT("Set bold text\n");
+                        break;
+                    case 2:
+                        TODO_PRINT("Set dim text\n");
+                        break;
+                    case 3:
+                        TODO_PRINT("Set italic text\n");
+                        break;
+                    case 4:
+                        TODO_PRINT("Set underline text\n");
+                        break;
+                    case 5:
+                        TODO_PRINT("Set slow blink text\n");
+                        break;
+                    case 6:
+                        TODO_PRINT("Set rapid blink text\n");
                         break;
                     case 7:
                         reverse = true;
@@ -225,116 +247,112 @@ void handle_escape_sequence(const char **ptr) {
                         break;
                     // Normal text colors (30-37)
                     case 30: 
-                        next_word.r = next_word.g = next_word.b = 0; 
+                        next_word.text_color = (Color){0, 0, 0};
                         break; // Black
-                    case 31: 
-                        next_word.r = 255; next_word.g = 0; next_word.b = 0; 
+                    case 31:
+                        next_word.text_color = (Color){255, 0, 0};
                         break; // Red
-                    case 32: 
-                        next_word.r = 0; next_word.g = 255; next_word.b = 0; 
+                    case 32:
+                        next_word.text_color = (Color){0, 255, 0};
                         break; // Green
-                    case 33: 
-                        next_word.r = 255; next_word.g = 255; next_word.b = 0; 
+                    case 33:
+                        next_word.text_color = (Color){255, 225, 0};
                         break; // Yellow
-                    case 34: 
-                        next_word.r = 0; next_word.g = 0; next_word.b = 255; 
+                    case 34:
+                        next_word.text_color = (Color){0, 0, 255};
                         break; // Blue
-                    case 35: 
-                        next_word.r = 255; next_word.g = 0; next_word.b = 255; 
+                    case 35:
+                        next_word.text_color = (Color){255, 0, 255};
                         break; // Magenta
-                    case 36: 
-                        next_word.r = 0; next_word.g = 255; next_word.b = 255; 
+                    case 36:
+                        next_word.text_color = (Color){0, 255, 255};
                         break; // Cyan
-                    case 37: 
-                        next_word.r = next_word.g = next_word.b = 255; 
+                    case 37:
+                        next_word.text_color = (Color){255, 255, 255};
                         break; // White
                     case 39: 
-                        next_word.r = DEFAULT_COLOR_R;
-                        next_word.g = DEFAULT_COLOR_G;
-                        next_word.b = DEFAULT_COLOR_B;
+                        next_word.text_color = (Color){DEFAULT_COLOR_R, DEFAULT_COLOR_G, DEFAULT_COLOR_B};
                         break; // Default color
 
                     // Bright text colors (90-97)
-                    case 90: 
-                        next_word.r = 128; next_word.g = 128; next_word.b = 128; 
+                    case 90:
+                        next_word.text_color = (Color){128, 128, 128};
                         break; // Gray
-                    case 91: 
-                        next_word.r = 255; next_word.g = 128; next_word.b = 128; 
+                    case 91:
+                        next_word.text_color = (Color){255, 128, 128};
                         break; // Light red
                     case 92: 
-                        next_word.r = 128; next_word.g = 255; next_word.b = 128; 
+                        next_word.text_color = (Color){128, 255, 128};
                         break; // Light green
                     case 93: 
-                        next_word.r = 255; next_word.g = 255; next_word.b = 128; 
+                        next_word.text_color = (Color){255, 255, 128};
                         break; // Light yellow
                     case 94: 
-                        next_word.r = 128; next_word.g = 128; next_word.b = 255; 
+                        next_word.text_color = (Color){128, 128, 255};
                         break; // Light blue
                     case 95: 
-                        next_word.r = 255; next_word.g = 128; next_word.b = 255; 
+                        next_word.text_color = (Color){255, 128, 255};
                         break; // Light magenta
                     case 96: 
-                        next_word.r = 128; next_word.g = 255; next_word.b = 255; 
+                        next_word.text_color = (Color){128, 255, 255};
                         break; // Light cyan
                     case 97: 
-                        next_word.r = next_word.g = next_word.b = 255; 
+                        next_word.text_color = (Color){255, 255, 255};
                         break; // Bright white
 
                     // Normal background colors (40-47)
-                    case 40: 
-                        next_word.bg_r = 0;   next_word.bg_g = 0;   next_word.bg_b = 0; 
+                    case 40:
+                        next_word.bg_color = (Color){0, 0, 0};
                         break; // Black background
                     case 41: 
-                        next_word.bg_r = 255; next_word.bg_g = 0;   next_word.bg_b = 0; 
+                        next_word.bg_color = (Color){255, 0, 0};
                         break; // Red background
                     case 42: 
-                        next_word.bg_r = 0;   next_word.bg_g = 255; next_word.bg_b = 0; 
+                        next_word.bg_color = (Color){0, 255, 0};
                         break; // Green background
                     case 43: 
-                        next_word.bg_r = 255; next_word.bg_g = 255; next_word.bg_b = 0; 
+                        next_word.bg_color = (Color){255, 255, 0};
                         break; // Yellow background
                     case 44: 
-                        next_word.bg_r = 0;   next_word.bg_g = 0;   next_word.bg_b = 255; 
+                        next_word.bg_color = (Color){0, 0, 255};
                         break; // Blue background
                     case 45: 
-                        next_word.bg_r = 255; next_word.bg_g = 0;   next_word.bg_b = 255; 
+                        next_word.bg_color = (Color){255, 0, 255};
                         break; // Magenta background
                     case 46: 
-                        next_word.bg_r = 0;   next_word.bg_g = 255; next_word.bg_b = 255; 
+                        next_word.bg_color = (Color){0, 255, 255};
                         break; // Cyan background
                     case 47: 
-                        next_word.bg_r = 255; next_word.bg_g = 255; next_word.bg_b = 255; 
+                        next_word.bg_color = (Color){255, 255, 255};
                         break; // White background
                     case 49: 
-                        next_word.bg_r = DEFAULT_COLOR_BG_R;
-                        next_word.bg_g = DEFAULT_COLOR_BG_G;
-                        next_word.bg_b = DEFAULT_COLOR_BG_B;
+                        next_word.bg_color = (Color){DEFAULT_COLOR_BG_R, DEFAULT_COLOR_BG_G, DEFAULT_COLOR_BG_B};
                         break; // Default background
 
                     // Bright background colors (100-107)
                     case 100: 
-                        next_word.bg_r = 128; next_word.bg_g = 128; next_word.bg_b = 128; 
+                        next_word.bg_color = (Color){128, 128, 128};
                         break; // Gray background
                     case 101: 
-                        next_word.bg_r = 255; next_word.bg_g = 128; next_word.bg_b = 128; 
+                        next_word.bg_color = (Color){255, 128, 128};
                         break; // Light red background
                     case 102: 
-                        next_word.bg_r = 128; next_word.bg_g = 255; next_word.bg_b = 128; 
+                        next_word.bg_color = (Color){128, 255, 128};
                         break; // Light green background
                     case 103: 
-                        next_word.bg_r = 255; next_word.bg_g = 255; next_word.bg_b = 128; 
+                        next_word.bg_color = (Color){255, 255, 128};
                         break; // Light yellow background
                     case 104: 
-                        next_word.bg_r = 128; next_word.bg_g = 128; next_word.bg_b = 255; 
+                        next_word.bg_color = (Color){128, 128, 255};
                         break; // Light blue background
                     case 105: 
-                        next_word.bg_r = 255; next_word.bg_g = 128; next_word.bg_b = 255; 
+                        next_word.bg_color = (Color){255, 128, 255};
                         break; // Light magenta background
                     case 106: 
-                        next_word.bg_r = 128; next_word.bg_g = 255; next_word.bg_b = 255; 
+                        next_word.bg_color = (Color){128, 255, 255};
                         break; // Light cyan background
                     case 107: 
-                        next_word.bg_r = 255; next_word.bg_g = 255; next_word.bg_b = 255; 
+                        next_word.bg_color = (Color){255, 255, 255};
                         break; // Bright white background
 
                     default:
@@ -345,33 +363,23 @@ void handle_escape_sequence(const char **ptr) {
             }
         
             if (reverse) {
-                int temp_r = next_word.r;
-                int temp_g = next_word.g;
-                int temp_b = next_word.b;
-                next_word.r = next_word.bg_r & 0xFF;
-                next_word.g = next_word.bg_g & 0xFF;
-                next_word.b = next_word.bg_b & 0xFF;
-                next_word.bg_r = temp_r;
-                next_word.bg_g = temp_g;
-                next_word.bg_b = temp_b;
+                Color tmp_color = next_word.text_color;
+                next_word.text_color = (Color){
+                    next_word.bg_color.r & 0xFF,
+                    next_word.bg_color.g & 0xFF,
+                    next_word.bg_color.b & 0xFF
+                };
+                next_word.bg_color = tmp_color;
             }
         
-            if (actual_word.r != next_word.r ||
-                actual_word.g != next_word.g ||
-                actual_word.b != next_word.b ||
-                actual_word.bg_r != next_word.bg_r ||
-                actual_word.bg_g != next_word.bg_g ||
-                actual_word.bg_b != next_word.bg_b ||
+            if (!colors_are_equal(actual_word.text_color, next_word.text_color) || 
+                !colors_are_equal(actual_word.bg_color, next_word.bg_color) ||
                 actual_word.font != next_word.font) {
                 AddActualTextStatic();
             }
         
-            actual_word.r = next_word.r;
-            actual_word.g = next_word.g;
-            actual_word.b = next_word.b;
-            actual_word.bg_r = next_word.bg_r;
-            actual_word.bg_g = next_word.bg_g;
-            actual_word.bg_b = next_word.bg_b;
+            actual_word.text_color = next_word.text_color;
+            actual_word.bg_color = next_word.bg_color;
             actual_word.font = next_word.font;
             break;
         }
@@ -400,6 +408,7 @@ void parse_ansi(const char* buffer) {
             AddActualTextStatic();
             if (*ptr == '\n' || actual_word.x + actual_word.width >= Display_Width()) {
                 actual_word.y += GetFontHeight(actual_word.font);
+                DEBUG_PRINT("New line, Y = %d\n", actual_word.y);
                 SetActualNewLine(actual_word.line+1);
                 actual_word.x = 0;
             }
@@ -440,9 +449,7 @@ void ListenToFIFO(void) {
         fd = InitializeScreen(fd);
 
         size_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
-
-        //close(fd);
-
+        
         if (bytesRead > 0) {
             buffer[bytesRead] = '\0';
             PrepareScreen();
