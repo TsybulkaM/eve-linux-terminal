@@ -32,14 +32,14 @@ int GetCharWidth(uint16_t font_size, char ch) {
         case 'M': return baseWidth * 1.4;
         case 'W': return baseWidth * 1.5;
         case 'I': return baseWidth * 0.1;
-        case 'i': case 'l': case '!': case '|': case '.': case ',': case '\'': case '"':
+        case 'i': case 'l': case '!': case '\'': case '"':
             return baseWidth * 0.8;
         case 'f': case 't': case 'j': return baseWidth * 0.9;
         case 'b': case 'p': case 'v': case 'm': case 'w': return baseWidth * 1.2;
-        case ' ': return baseWidth;
+        case '0': return baseWidth * 1.2;
     }
     
-    if (ch >= 'A' && ch <= 'Z') return baseWidth * 1.2;
+    if (ch >= 'A' && ch <= 'Z') return baseWidth * 1.4;
     
     return baseWidth;
 }
@@ -58,30 +58,33 @@ int GetTextWidth(const char* text, int font) {
 }
 
 
-bool is_valid_utf8(const char *str) {
-    const uint8_t *bytes = (const uint8_t *)str;
-    while (*bytes) {
-        if ((*bytes & 0x80) == 0) {
-            // ASCII
-            bytes++;
-        } else if ((*bytes & 0xE0) == 0xC0) {
-            // 2-byte
-            if ((bytes[1] & 0xC0) != 0x80) return false;
-            bytes += 2;
-        } else if ((*bytes & 0xF0) == 0xE0) {
-            // 3-byte
-            if ((bytes[1] & 0xC0) != 0x80 || (bytes[2] & 0xC0) != 0x80) return false;
-            bytes += 3;
-        } else if ((*bytes & 0xF8) == 0xF0) {
-            // 4-byte
-            if ((bytes[1] & 0xC0) != 0x80 || (bytes[2] & 0xC0) != 0x80 || (bytes[3] & 0xC0) != 0x80) return false;
-            bytes += 4;
-        } else {
-            return false;
+bool is_valid_utf8(const char **ptr) {
+    const unsigned char *bytes = (const unsigned char *)*ptr;
+    if (bytes[0] <= 0x7F) {
+        // 1-byte character (ASCII)
+        return true;
+    } else if ((bytes[0] & 0xE0) == 0xC0) {
+        // 2-byte character
+        if ((bytes[1] & 0xC0) == 0x80) {
+            *ptr += 1;
+            return true;
+        }
+    } else if ((bytes[0] & 0xF0) == 0xE0) {
+        // 3-byte character
+        if ((bytes[1] & 0xC0) == 0x80 && (bytes[2] & 0xC0) == 0x80) {
+            *ptr += 2;
+            return true;
+        }
+    } else if ((bytes[0] & 0xF8) == 0xF0) {
+        // 4-byte character
+        if ((bytes[1] & 0xC0) == 0x80 && (bytes[2] & 0xC0) == 0x80 && (bytes[3] & 0xC0) == 0x80) {
+            *ptr += 3;
+            return true;
         }
     }
-    return true;
+    return false;
 }
+
 
 bool colors_are_equal(Color a, Color b) {
     return a.r == b.r && a.g == b.g && a.b == b.b;
@@ -116,7 +119,7 @@ void AddActualTextStatic(void) {
     }
 
     if (mutex_newline) {
-        ClearLine();
+        ClearPlaceForActual();
         mutex_newline = false;
     }
 
@@ -251,11 +254,14 @@ void ClearLineBeforeX(void) {
 void ClearPlaceForActual(void) {
     int j = 0;
     for (int i = 0; i < staticTextCount; i++) {
-        if (staticTexts[i].line != actual_word.line || 
-            !(staticTexts[i].x <= actual_word.x && staticTexts[i].x + staticTexts[i].width >= actual_word.x + actual_word.width)) {
-            staticTexts[j++] = staticTexts[i];
-        } else {
+        if (
+            (staticTexts[i].line == actual_word.line) &&
+            ((staticTexts[i].x <= actual_word.x && staticTexts[i].x + staticTexts[i].width >= actual_word.x) ||
+            (staticTexts[i].x >= actual_word.x && staticTexts[i].x <= actual_word.x + actual_word.width)))
+        {
             DEBUG_PRINT("Cleared Place X=%d: %s\n", actual_word.x, staticTexts[i].text);
+        } else {
+            staticTexts[j++] = staticTexts[i];
         }
     }
     staticTextCount = j;

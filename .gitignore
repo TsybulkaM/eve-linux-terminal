@@ -33,6 +33,7 @@
 
 # Build directory
 build
+build-aarch64
 
 # Build artifacts
 eveld_*

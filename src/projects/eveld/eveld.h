@@ -57,7 +57,7 @@ typedef struct {
 #define COLOR_FMT "%d, %d, %d"
 #define COLOR_ARGS(c) (c).r, (c).g, (c).b
 
-#define MAX_STATIC_TEXTS 100
+#define MAX_STATIC_TEXTS 150
 
 extern bool isEveInitialized;
 extern bool mutex_newline;
@@ -74,6 +74,7 @@ typedef struct {
 } StaticText;
 
 extern StaticText actual_word;
+extern StaticText saved_word;
 extern uint16_t actual_word_len;
 
 extern StaticText staticTexts[MAX_STATIC_TEXTS];
@@ -86,6 +87,7 @@ extern uint16_t saved_x, saved_y;
 
 int check_ftdi_device(void);
 
+// operations
 // eveld_ops.c
 int InitializeScreen(int fd);
 int OpenPipe(void);
@@ -93,6 +95,7 @@ void handle_escape_sequence(const char **ptr);
 void parse_ansi(const char* buffer);
 void ListenToFIFO();
 
+// framebuffer operations
 // eveld_fb.c
 void PrepareScreen(void);
 void ClearScreen(void);
@@ -103,7 +106,7 @@ int GetCharWidth(uint16_t, char);
 int GetTextWidth(const char*, int);
 int GetFontHeight(int font);
 
-bool is_valid_utf8(const char *str);
+bool is_valid_utf8(const char **bytes);
 bool colors_are_equal(Color a, Color b);
 
 void SetActualNewLine(uint16_t line);
@@ -120,10 +123,12 @@ void ClearLineAfterX(void);
 void ClearLine(void);
 void ClearPlaceForActual(void);
 
+// memory management
 // eveld_mem.c
 uint32_t monitor_display_list_memory(void);
 void check_display_list_memory(void);
 
+// initial logo
 // logo.c
 void DrawLogoPNG(void);
 

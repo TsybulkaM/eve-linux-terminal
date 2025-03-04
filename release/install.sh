@@ -23,7 +23,7 @@ else
   echo "Given binary already exists."
 fi
 
-cp $EVE_BINARY /usr/local/bin
+cp -f $EVE_BINARY /usr/local/bin
 chmod +x /usr/local/bin/$EVE_BINARY
 
 # --- 1. Create systemd-service ---

@@ -33,6 +33,24 @@ int InitializeScreen(int fd) {
     return OpenPipe();
 }
 
+void _return_to_stand_buffer() {
+    memcpy(staticTexts, savedStaticTexts, sizeof(StaticText) * MAX_STATIC_TEXTS);
+    
+    staticTextCount = savedStaticTextCount;
+    actual_word.x = saved_word.x;
+    actual_word.y = saved_word.y;
+    actual_word.line = saved_word.line;
+
+    savedStaticTextCount = 0;
+    saved_word.x = 0;
+    saved_word.y = 0;
+    saved_word.line = 0;
+
+    PrepareScreen();
+    DrawStaticTexts();
+    DisplayFrame();
+}
+
 void handle_escape_sequence(const char **ptr) {
     if (**ptr == '(' && *(*ptr + 1) == 'B') {
         (*ptr) += 2;
@@ -64,20 +82,20 @@ void handle_escape_sequence(const char **ptr) {
 
         if (strcmp(seq, "?1049") == 0) {
             if (**ptr == 'h') {
-                memcpy(savedStaticTexts, staticTexts, sizeof(staticTexts));
+                memcpy(savedStaticTexts, staticTexts, sizeof(StaticText) * MAX_STATIC_TEXTS);
+
                 savedStaticTextCount = staticTextCount;
-                saved_x = actual_word.x;
-                saved_y = actual_word.y;
+                saved_word.x = actual_word.x;
+                saved_word.y = actual_word.y;
+                saved_word.line = actual_word.line;
+
                 actual_word.x = 0;
                 actual_word.y = 0;
                 actual_word.line = 0;
+
                 ResetScreen();               
             } else if (**ptr == 'l') {
-                memcpy(staticTexts, savedStaticTexts, sizeof(savedStaticTexts));
-                staticTextCount = savedStaticTextCount;
-                actual_word.x = saved_x;
-                actual_word.y = saved_y;
-                ResetScreen();
+                _return_to_stand_buffer();
             }
             (*ptr)++;
         } else if (strcmp(seq, "?1") == 0) { 
@@ -134,6 +152,7 @@ void handle_escape_sequence(const char **ptr) {
             AddActualTextStatic();
             actual_word.y = (seq[0] != '\0') ? atoi(seq)*GetFontHeight(actual_word.font) : 0;
             SetActualNewLine(atoi(seq));
+            actual_word.x = 0;
             DEBUG_PRINT("Move to line: %d, Y = %d\n", atoi(seq), actual_word.y);
             break;
         case 'A':
@@ -426,14 +445,13 @@ void parse_ansi(const char* buffer) {
             continue;
         }
 
-        if (is_valid_utf8(ptr)) {
+        if (is_valid_utf8(&ptr)) {
             AppendCharToActualWord(*ptr);
+            ptr++;
         } else {
             ERROR_PRINT("Invalid UTF-8 encoding %c\n", *ptr);
             return;
         }
-
-        ptr++;
     }
 
     AddActualTextStatic();
@@ -456,7 +474,11 @@ void ListenToFIFO(void) {
             parse_ansi(buffer);
         } else if (bytesRead == 0) {
             INFO_PRINT("FIFO closed, reopening...\n");
-            sleep(1);
+
+            if (staticTextCount > 0) {
+                //_return_to_stand_buffer();
+            }
+            //sleep(1);
         } else if (bytesRead == -1) {
             INFO_PRINT("FIFO error, reopening...\n");
             sleep(1);

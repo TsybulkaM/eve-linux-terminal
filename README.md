@@ -62,7 +62,7 @@ TERM=linux stty cols 57 rows 15; df -h | cat -v > /tmp/eve_pipe
 ```
 Disks usage
 
-### Clear Screen
+### Clear Screen 
 To clear the screen:
 ```bash
 clear | cat -v > /tmp/eve_pipe
@@ -73,13 +73,13 @@ clear | cat -v > /tmp/eve_pipe
 ### Realised 
 
 ```bash
-TERM=linux stty cols 57 rows 15; top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 55 rows 15; top | cat -v > /tmp/eve_pipe
 ```
 
 ### TODO 
 
 ```bash
-TERM=linux stty cols 53 rows 14; htop | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 55 rows 15; htop | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
