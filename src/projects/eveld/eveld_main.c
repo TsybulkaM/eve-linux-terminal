@@ -2,6 +2,7 @@
 
 bool isEveInitialized = false;
 bool mutex_newline = false;
+char breakdown_ansi[BD_ANSI_LEN] = {0}; 
 
 StaticText actual_word = {
     .x = 0,

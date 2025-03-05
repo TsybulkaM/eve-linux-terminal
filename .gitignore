@@ -37,3 +37,6 @@ build-aarch64
 
 # Build artifacts
 eveld_*
+
+# Log files
+*.log

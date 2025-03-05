@@ -35,6 +35,8 @@
 #define INFO_PRINT(fmt, ...) fprintf(stderr, "\x1B[32mINFO:\x1B[m " fmt , ##__VA_ARGS__)
 #define ERROR_PRINT(fmt, ...) fprintf(stderr, "\x1B[31mERROR:\x1B[m " fmt , ##__VA_ARGS__)
 
+#define LINE_FEED 0
+
 #define MAX_LINES 20
 #define MAX_LENGTH 512
 #define DEFAULT_FONT 16
@@ -47,6 +49,8 @@
 #define DEFAULT_COLOR_BG_R 0
 #define DEFAULT_COLOR_BG_G 0
 #define DEFAULT_COLOR_BG_B 0
+
+#define BD_ANSI_LEN 10
 
 typedef struct { 
     uint8_t r;
@@ -61,6 +65,7 @@ typedef struct {
 
 extern bool isEveInitialized;
 extern bool mutex_newline;
+extern char breakdown_ansi[BD_ANSI_LEN];
 
 typedef struct {
     uint16_t x;

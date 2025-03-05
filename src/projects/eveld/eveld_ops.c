@@ -52,6 +52,11 @@ void _return_to_stand_buffer() {
 }
 
 void handle_escape_sequence(const char **ptr) {
+    if (**ptr == '\0') {
+        snprintf(breakdown_ansi, BD_ANSI_LEN-1, "^[");
+        return;
+    }
+
     if (**ptr == '(' && *(*ptr + 1) == 'B') {
         (*ptr) += 2;
         TODO_PRINT("Set character set to ASCII\n");
@@ -66,8 +71,19 @@ void handle_escape_sequence(const char **ptr) {
         return;
     }
 
+    if (**ptr == '(') {
+        (*ptr)++;
+        snprintf(breakdown_ansi, BD_ANSI_LEN-1, "^[(");
+        return;
+    }
+    
     if (**ptr != '[') return;
     (*ptr)++;
+
+    if (**ptr == '\0') {
+        snprintf(breakdown_ansi, BD_ANSI_LEN-1, "^[[");
+        return;
+    }
 
     if (**ptr == '?') {
         char seq[32] = {0};
@@ -89,6 +105,7 @@ void handle_escape_sequence(const char **ptr) {
                 saved_word.y = actual_word.y;
                 saved_word.line = actual_word.line;
 
+                staticTextCount = 0;
                 actual_word.x = 0;
                 actual_word.y = 0;
                 actual_word.line = 0;
@@ -403,7 +420,11 @@ void handle_escape_sequence(const char **ptr) {
             break;
         }
         default:
-            ERROR_PRINT("Unknown ANSI sequence: ESC [ %s %c\n", seq, **ptr);
+            if ('a' <= **ptr && **ptr <= 'z') {
+                ERROR_PRINT("Unknown ANSI sequence: ESC [ %s\n", seq);
+            } else {
+                snprintf(breakdown_ansi, BD_ANSI_LEN-1, "^[[%s", seq);
+            }
             break;
     }
     (*ptr)++;
@@ -423,14 +444,13 @@ void parse_ansi(const char* buffer) {
             SetActualNewLine(0);
         }
 
-        if (*ptr == '\n' || actual_word.x + actual_word.width >= Display_Width()) {
+        if (*ptr == '\n'|| (actual_word.x + actual_word.width >= Display_Width() && LINE_FEED)) {
             AddActualTextStatic();
-            if (*ptr == '\n' || actual_word.x + actual_word.width >= Display_Width()) {
-                actual_word.y += GetFontHeight(actual_word.font);
-                DEBUG_PRINT("New line, Y = %d\n", actual_word.y);
-                SetActualNewLine(actual_word.line+1);
-                actual_word.x = 0;
-            }
+            
+            actual_word.y += GetFontHeight(actual_word.font);
+            DEBUG_PRINT("New line, Y = %d\n", actual_word.y);
+            SetActualNewLine(actual_word.line+1);
+            actual_word.x = 0;
 
             if (*ptr == '\n') {
                 ptr++;
@@ -439,7 +459,21 @@ void parse_ansi(const char* buffer) {
             continue;
         }
 
-        if (*ptr == '^' && *(ptr + 1) == '[') {
+        if ((*ptr == '^' && *(ptr + 1) == 'M')) {
+            AddActualTextStatic();
+            ptr += 2;
+            actual_word.x = 0;
+            continue;
+        }
+
+        if ((*ptr == '^' && *(ptr + 1) == '\0')) {
+            ptr++;
+            snprintf(breakdown_ansi, BD_ANSI_LEN-1, "^");
+            continue;
+        }
+
+
+        if ((*ptr == '^' && *(ptr + 1) == '[')) {
             ptr += 2;
             handle_escape_sequence(&ptr);
             continue;
@@ -466,10 +500,36 @@ void ListenToFIFO(void) {
     while (1) {
         fd = InitializeScreen(fd);
 
-        size_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
+        size_t bytesRead = read(fd, buffer, sizeof(buffer) - BD_ANSI_LEN -1);
         
         if (bytesRead > 0) {
             buffer[bytesRead] = '\0';
+
+            if (breakdown_ansi[0] != '\0') {
+                DEBUG_PRINT("Breakdown ANSI added to buffer: %s\n", breakdown_ansi);
+            
+                size_t ansi_len = strlen(breakdown_ansi);   // Длина ANSI-кода
+                size_t buf_len = strlen(buffer);             // Длина текущего buffer
+            
+                // Проверяем, влезет ли ANSI-код в buffer
+                if (ansi_len + buf_len < MAX_LENGTH - 1) {
+                    // Сдвигаем содержимое buffer вправо на длину breakdown_ansi
+                    memmove(buffer + ansi_len, buffer, buf_len + 1);  
+                    // Копируем breakdown_ansi в начало buffer
+                    memcpy(buffer, breakdown_ansi, ansi_len);
+                    
+                    // Завершаем строку нулевым символом в конце (для безопасности)
+                    buffer[ansi_len + buf_len] = '\0';
+                    
+                    INFO_PRINT("Final buffer after addition: %s\n", buffer);  // Для проверки
+                } else {
+                    DEBUG_PRINT("Not enough space to prepend breakdown_ansi!\n");
+                }
+            
+                // Очищаем breakdown_ansi
+                breakdown_ansi[0] = '\0';
+            }
+            
             PrepareScreen();
             parse_ansi(buffer);
         } else if (bytesRead == 0) {
@@ -478,7 +538,6 @@ void ListenToFIFO(void) {
             if (staticTextCount > 0) {
                 //_return_to_stand_buffer();
             }
-            //sleep(1);
         } else if (bytesRead == -1) {
             INFO_PRINT("FIFO error, reopening...\n");
             sleep(1);
