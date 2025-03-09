@@ -3,37 +3,36 @@
 
 #include "eve.h"
 #include "hw_api.h"
+#include <ctype.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <ctype.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #ifdef _MSC_VER
 #include <conio.h>
 #endif
-
 
 #define FIFO_PATH "/tmp/eve_pipe"
 
 #define DEBUG 1
 #if DEBUG
-    #define DEBUG_PRINT(fmt, ...) fprintf(stderr, "\x1B[35mDEBUG:\x1B[m " fmt , ##__VA_ARGS__)
+#define DEBUG_PRINT(fmt, ...) fprintf(stderr, "\x1B[35mDEBUG:\x1B[m " fmt, ##__VA_ARGS__)
 #else
-    #define DEBUG_PRINT(fmt, ...)
+#define DEBUG_PRINT(fmt, ...)
 #endif
 
 // need TODO ansi commands
 #define TODO 0
 #if TODO
-    #define TODO_PRINT(fmt, ...) fprintf(stderr, "\x1B[33mTODO:\x1B[m " fmt , ##__VA_ARGS__)
+#define TODO_PRINT(fmt, ...) fprintf(stderr, "\x1B[33mTODO:\x1B[m " fmt, ##__VA_ARGS__)
 #else
-    #define TODO_PRINT(fmt, ...)
+#define TODO_PRINT(fmt, ...)
 #endif
 
-#define INFO_PRINT(fmt, ...) fprintf(stderr, "\x1B[32mINFO:\x1B[m " fmt , ##__VA_ARGS__)
-#define ERROR_PRINT(fmt, ...) fprintf(stderr, "\x1B[31mERROR:\x1B[m " fmt , ##__VA_ARGS__)
+#define INFO_PRINT(fmt, ...) fprintf(stderr, "\x1B[32mINFO:\x1B[m " fmt, ##__VA_ARGS__)
+#define ERROR_PRINT(fmt, ...) fprintf(stderr, "\x1B[31mERROR:\x1B[m " fmt, ##__VA_ARGS__)
 
 #define LINE_FEED 0
 
@@ -52,10 +51,11 @@
 
 #define BD_ANSI_LEN 10
 
-typedef struct { 
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
+typedef struct
+{
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
 } Color;
 
 #define COLOR_FMT "%d, %d, %d"
@@ -67,15 +67,16 @@ extern bool isEveInitialized;
 extern bool mutex_newline;
 extern char breakdown_ansi[BD_ANSI_LEN];
 
-typedef struct {
-    uint16_t x;
-    uint16_t y;
-    uint16_t font;
-    Color text_color;
-    Color bg_color;
-    uint16_t line;
-    uint16_t width;
-    char text[MAX_LENGTH];
+typedef struct
+{
+  uint16_t x;
+  uint16_t y;
+  uint16_t font;
+  Color text_color;
+  Color bg_color;
+  uint16_t line;
+  uint16_t width;
+  char text[MAX_LENGTH];
 } StaticText;
 
 extern StaticText actual_word;
@@ -89,7 +90,6 @@ extern StaticText savedStaticTexts[MAX_STATIC_TEXTS];
 extern uint16_t savedStaticTextCount;
 extern uint16_t saved_x, saved_y;
 
-
 int check_ftdi_device(void);
 
 // operations
@@ -97,7 +97,7 @@ int check_ftdi_device(void);
 int InitializeScreen(int fd);
 int OpenPipe(void);
 void handle_escape_sequence(const char **ptr);
-void parse_ansi(const char* buffer);
+void parse_ansi(const char *buffer);
 void ListenToFIFO();
 
 // framebuffer operations
@@ -108,7 +108,7 @@ void DisplayFrame(void);
 void ResetScreen(void);
 
 int GetCharWidth(uint16_t, char);
-int GetTextWidth(const char*, int);
+int GetTextWidth(const char *, int);
 int GetFontHeight(int font);
 
 bool is_valid_utf8(const char **bytes);

@@ -528,62 +528,63 @@ unsigned char logo_png[] = {
     0x26, 0xF8, 0x22, 0x25, 0xF0, 0xFF, 0x00, 0xC0, 0x80, 0xEA, 0xF1, 0x9D, 0x0E, 0xD7, 0x20, 0x00,
     0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82, 0x00};
 
-void DrawLogoPNG(void) {
-    uint32_t Reference = 0;
+void DrawLogoPNG(void)
+{
+  uint32_t Reference = 0;
 
-    // Loading the Image
-    Send_CMD(CMD_LOADIMAGE); // Tell the CoProcessor to prepare for compressed data
-    Send_CMD(RAM_G);         // This is the address where decompressed data will go
-    Send_CMD(0);             // Send options 0 = RGB565 for a jpeg image
-    CoProWrCmdBuf(logo_png,
-                    sizeof(logo_png)); // write image to the coprocessor
-    Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
-                            // command.
+  // Loading the Image
+  Send_CMD(CMD_LOADIMAGE); // Tell the CoProcessor to prepare for compressed data
+  Send_CMD(RAM_G);         // This is the address where decompressed data will go
+  Send_CMD(0);             // Send options 0 = RGB565 for a jpeg image
+  CoProWrCmdBuf(logo_png,
+                sizeof(logo_png)); // write image to the coprocessor
+  Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
+                         // command.
 
-    int props_start_address = FifoWriteLocation; // the CMD_GETPROPS command will write the results
-                                                    // into the fifo buffer, so we have to keep track
-                                                    // what address we are currently at.
+  int props_start_address = FifoWriteLocation; // the CMD_GETPROPS command will write the results
+                                               // into the fifo buffer, so we have to keep track
+                                               // what address we are currently at.
 
-    Send_CMD(CMD_GETPROPS); // Tell the CoProcessor we would like to query the properties of the last
-                            // compressed image.
+  Send_CMD(CMD_GETPROPS); // Tell the CoProcessor we would like to query the properties of the last
+                          // compressed image.
 
-    // Because the command will write into the fifo buffer we will have to reserve space for the
-    // output of all output variables from the manual section 5.53 CMD_GETPROPS
-    Send_CMD(0); // +4 ptr
-    Send_CMD(0); // +8 width
-    Send_CMD(0); // +12 height
+  // Because the command will write into the fifo buffer we will have to reserve space for the
+  // output of all output variables from the manual section 5.53 CMD_GETPROPS
+  Send_CMD(0); // +4 ptr
+  Send_CMD(0); // +8 width
+  Send_CMD(0); // +12 height
 
-    UpdateFIFO();          // force run the GetProps command, so we can read back the results
-    Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
-                            // command.
+  UpdateFIFO();          // force run the GetProps command, so we can read back the results
+  Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
+                         // command.
 
-    uint32_t ptr = rd32(props_start_address + RAM_CMD + 4);     // Read back the ptr variable
-    uint32_t width = rd32(props_start_address + RAM_CMD + 8);   // Read back the width variable
-    uint32_t height = rd32(props_start_address + RAM_CMD + 12); // Read back the height variable
+  uint32_t ptr = rd32(props_start_address + RAM_CMD + 4);     // Read back the ptr variable
+  uint32_t width = rd32(props_start_address + RAM_CMD + 8);   // Read back the width variable
+  uint32_t height = rd32(props_start_address + RAM_CMD + 12); // Read back the height variable
 
-    // Now that the bitmap is loaded we can display it
+  // Now that the bitmap is loaded we can display it
 
-    Send_CMD(CMD_DLSTART);                // Start a new display list
-    Send_CMD(CLEAR_COLOR_RGB(0, 255, 0)); // Set the clear color to be white
-    Send_CMD(CLEAR(1, 1, 1));             // Clear the screen
+  Send_CMD(CMD_DLSTART);                // Start a new display list
+  Send_CMD(CLEAR_COLOR_RGB(0, 255, 0)); // Set the clear color to be white
+  Send_CMD(CLEAR(1, 1, 1));             // Clear the screen
 
-    Send_CMD(BITMAP_HANDLE(Reference)); // handle for this bitmap
-    Cmd_SetBitmap(
-        RAM_G, ARGB4, width, height); // Use the CoPro Command to fill in the bitmap parameters
+  Send_CMD(BITMAP_HANDLE(Reference)); // handle for this bitmap
+  Cmd_SetBitmap(
+      RAM_G, ARGB4, width, height); // Use the CoPro Command to fill in the bitmap parameters
 
-    // Place the bitmap in the center of the screen
-    int32_t left = (Display_Width() - width) / 2;
-    int32_t top = Display_VOffset() + (Display_Height() - height) / 2;
-    Send_CMD(VERTEXFORMAT(0)); // Setup VERTEX2F to take pixel coordinates
-    Send_CMD(BEGIN(BITMAPS));  // Begin bitmap placement
-    Send_CMD(VERTEX2F(left,
-                        top)); // Define the placement position of the previously defined holding area.
-    Send_CMD(END());         // end placing bitmaps
-    Send_CMD(DISPLAY());     // End display list
-    Send_CMD(CMD_SWAP);      // Activate this display list
+  // Place the bitmap in the center of the screen
+  int32_t left = (Display_Width() - width) / 2;
+  int32_t top = Display_VOffset() + (Display_Height() - height) / 2;
+  Send_CMD(VERTEXFORMAT(0)); // Setup VERTEX2F to take pixel coordinates
+  Send_CMD(BEGIN(BITMAPS));  // Begin bitmap placement
+  Send_CMD(VERTEX2F(left,
+                    top)); // Define the placement position of the previously defined holding area.
+  Send_CMD(END());         // end placing bitmaps
+  Send_CMD(DISPLAY());     // End display list
+  Send_CMD(CMD_SWAP);      // Activate this display list
 
-    UpdateFIFO();          // Trigger the CoProcessor to start processing commands out of the FIFO
-    Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
+  UpdateFIFO();          // Trigger the CoProcessor to start processing commands out of the FIFO
+  Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
 
-    sleep(2);
+  sleep(2);
 }

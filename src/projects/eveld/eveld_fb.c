@@ -60,6 +60,12 @@ int GetTextWidth(const char* text, int font) {
 
 bool is_valid_utf8(const char **ptr) {
     const unsigned char *bytes = (const unsigned char *)*ptr;
+
+    if (bytes[0] == 'M' && bytes[1] == '-' && bytes[2] == 'b') {
+        *ptr += 10;
+        return false;
+    }
+
     if (bytes[0] <= 0x7F) {
         // 1-byte character (ASCII)
         return true;
@@ -82,6 +88,8 @@ bool is_valid_utf8(const char **ptr) {
             return true;
         }
     }
+
+    *ptr += 1;
     return false;
 }
 
@@ -251,18 +259,97 @@ void ClearLineBeforeX(void) {
     staticTextCount = j;
 }
 
+/*
+>>>>><<<<
+123456789
+    00
+*/
+
 void ClearPlaceForActual(void) {
-    int j = 0;
+    StaticText newStaticTexts[MAX_STATIC_TEXTS]; // Временный массив
+    int newCount = 0;
+
     for (int i = 0; i < staticTextCount; i++) {
-        if (
-            (staticTexts[i].line == actual_word.line) &&
-            ((staticTexts[i].x <= actual_word.x && staticTexts[i].x + staticTexts[i].width >= actual_word.x) ||
-            (staticTexts[i].x >= actual_word.x && staticTexts[i].x <= actual_word.x + actual_word.width)))
-        {
-            DEBUG_PRINT("Cleared Place X=%d: %s\n", actual_word.x, staticTexts[i].text);
+        StaticText *word = &staticTexts[i];
+
+        if (word->line == actual_word.line &&
+            word->x <= actual_word.x + actual_word.width &&
+            word->x + word->width >= actual_word.x) {
+            
+            DEBUG_PRINT("CLEAN - Intersection found: [%d, %d] (%s) with [%d, %d] (%s)\n",
+                        word->x, word->x + word->width, word->text,
+                        actual_word.x, actual_word.x + actual_word.width, actual_word.text);
+
+            if (word->font == actual_word.font &&
+                colors_are_equal(word->text_color, actual_word.text_color) &&
+                colors_are_equal(word->bg_color, actual_word.bg_color)) {
+
+                // Найти индекс символа в тексте, который начинается в actual_word.x
+                int shift = 0;
+                int px = word->x;
+                while (px < actual_word.x && word->text[shift] != '\0') {
+                    px += GetCharWidth(word->font, word->text[shift]);
+                    shift++;
+                }
+
+                // Вставляем текст в нужное место
+                strncpy(word->text + shift, actual_word.text, MAX_LENGTH - shift - 1);
+                word->text[MAX_LENGTH - 1] = '\0'; // Защита от переполнения
+                word->width += actual_word.width;
+
+                DEBUG_PRINT("CLEAN - Text association: [%d, %d] -> (%s)\n",
+                            word->x, word->x + word->width, word->text);
+
+                newStaticTexts[newCount++] = *word;
+                continue;
+            }
+
+            // Разбиваем текст, если перекрытие внутри слова
+            /*int left_width = actual_word.x - word->x;
+            int right_start = actual_word.x + actual_word.width - word->x;
+
+            int left_chars = 0;
+            int px = word->x;
+            while (px < actual_word.x && word->text[left_chars] != '\0') {
+                px += GetCharWidth(word->font, word->text[left_chars]);
+                left_chars++;
+            }
+
+            if (left_width > 0 && left_chars > 0) {
+                StaticText left_part = *word;
+                left_part.width = left_width;
+                left_part.text[left_chars] = '\0'; // Обрезаем строку
+                newStaticTexts[newCount++] = left_part;
+
+                DEBUG_PRINT("CLEAN - The left fragment has been created: [%d, %d] -> (%s)\n",
+                            left_part.x, left_part.x + left_part.width, left_part.text);
+            }
+
+            if (right_start < word->width) {
+                StaticText right_part = *word;
+                right_part.x = actual_word.x + actual_word.width;
+                right_part.width = word->width - right_start;
+
+                int right_chars = left_chars; // Начинаем с позиции после удаленного текста
+                while (word->text[right_chars] != '\0' &&
+                       px < actual_word.x + actual_word.width) {
+                    px += GetCharWidth(word->font, word->text[right_chars]);
+                    right_chars++;
+                }
+
+                strcpy(right_part.text, word->text + right_chars);
+                newStaticTexts[newCount++] = right_part;
+
+                DEBUG_PRINT("CLEAN - The right fragment has been created: [%d, %d] -> (%s)\n",
+                            right_part.x, right_part.x + right_part.width, right_part.text);
+            }*/
+
         } else {
-            staticTexts[j++] = staticTexts[i];
+            newStaticTexts[newCount++] = *word;
         }
     }
-    staticTextCount = j;
+
+    // Копируем обновленный массив обратно
+    memcpy(staticTexts, newStaticTexts, newCount * sizeof(StaticText));
+    staticTextCount = newCount;
 }
