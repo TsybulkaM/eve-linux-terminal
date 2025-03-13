@@ -510,10 +510,9 @@ void parse_ansi(const char *buffer)
       AddActualTextStatic();
 
       actual_word.y += GetFontHeight(actual_word.font);
-      DEBUG_PRINT("New line, Y = %d\n", actual_word.y);
-      SetActualNewLine(actual_word.line + 1);
       actual_word.x = 0;
-
+      SetActualNewLine(actual_word.line + 1);
+      
       if (*ptr == '\n')
       {
         ptr++;
@@ -588,8 +587,6 @@ void ListenToFIFO(void)
           memcpy(buffer, breakdown_ansi, ansi_len);
 
           buffer[ansi_len + buf_len] = '\0';
-
-          INFO_PRINT("Final buffer after addition: %s\n", buffer);
         }
         else
         {

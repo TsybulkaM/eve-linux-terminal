@@ -127,6 +127,7 @@ void ClearLineBeforeX(void);
 void ClearLineAfterX(void);
 void ClearLine(void);
 void ClearPlaceForActual(void);
+void ClearPlaceForActualDev(void);
 
 // memory management
 // eveld_mem.c

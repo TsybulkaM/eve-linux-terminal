@@ -99,6 +99,7 @@ bool colors_are_equal(Color a, Color b) {
 }
 
 void SetActualNewLine(uint16_t line) {
+    DEBUG_PRINT("New line, y = %d x = %d\n", actual_word.y, actual_word.x);
     actual_word.line = line;
     mutex_newline = true;
 }
@@ -126,8 +127,11 @@ void AddActualTextStatic(void) {
         return;
     }
 
+    ClearPlaceForActual();
+
     if (mutex_newline) {
-        ClearPlaceForActual();
+        DEBUG_PRINT("Clear mutex is on!\n");
+        //ClearPlaceForActual();
         mutex_newline = false;
     }
 
@@ -235,6 +239,7 @@ void ClearLine(void) {
     staticTextCount = j;
 }
 
+
 void ClearLineAfterX(void) {
     int j = 0;
     for (int i = 0; i < staticTextCount; i++) {
@@ -259,97 +264,91 @@ void ClearLineBeforeX(void) {
     staticTextCount = j;
 }
 
-/*
->>>>><<<<
-123456789
-    00
-*/
 
 void ClearPlaceForActual(void) {
+    int j = 0;
+    for (int i = 0; i < staticTextCount; i++) {
+        if (staticTexts[i].line != actual_word.line || 
+            (staticTexts[i].x + staticTexts[i].width <= actual_word.x || 
+             staticTexts[i].x >= actual_word.x + actual_word.width)) {
+            staticTexts[j++] = staticTexts[i];  // Копируем только нужные элементы
+        } else {
+            DEBUG_PRINT("Cleared Place X=%d: %s\n", actual_word.x, staticTexts[i].text);
+        }
+    }
+    staticTextCount = j;
+}
+
+void ClearPlaceForActualDev(void) {
     StaticText newStaticTexts[MAX_STATIC_TEXTS]; // Временный массив
     int newCount = 0;
+    bool merged = false;
 
     for (int i = 0; i < staticTextCount; i++) {
         StaticText *word = &staticTexts[i];
 
         if (word->line == actual_word.line &&
-            word->x <= actual_word.x + actual_word.width &&
-            word->x + word->width >= actual_word.x) {
+            word->x < actual_word.x + actual_word.width &&
+            word->x + word->width > actual_word.x) {
             
             DEBUG_PRINT("CLEAN - Intersection found: [%d, %d] (%s) with [%d, %d] (%s)\n",
                         word->x, word->x + word->width, word->text,
                         actual_word.x, actual_word.x + actual_word.width, actual_word.text);
-
+            
             if (word->font == actual_word.font &&
                 colors_are_equal(word->text_color, actual_word.text_color) &&
                 colors_are_equal(word->bg_color, actual_word.bg_color)) {
-
-                // Найти индекс символа в тексте, который начинается в actual_word.x
-                int shift = 0;
-                int px = word->x;
+                
+                int shift = 0, px = word->x;
                 while (px < actual_word.x && word->text[shift] != '\0') {
                     px += GetCharWidth(word->font, word->text[shift]);
                     shift++;
                 }
 
-                // Вставляем текст в нужное место
                 strncpy(word->text + shift, actual_word.text, MAX_LENGTH - shift - 1);
-                word->text[MAX_LENGTH - 1] = '\0'; // Защита от переполнения
-                word->width += actual_word.width;
-
-                DEBUG_PRINT("CLEAN - Text association: [%d, %d] -> (%s)\n",
-                            word->x, word->x + word->width, word->text);
-
+                word->text[MAX_LENGTH - 1] = '\0';
+                word->width = (word->x + word->width > actual_word.x + actual_word.width) ?
+                              (word->x + word->width - word->x) : (actual_word.x + actual_word.width - word->x);
+                
+                DEBUG_PRINT("CLEAN - Merged text: [%d, %d] -> (%s)\n", word->x, word->x + word->width, word->text);
                 newStaticTexts[newCount++] = *word;
+                merged = true;
                 continue;
             }
-
-            // Разбиваем текст, если перекрытие внутри слова
-            /*int left_width = actual_word.x - word->x;
-            int right_start = actual_word.x + actual_word.width - word->x;
-
-            int left_chars = 0;
-            int px = word->x;
-            while (px < actual_word.x && word->text[left_chars] != '\0') {
-                px += GetCharWidth(word->font, word->text[left_chars]);
-                left_chars++;
-            }
-
-            if (left_width > 0 && left_chars > 0) {
+            
+            if (word->x < actual_word.x) {
                 StaticText left_part = *word;
-                left_part.width = left_width;
-                left_part.text[left_chars] = '\0'; // Обрезаем строку
+                left_part.width = actual_word.x - word->x;
+                int left_chars = 0, px = word->x;
+                while (px < actual_word.x && word->text[left_chars] != '\0') {
+                    px += GetCharWidth(word->font, word->text[left_chars]);
+                    left_chars++;
+                }
+                left_part.text[left_chars] = '\0';
                 newStaticTexts[newCount++] = left_part;
-
-                DEBUG_PRINT("CLEAN - The left fragment has been created: [%d, %d] -> (%s)\n",
-                            left_part.x, left_part.x + left_part.width, left_part.text);
             }
 
-            if (right_start < word->width) {
+            if (word->x + word->width > actual_word.x + actual_word.width) {
                 StaticText right_part = *word;
                 right_part.x = actual_word.x + actual_word.width;
-                right_part.width = word->width - right_start;
-
-                int right_chars = left_chars; // Начинаем с позиции после удаленного текста
-                while (word->text[right_chars] != '\0' &&
-                       px < actual_word.x + actual_word.width) {
+                right_part.width = (word->x + word->width) - right_part.x;
+                int right_chars = 0, px = word->x;
+                while (px < right_part.x && word->text[right_chars] != '\0') {
                     px += GetCharWidth(word->font, word->text[right_chars]);
                     right_chars++;
                 }
-
                 strcpy(right_part.text, word->text + right_chars);
                 newStaticTexts[newCount++] = right_part;
-
-                DEBUG_PRINT("CLEAN - The right fragment has been created: [%d, %d] -> (%s)\n",
-                            right_part.x, right_part.x + right_part.width, right_part.text);
-            }*/
-
+            }
         } else {
             newStaticTexts[newCount++] = *word;
         }
     }
 
-    // Копируем обновленный массив обратно
+    if (!merged) {
+        newStaticTexts[newCount++] = actual_word;
+    }
+
     memcpy(staticTexts, newStaticTexts, newCount * sizeof(StaticText));
     staticTextCount = newCount;
 }
