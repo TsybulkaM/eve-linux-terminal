@@ -1,5 +1,9 @@
 #include "eveld.h"
 
+#define max(a, b) ((a) > (b) ? (a) : (b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
+
 void PrepareScreen() {
     Send_CMD(CMD_DLSTART);
     Send_CMD(VERTEXFORMAT(0));
@@ -127,11 +131,8 @@ void AddActualTextStatic(void) {
         return;
     }
 
-    ClearPlaceForActual();
-
     if (mutex_newline) {
-        DEBUG_PRINT("Clear mutex is on!\n");
-        //ClearPlaceForActual();
+        //DEBUG_PRINT("Clear mutex is on!\n");
         mutex_newline = false;
     }
 
@@ -271,7 +272,7 @@ void ClearPlaceForActual(void) {
         if (staticTexts[i].line != actual_word.line || 
             (staticTexts[i].x + staticTexts[i].width <= actual_word.x || 
              staticTexts[i].x >= actual_word.x + actual_word.width)) {
-            staticTexts[j++] = staticTexts[i];  // Копируем только нужные элементы
+            staticTexts[j++] = staticTexts[i];
         } else {
             DEBUG_PRINT("Cleared Place X=%d: %s\n", actual_word.x, staticTexts[i].text);
         }
@@ -279,76 +280,191 @@ void ClearPlaceForActual(void) {
     staticTextCount = j;
 }
 
-void ClearPlaceForActualDev(void) {
-    StaticText newStaticTexts[MAX_STATIC_TEXTS]; // Временный массив
+
+int GetTextOffset(StaticText *word, int xPos) {
+    int offset = 0, px = word->x;
+    while (px < xPos && word->text[offset] != '\0') {
+        int charWidth = GetCharWidth(word->font, word->text[offset]);
+        if (px + charWidth > xPos) {
+            break;
+        }
+        px += charWidth;
+        offset++;
+    }
+    return offset;
+}
+
+StaticText CreateSubText(StaticText src, int newX, int newWidth) {
+    StaticText subText = src;
+    subText.x = newX;
+    subText.width = newWidth;
+    
+    int charOffset = GetTextOffset(&src, newX);
+    if (charOffset >= strlen(src.text)) {
+        subText.text[0] = '\0';
+        return subText;
+    }
+    
+    int px = newX;
+    int textLen = 0;
+    for (int i = charOffset; src.text[i] != '\0' && px < newX + newWidth; i++) {
+        int charWidth = GetCharWidth(src.font, src.text[i]);
+        if (px + charWidth > newX + newWidth) {
+            break;
+        }
+        subText.text[textLen++] = src.text[i];
+        px += charWidth;
+    }
+    subText.text[textLen] = '\0';
+    
+    if (textLen == 0) {
+        subText.text[0] = '\0';
+    }
+    return subText;
+}
+
+bool IsOnlySpaces(const char *text) {
+    for (int i = 0; text[i] != '\0'; i++) {
+        if (text[i] != ' ') {
+            return false;
+        }
+    }
+    return true;
+}
+
+void TrimTrailingSpaces(char *text) {
+    int len = strlen(text);
+    while (len > 0 && text[len - 1] == ' ') {
+        text[--len] = '\0';
+    }
+}
+
+void AddOrMergeActualTextStatic(void) {
+    if (actual_word_len <= 0) {
+        DEBUG_PRINT("Skipping empty text\n");
+        return;
+    }
+    actual_word.text[actual_word_len] = '\0';
+
+    if (IsOnlySpaces(actual_word.text)) {
+        DEBUG_PRINT("Text contains only spaces, moving x to %d\n", actual_word.x + actual_word.width);
+        actual_word.x += actual_word.width;
+        actual_word_len = 0;
+        actual_word.width = 0;
+        return;
+    }
+
+    if (actual_word.font > 32 || actual_word.font < 15) {
+        ERROR_PRINT("Error during add static text: invalid font size %d\n", actual_word.font);
+        return;
+    }
+
+    actual_word.y = max(0, actual_word.y);
+    actual_word.y = min(actual_word.y, Display_Height() - GetFontHeight(actual_word.font));
+    actual_word.x = max(0, actual_word.x);
+    actual_word.width = min(actual_word.width, Display_Width() - actual_word.x);
+
+    DEBUG_PRINT("Adding word: '%s' at [%d, %d] width: %d, font: %d\n", 
+        actual_word.text, actual_word.x, actual_word.y, actual_word.width, actual_word.font);
+
+    StaticText newStaticTexts[MAX_STATIC_TEXTS];
     int newCount = 0;
     bool merged = false;
+    StaticText *intersectingWords[MAX_STATIC_TEXTS];
+    int intersectCount = 0;
 
     for (int i = 0; i < staticTextCount; i++) {
         StaticText *word = &staticTexts[i];
 
-        if (word->line == actual_word.line &&
-            word->x < actual_word.x + actual_word.width &&
-            word->x + word->width > actual_word.x) {
-            
-            DEBUG_PRINT("CLEAN - Intersection found: [%d, %d] (%s) with [%d, %d] (%s)\n",
-                        word->x, word->x + word->width, word->text,
-                        actual_word.x, actual_word.x + actual_word.width, actual_word.text);
-            
-            if (word->font == actual_word.font &&
-                colors_are_equal(word->text_color, actual_word.text_color) &&
-                colors_are_equal(word->bg_color, actual_word.bg_color)) {
-                
-                int shift = 0, px = word->x;
-                while (px < actual_word.x && word->text[shift] != '\0') {
-                    px += GetCharWidth(word->font, word->text[shift]);
-                    shift++;
-                }
-
-                strncpy(word->text + shift, actual_word.text, MAX_LENGTH - shift - 1);
-                word->text[MAX_LENGTH - 1] = '\0';
-                word->width = (word->x + word->width > actual_word.x + actual_word.width) ?
-                              (word->x + word->width - word->x) : (actual_word.x + actual_word.width - word->x);
-                
-                DEBUG_PRINT("CLEAN - Merged text: [%d, %d] -> (%s)\n", word->x, word->x + word->width, word->text);
-                newStaticTexts[newCount++] = *word;
-                merged = true;
-                continue;
-            }
-            
-            if (word->x < actual_word.x) {
-                StaticText left_part = *word;
-                left_part.width = actual_word.x - word->x;
-                int left_chars = 0, px = word->x;
-                while (px < actual_word.x && word->text[left_chars] != '\0') {
-                    px += GetCharWidth(word->font, word->text[left_chars]);
-                    left_chars++;
-                }
-                left_part.text[left_chars] = '\0';
-                newStaticTexts[newCount++] = left_part;
-            }
-
-            if (word->x + word->width > actual_word.x + actual_word.width) {
-                StaticText right_part = *word;
-                right_part.x = actual_word.x + actual_word.width;
-                right_part.width = (word->x + word->width) - right_part.x;
-                int right_chars = 0, px = word->x;
-                while (px < right_part.x && word->text[right_chars] != '\0') {
-                    px += GetCharWidth(word->font, word->text[right_chars]);
-                    right_chars++;
-                }
-                strcpy(right_part.text, word->text + right_chars);
-                newStaticTexts[newCount++] = right_part;
-            }
-        } else {
+        if (word->line != actual_word.line || word->x + word->width < actual_word.x || word->x > actual_word.x + actual_word.width) {
             newStaticTexts[newCount++] = *word;
+        } else {
+            DEBUG_PRINT("Intersecting word: '%s' at [%d, %d] width: %d\n", word->text, word->x, word->y, word->width);
+            intersectingWords[intersectCount++] = word;
         }
     }
 
-    if (!merged) {
+    if (intersectCount == 0) {
+        DEBUG_PRINT("No intersections, adding new word: '%s'\n", actual_word.text);
         newStaticTexts[newCount++] = actual_word;
+    } else {
+        for (int i = 0; i < intersectCount; i++) {
+            StaticText *word = intersectingWords[i];
+
+            if (word->font == actual_word.font &&
+                colors_are_equal(word->text_color, actual_word.text_color) &&
+                colors_are_equal(word->bg_color, actual_word.bg_color)) {
+            
+                DEBUG_PRINT("Merging text '%s' with '%s'\n", word->text, actual_word.text);
+            
+                int char_width = GetCharWidth(word->font, ' ');
+                int actual_start = max(0, (actual_word.x - word->x) / char_width);
+                int actual_len = strlen(actual_word.text);
+            
+                if (actual_start + actual_len > MAX_LENGTH) {
+                    ERROR_PRINT("Text merge out of bounds\n");
+                    return;
+                }
+            
+                // Очищаем старый текст перед заменой (убираем артефакты)
+                memset(word->text + actual_start, ' ', actual_len);
+                memcpy(word->text + actual_start, actual_word.text, actual_len);
+                word->text[max(actual_start + actual_len, strlen(word->text))] = '\0';
+            
+                word->x = min(word->x, actual_word.x);
+                word->width = (strlen(word->text) * char_width); // Учитываем реальный размер текста
+            
+                DEBUG_PRINT("Merged result: '%s' at [%d, %d] width: %d\n", word->text, word->x, word->y, word->width);
+            
+                // Заменяем старое слово в списке
+                bool alreadyAdded = false;
+                for (int j = 0; j < newCount; j++) {
+                    if (strcmp(newStaticTexts[j].text, word->text) == 0) {
+                        alreadyAdded = true;
+                        break;
+                    }
+                }
+                if (!alreadyAdded) {
+                    newStaticTexts[newCount++] = *word;
+                }
+                
+                merged = true;
+            } else {
+                DEBUG_PRINT("Splitting word: '%s' at [%d, %d]\n", word->text, word->x, word->y);
+
+                StaticText leftPart = CreateSubText(*word, word->x, actual_word.x - word->x);
+                StaticText rightPart = CreateSubText(*word, actual_word.x + actual_word.width, (word->x + word->width) - (actual_word.x + actual_word.width));
+
+                if (leftPart.text[0] != '\0') {
+                    DEBUG_PRINT("Adding left part: '%s' at [%d, %d] width: %d\n", leftPart.text, leftPart.x, leftPart.y, leftPart.width);
+                    newStaticTexts[newCount++] = leftPart;
+                }
+
+                if (rightPart.text[0] != '\0') {
+                    DEBUG_PRINT("Adding right part: '%s' at [%d, %d] width: %d\n", rightPart.text, rightPart.x, rightPart.y, rightPart.width);
+                    newStaticTexts[newCount++] = rightPart;
+                }
+            }
+        }
+
+        if (!merged) {
+            DEBUG_PRINT("Adding new word: '%s' at [%d, %d] width: %d\n", actual_word.text, actual_word.x, actual_word.y, actual_word.width);
+            newStaticTexts[newCount++] = actual_word;
+        }
+    }
+
+    if (newCount > MAX_STATIC_TEXTS) {
+        ERROR_PRINT("Too many static texts! Possible memory corruption, clearing line\n");
+        ClearLine();
+        return;
     }
 
     memcpy(staticTexts, newStaticTexts, newCount * sizeof(StaticText));
     staticTextCount = newCount;
+
+    DEBUG_PRINT("Final staticTextCount: %d\n", staticTextCount);
+
+    actual_word.x += actual_word.width;
+    actual_word_len = 0;
+    actual_word.width = 0;
 }

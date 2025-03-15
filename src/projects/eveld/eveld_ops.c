@@ -197,7 +197,7 @@ void handle_escape_sequence(const char **ptr)
       sscanf(seq, "%d;%d", &row, &col);
     }
 
-    AddActualTextStatic();
+    AddOrMergeActualTextStatic();
 
     actual_word.y = (row > 0) ? row * GetFontHeight(actual_word.font) : 0;
     actual_word.x = (col > 0) ? col * GetCharWidth(actual_word.font, ' ') : 0;
@@ -211,46 +211,46 @@ void handle_escape_sequence(const char **ptr)
                 actual_word.y);
     break;
   case 'd':
-    AddActualTextStatic();
+    AddOrMergeActualTextStatic();
     actual_word.y = (seq[0] != '\0') ? atoi(seq) * GetFontHeight(actual_word.font) : 0;
     SetActualNewLine(atoi(seq));
     actual_word.x = 0;
     DEBUG_PRINT("Move to line: %d, Y = %d\n", atoi(seq), actual_word.y);
     break;
   case 'A':
-    AddActualTextStatic();
+    AddOrMergeActualTextStatic();
     actual_word.y -= (seq[0] != '\0') ? atoi(seq) * GetFontHeight(actual_word.font)
                                       : GetFontHeight(actual_word.font);
     SetActualNewLine(atoi(seq));
     DEBUG_PRINT("Move up %d lines, Y = %d\n", atoi(seq), actual_word.y);
     break;
   case 'B':
-    AddActualTextStatic();
+    AddOrMergeActualTextStatic();
     actual_word.y += (seq[0] != '\0') ? atoi(seq) * GetFontHeight(actual_word.font)
                                       : GetFontHeight(actual_word.font);
     SetActualNewLine(atoi(seq));
     DEBUG_PRINT("Move down %d lines, Y = %d\n", atoi(seq), actual_word.y);
     break;
   case 'C':
-    AddActualTextStatic();
+    AddOrMergeActualTextStatic();
     actual_word.x += (seq[0] != '\0') ? atoi(seq) * GetCharWidth(actual_word.font, ' ')
                                       : GetCharWidth(actual_word.font, ' ');
     DEBUG_PRINT("Move right %d spaces, X = %d\n", atoi(seq), actual_word.x);
     break;
   case 'D':
-    AddActualTextStatic();
+    AddOrMergeActualTextStatic();
     actual_word.x -= (seq[0] != '\0') ? atoi(seq) * GetCharWidth(actual_word.font, ' ')
                                       : GetCharWidth(actual_word.font, ' ');
     DEBUG_PRINT("Move left %d spaces, X = %d\n", atoi(seq), actual_word.x);
     break;
   case 'P':
-    AddActualTextStatic();
+    AddOrMergeActualTextStatic();
     uint16_t count = (seq[0] != '\0') ? atoi(seq) : 0;
     DeleteChatH(count);
     DEBUG_PRINT("Delete %d characters\n", count);
     break;
   case 'G':
-    AddActualTextStatic();
+    AddOrMergeActualTextStatic();
     actual_word.x = (seq[0] != '\0') ? atoi(seq) * GetCharWidth(actual_word.font, ' ') : 0;
     DEBUG_PRINT("Move to column %d, X = %d\n", atoi(seq), actual_word.x);
     break;
@@ -466,7 +466,7 @@ void handle_escape_sequence(const char **ptr)
         !colors_are_equal(actual_word.bg_color, next_word.bg_color) ||
         actual_word.font != next_word.font)
     {
-      AddActualTextStatic();
+      AddOrMergeActualTextStatic();
     }
 
     actual_word.text_color = next_word.text_color;
@@ -507,7 +507,7 @@ void parse_ansi(const char *buffer)
 
     if (*ptr == '\n' || (actual_word.x + actual_word.width >= Display_Width() && LINE_FEED))
     {
-      AddActualTextStatic();
+      AddOrMergeActualTextStatic();
 
       actual_word.y += GetFontHeight(actual_word.font);
       actual_word.x = 0;
@@ -523,7 +523,7 @@ void parse_ansi(const char *buffer)
 
     if ((*ptr == '^' && *(ptr + 1) == 'M'))
     {
-      AddActualTextStatic();
+      AddOrMergeActualTextStatic();
       ptr += 2;
       actual_word.x = 0;
       continue;
@@ -554,7 +554,7 @@ void parse_ansi(const char *buffer)
     }
   }
 
-  AddActualTextStatic();
+  AddOrMergeActualTextStatic();
   DrawStaticTexts();
 }
 

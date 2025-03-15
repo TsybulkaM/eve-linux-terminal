@@ -61,7 +61,7 @@ typedef struct
 #define COLOR_FMT "%d, %d, %d"
 #define COLOR_ARGS(c) (c).r, (c).g, (c).b
 
-#define MAX_STATIC_TEXTS 150
+#define MAX_STATIC_TEXTS 200
 
 extern bool isEveInitialized;
 extern bool mutex_newline;
@@ -117,7 +117,7 @@ bool colors_are_equal(Color a, Color b);
 void SetActualNewLine(uint16_t line);
 
 void AppendCharToActualWord(char ch);
-void AddActualTextStatic(void);
+void AddOrMergeActualTextStatic(void);
 
 void DrawStaticTexts(void);
 
