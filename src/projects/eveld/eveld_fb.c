@@ -398,25 +398,30 @@ void AddOrMergeActualTextStatic(void) {
                 DEBUG_PRINT("Merging text '%s' with '%s'\n", word->text, actual_word.text);
             
                 int char_width = GetCharWidth(word->font, ' ');
-                int actual_start = max(0, (actual_word.x - word->x) / char_width);
-                int actual_len = strlen(actual_word.text);
+                // TODO: check if actual_word.x <= word->x + word->width
+                int actual_start = (int)((actual_word.x - word->x) / (double)char_width + 0.5);
+                int text_len = strlen(word->text);
+                int insert_len = strlen(actual_word.text);
             
-                if (actual_start + actual_len > MAX_LENGTH) {
+                if (actual_start + insert_len > MAX_LENGTH) {
                     ERROR_PRINT("Text merge out of bounds\n");
                     return;
                 }
             
-                // Очищаем старый текст перед заменой (убираем артефакты)
-                memset(word->text + actual_start, ' ', actual_len);
-                memcpy(word->text + actual_start, actual_word.text, actual_len);
-                word->text[max(actual_start + actual_len, strlen(word->text))] = '\0';
+                memmove(word->text + actual_start + insert_len, 
+                        word->text + actual_start, 
+                        text_len - actual_start + 1);
+            
+                memcpy(word->text + actual_start, actual_word.text, insert_len);
+            
+                word->text[MAX_LENGTH - 1] = '\0';
             
                 word->x = min(word->x, actual_word.x);
-                word->width = (strlen(word->text) * char_width); // Учитываем реальный размер текста
+                word->width = GetTextWidth(word->text, word->font);
             
-                DEBUG_PRINT("Merged result: '%s' at [%d, %d] width: %d\n", word->text, word->x, word->y, word->width);
+                DEBUG_PRINT("Merged result: '%s' at [%d, %d] width: %d\n", 
+                            word->text, word->x, word->y, word->width);
             
-                // Заменяем старое слово в списке
                 bool alreadyAdded = false;
                 for (int j = 0; j < newCount; j++) {
                     if (strcmp(newStaticTexts[j].text, word->text) == 0) {
@@ -425,9 +430,20 @@ void AddOrMergeActualTextStatic(void) {
                     }
                 }
                 if (!alreadyAdded) {
-                    newStaticTexts[newCount++] = *word;
+                    bool duplicate = false;
+                    for (int j = 0; j < newCount; j++) {
+                        if (strcmp(newStaticTexts[j].text, word->text) == 0 &&
+                            newStaticTexts[j].x == word->x &&
+                            newStaticTexts[j].y == word->y) {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+                    if (!duplicate) {
+                        newStaticTexts[newCount++] = *word;
+                    }
                 }
-                
+            
                 merged = true;
             } else {
                 DEBUG_PRINT("Splitting word: '%s' at [%d, %d]\n", word->text, word->x, word->y);
