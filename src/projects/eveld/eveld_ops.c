@@ -167,6 +167,28 @@ void handle_escape_sequence(const char **ptr)
       }
       (*ptr)++;
     }
+    else if (strcmp(seq, "?7") == 0)
+    {
+      if (**ptr == 'h')
+      {
+        TODO_PRINT("Enable line wrap\n");
+        //LINE_FEED = true;
+      }
+      else if (**ptr == 'l')
+      {
+        LINE_FEED = false;
+      }
+      (*ptr)++;
+
+    }
+    else if (strcmp(seq, "?1006;1000")) {
+      if (**ptr == 'h') {
+        TODO_PRINT("Enable mouse tracking\n");
+      } else if (**ptr == 'l') {
+        TODO_PRINT("Disable mouse tracking\n");
+      }
+      (*ptr)++;
+    }
     else
     {
       ERROR_PRINT("Unknown CSI ? sequence: %s\n", seq);
@@ -200,7 +222,7 @@ void handle_escape_sequence(const char **ptr)
     AddOrMergeActualTextStatic();
 
     actual_word.y = (row > 0) ? row * GetFontHeight(actual_word.font) : 0;
-    actual_word.x = (col > 0) ? col * GetCharWidth(actual_word.font, ' ') : 0;
+    actual_word.x = (col > 0) ? (col - 1) * GetCharWidth(actual_word.font, ' ') : 0;
 
     SetActualNewLine(actual_word.y / GetFontHeight(actual_word.font));
     DEBUG_PRINT("Sequence: %s, Move to row %d, column %d, X = %d, Y = %d\n",
@@ -209,6 +231,15 @@ void handle_escape_sequence(const char **ptr)
                 col,
                 actual_word.x,
                 actual_word.y);
+    break;
+  case 't':
+    TODO_PRINT("Window manipulation\n");
+    break;
+  case 'r':
+    TODO_PRINT("Set scrolling region\n");
+    break;
+  case 'l':
+    TODO_PRINT("Reset mode\n");
     break;
   case 'd':
     AddOrMergeActualTextStatic();
@@ -497,8 +528,9 @@ void parse_ansi(const char *buffer)
   while (*ptr)
   {
     // TODO: Scroll
-    if (actual_word.y + GetFontHeight(actual_word.font) >= Display_Height())
+    if (actual_word.y + GetFontHeight(actual_word.font) > Display_Height())
     {
+      DEBUG_PRINT("Scrolling screen\n");
       ResetScreen();
       actual_word.x = 0;
       actual_word.y = 0;
@@ -526,6 +558,16 @@ void parse_ansi(const char *buffer)
       AddOrMergeActualTextStatic();
       ptr += 2;
       actual_word.x = 0;
+      continue;
+    }
+
+    if ((*ptr == '^' && *(ptr + 1) == 'H'))
+    {
+      AddOrMergeActualTextStatic();
+      actual_word.x -= GetCharWidth(actual_word.font, ' ');
+      AppendCharToActualWord(' ');
+      AddOrMergeActualTextStatic();
+      ptr += 2;
       continue;
     }
 

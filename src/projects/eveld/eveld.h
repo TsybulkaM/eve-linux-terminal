@@ -34,7 +34,7 @@
 #define INFO_PRINT(fmt, ...) fprintf(stderr, "\x1B[32mINFO:\x1B[m " fmt, ##__VA_ARGS__)
 #define ERROR_PRINT(fmt, ...) fprintf(stderr, "\x1B[31mERROR:\x1B[m " fmt, ##__VA_ARGS__)
 
-#define LINE_FEED 0
+extern bool LINE_FEED;
 
 #define MAX_LINES 20
 #define MAX_LENGTH 512

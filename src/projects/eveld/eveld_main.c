@@ -1,5 +1,6 @@
 #include "eveld.h"
 
+bool LINE_FEED = false;
 bool isEveInitialized = false;
 bool mutex_newline = false;
 char breakdown_ansi[BD_ANSI_LEN] = {0}; 

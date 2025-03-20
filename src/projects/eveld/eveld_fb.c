@@ -131,11 +131,6 @@ void AddActualTextStatic(void) {
         return;
     }
 
-    if (mutex_newline) {
-        //DEBUG_PRINT("Clear mutex is on!\n");
-        mutex_newline = false;
-    }
-
     if (actual_word.font > 32 || actual_word.font < 15) {
         ERROR_PRINT("Error during add static text: invalid font size\n");
         return;
@@ -332,13 +327,6 @@ bool IsOnlySpaces(const char *text) {
     return true;
 }
 
-void TrimTrailingSpaces(char *text) {
-    int len = strlen(text);
-    while (len > 0 && text[len - 1] == ' ') {
-        text[--len] = '\0';
-    }
-}
-
 void AddOrMergeActualTextStatic(void) {
     if (actual_word_len <= 0) {
         DEBUG_PRINT("Skipping empty text\n");
@@ -364,7 +352,7 @@ void AddOrMergeActualTextStatic(void) {
     actual_word.x = max(0, actual_word.x);
     actual_word.width = min(actual_word.width, Display_Width() - actual_word.x);
 
-    DEBUG_PRINT("Adding word: '%s' at [%d, %d] width: %d, font: %d\n", 
+    DEBUG_PRINT("Actual word: '%s' at [%d, %d] width: %d, font: %d\n", 
         actual_word.text, actual_word.x, actual_word.y, actual_word.width, actual_word.font);
 
     StaticText newStaticTexts[MAX_STATIC_TEXTS];
@@ -398,52 +386,28 @@ void AddOrMergeActualTextStatic(void) {
                 DEBUG_PRINT("Merging text '%s' with '%s'\n", word->text, actual_word.text);
             
                 int char_width = GetCharWidth(word->font, ' ');
-                // TODO: check if actual_word.x <= word->x + word->width
-                int actual_start = (int)((actual_word.x - word->x) / (double)char_width + 0.5);
-                int text_len = strlen(word->text);
-                int insert_len = strlen(actual_word.text);
+                int actual_start = max(0, (actual_word.x - word->x) / char_width);
+                int actual_len = strlen(actual_word.text);
             
-                if (actual_start + insert_len > MAX_LENGTH) {
+                if (actual_start + actual_len > MAX_LENGTH) {
                     ERROR_PRINT("Text merge out of bounds\n");
                     return;
                 }
             
-                memmove(word->text + actual_start + insert_len, 
-                        word->text + actual_start, 
-                        text_len - actual_start + 1);
-            
-                memcpy(word->text + actual_start, actual_word.text, insert_len);
-            
-                word->text[MAX_LENGTH - 1] = '\0';
+                int max_copy_len = min(actual_len, MAX_LENGTH - actual_start - 1);
+                if (actual_start >= 0 && actual_start < MAX_LENGTH) {
+                    memset(word->text + actual_start, ' ', max_copy_len);
+                    memcpy(word->text + actual_start, actual_word.text, max_copy_len);
+                    word->text[min(actual_start + max_copy_len, MAX_LENGTH - 1)] = '\0';
+                }
             
                 word->x = min(word->x, actual_word.x);
-                word->width = GetTextWidth(word->text, word->font);
+                word->width = (strlen(word->text) * char_width);
             
-                DEBUG_PRINT("Merged result: '%s' at [%d, %d] width: %d\n", 
-                            word->text, word->x, word->y, word->width);
+                DEBUG_PRINT("Merged result: '%s' at [%d, %d] width: %d\n", word->text, word->x, word->y, word->width);
             
-                bool alreadyAdded = false;
-                for (int j = 0; j < newCount; j++) {
-                    if (strcmp(newStaticTexts[j].text, word->text) == 0) {
-                        alreadyAdded = true;
-                        break;
-                    }
-                }
-                if (!alreadyAdded) {
-                    bool duplicate = false;
-                    for (int j = 0; j < newCount; j++) {
-                        if (strcmp(newStaticTexts[j].text, word->text) == 0 &&
-                            newStaticTexts[j].x == word->x &&
-                            newStaticTexts[j].y == word->y) {
-                            duplicate = true;
-                            break;
-                        }
-                    }
-                    if (!duplicate) {
-                        newStaticTexts[newCount++] = *word;
-                    }
-                }
-            
+                newStaticTexts[newCount++] = *word;
+
                 merged = true;
             } else {
                 DEBUG_PRINT("Splitting word: '%s' at [%d, %d]\n", word->text, word->x, word->y);
