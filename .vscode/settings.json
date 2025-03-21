@@ -12,7 +12,8 @@
         "eveld.h": "c",
         "string.h": "c",
         "hw_api.h": "c",
-        "eve_export.h": "c"
+        "eve_export.h": "c",
+        "string_view": "c"
     },
     "editor.formatOnSave": true,
     "editor.formatOnType": true,

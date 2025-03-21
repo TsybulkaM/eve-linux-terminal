@@ -29,18 +29,119 @@ void ResetScreen(void) {
 }
 
 
+int GetCharWidthDev(uint16_t font_size, char ch) {
+    switch (ch) {
+        case 'a': return 8;
+        case 'b': return 9;
+        case 'c': return 8;
+        case 'd': return 9;
+        case 'e': return 8;
+        case 'f': return 6;
+        case 'g': return 9;
+        case 'h': return 9;
+        case 'i': return 4;
+        case 'j': return 5;
+        case 'k': return 9;
+        case 'l': return 4;
+        case 'm': return 14;
+        case 'n': return 9;
+        case 'o': return 9;
+        case 'p': return 9;
+        case 'q': return 9;
+        case 'r': return 6;
+        case 's': return 8;
+        case 't': return 6;
+        case 'u': return 9;
+        case 'v': return 8;
+        case 'w': return 12;
+        case 'x': return 8;
+        case 'y': return 8;
+        case 'z': return 8;
+        case 'A': return 12;
+        case 'B': return 11;
+        case 'C': return 11;
+        case 'D': return 11;
+        case 'E': return 10;
+        case 'F': return 9;
+        case 'G': return 12;
+        case 'H': return 12;
+        case 'I': return 5;
+        case 'J': return 7;
+        case 'K': return 11;
+        case 'L': return 9;
+        case 'M': return 14;
+        case 'N': return 12;
+        case 'O': return 12;
+        case 'P': return 11;
+        case 'Q': return 12;
+        case 'R': return 11;
+        case 'S': return 10;
+        case 'T': return 10;
+        case 'U': return 11;
+        case 'V': return 11;
+        case 'W': return 16;
+        case 'X': return 11;
+        case 'Y': return 11;
+        case 'Z': return 10;
+        case '0': return 9;
+        case '1': return 9;
+        case '2': return 9;
+        case '3': return 9;
+        case '4': return 9;
+        case '5': return 9;
+        case '6': return 9;
+        case '7': return 9;
+        case '8': return 9;
+        case '9': return 9;
+        case '!': return 5;
+        case '?': return 9;
+        case '.': return 5;
+        case ',': return 5;
+        case ':': return 5;
+        case ';': return 5;
+        case '(': return 6;
+        case ')': return 6;
+        case '[': return 6;
+        case ']': return 6;
+        case '{': return 6;
+        case '}': return 6;
+        case '<': return 9;
+        case '>': return 9;
+        case '+': return 9;
+        case '-': return 9;
+        case '*': return 9;
+        case '/': return 9;
+        case '\\': return 9;
+        case '|': return 9;
+        case '=': return 9;
+        case '&': return 9;
+        case '^': return 9;
+        case '%': return 9;
+        case '$': return 9;
+        case '#': return 9;
+        case '@': return 9;
+        case '~': return 9;
+        case '`': return 5;
+        case '\'': return 5;
+        case '"': return 7;
+        case ' ': return 5;
+        case '\n': return 0;
+        default: return 9;
+    }
+}
+
 int GetCharWidth(uint16_t font_size, char ch) {
     int baseWidth = font_size * 0.5;
     
     switch (ch) {
+        case 'I': return baseWidth * 0.1;
+        case 'e': return baseWidth * 0.7;
+        case 'i': case '!': case '\'': case '"': case ',': case '.':
+            return baseWidth * 0.8;
+        case 'f': case '[': case 't': case 'j': return baseWidth * 0.9;
+        case '|': case '0': case '%': case 'b': case 'p': case 'v': case 'm': case 'w': return baseWidth * 1.2;
         case 'M': return baseWidth * 1.4;
         case 'W': return baseWidth * 1.5;
-        case 'I': return baseWidth * 0.1;
-        case 'i': case 'l': case '!': case '\'': case '"':
-            return baseWidth * 0.8;
-        case 'f': case 't': case 'j': return baseWidth * 0.9;
-        case 'b': case 'p': case 'v': case 'm': case 'w': return baseWidth * 1.2;
-        case '0': return baseWidth * 1.2;
     }
     
     if (ch >= 'A' && ch <= 'Z') return baseWidth * 1.4;
@@ -376,8 +477,9 @@ void AddOrMergeActualTextStatic(void) {
         DEBUG_PRINT("No intersections, adding new word: '%s'\n", actual_word.text);
         newStaticTexts[newCount++] = actual_word;
     } else {
+        StaticText *word;
         for (int i = 0; i < intersectCount; i++) {
-            StaticText *word = intersectingWords[i];
+            word = intersectingWords[i];
 
             if (word->font == actual_word.font &&
                 colors_are_equal(word->text_color, actual_word.text_color) &&
@@ -385,29 +487,54 @@ void AddOrMergeActualTextStatic(void) {
             
                 DEBUG_PRINT("Merging text '%s' with '%s'\n", word->text, actual_word.text);
             
-                int char_width = GetCharWidth(word->font, ' ');
-                int actual_start = max(0, (actual_word.x - word->x) / char_width);
-                int actual_len = strlen(actual_word.text);
+                uint8_t actual_index_start = 0;
+                uint16_t current_x = word->x;
+                uint8_t word_length = strlen(word->text);
+
+                if (word->x + word->width == actual_word.x) {
+                    actual_index_start = word_length;
+                    current_x = word->x + word->width;
+                } else {
+                    for (int i = 0; i < word_length; i++) {
+                        if (current_x >= actual_word.x) {
+                            break;
+                        }
+                        DEBUG_PRINT("Char '%c' at %d\n", word->text[i], current_x);
+                        current_x += GetCharWidth(word->font, word->text[i]);
+                        actual_index_start++;
+                    }
+                }
             
-                if (actual_start + actual_len > MAX_LENGTH) {
+                DEBUG_PRINT("Calculated actual_index_start: %d\n", actual_index_start);
+            
+                if (actual_index_start + actual_word_len > MAX_LENGTH) {
                     ERROR_PRINT("Text merge out of bounds\n");
                     return;
                 }
             
-                int max_copy_len = min(actual_len, MAX_LENGTH - actual_start - 1);
-                if (actual_start >= 0 && actual_start < MAX_LENGTH) {
-                    memset(word->text + actual_start, ' ', max_copy_len);
-                    memcpy(word->text + actual_start, actual_word.text, max_copy_len);
-                    word->text[min(actual_start + max_copy_len, MAX_LENGTH - 1)] = '\0';
+                if (actual_index_start >= 0 && actual_index_start < MAX_LENGTH) {
+                    DEBUG_PRINT("actual_index_start: %d\n", actual_index_start);
+                
+                    int max_copy_len = min(actual_word_len, MAX_LENGTH - actual_index_start);
+                
+                    for (int i = 0; i < max_copy_len; i++) {
+                        word->text[actual_index_start + i] = actual_word.text[i];
+                    }
+                
+                    int new_length = max(word_length, actual_index_start + max_copy_len);
+                
+                    if (new_length < MAX_LENGTH) {
+                        word->text[new_length] = '\0';
+                    } else {
+                        word->text[MAX_LENGTH - 1] = '\0';
+                    }
                 }
             
                 word->x = min(word->x, actual_word.x);
-                word->width = (strlen(word->text) * char_width);
+                word->width = GetTextWidth(word->text, word->font);
             
                 DEBUG_PRINT("Merged result: '%s' at [%d, %d] width: %d\n", word->text, word->x, word->y, word->width);
             
-                newStaticTexts[newCount++] = *word;
-
                 merged = true;
             } else {
                 DEBUG_PRINT("Splitting word: '%s' at [%d, %d]\n", word->text, word->x, word->y);
@@ -427,7 +554,9 @@ void AddOrMergeActualTextStatic(void) {
             }
         }
 
-        if (!merged) {
+        if (merged) {
+            newStaticTexts[newCount++] = *word;
+        } else {
             DEBUG_PRINT("Adding new word: '%s' at [%d, %d] width: %d\n", actual_word.text, actual_word.x, actual_word.y, actual_word.width);
             newStaticTexts[newCount++] = actual_word;
         }
@@ -441,8 +570,6 @@ void AddOrMergeActualTextStatic(void) {
 
     memcpy(staticTexts, newStaticTexts, newCount * sizeof(StaticText));
     staticTextCount = newCount;
-
-    DEBUG_PRINT("Final staticTextCount: %d\n", staticTextCount);
 
     actual_word.x += actual_word.width;
     actual_word_len = 0;

@@ -73,13 +73,15 @@ clear | cat -v > /tmp/eve_pipe
 ### Realised 
 
 ```bash
-TERM=linux stty cols 54 rows 16; top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 54 rows 17; top | cat -v > /tmp/eve_pipe
 ```
 
 ### TODO 
 
 ```bash
 TERM=linux stty cols 54 rows 16; htop | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 54 rows 16; cbonsai | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 54 rows 16; asciiquarium | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
