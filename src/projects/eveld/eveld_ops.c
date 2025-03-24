@@ -40,21 +40,47 @@ int InitializeScreen(int fd)
 
 void _return_to_stand_buffer()
 {
-  memcpy(staticTexts, savedStaticTexts, sizeof(StaticText) * MAX_STATIC_TEXTS);
+  if (mutex_second_buffer) {
+    mutex_second_buffer = false;
+    memcpy(staticTexts, savedStaticTexts, sizeof(StaticText) * MAX_STATIC_TEXTS);
 
-  staticTextCount = savedStaticTextCount;
-  actual_word.x = saved_word.x;
-  actual_word.y = saved_word.y;
-  actual_word.line = saved_word.line;
+    staticTextCount = savedStaticTextCount;
+    actual_word.x = saved_word.x;
+    actual_word.y = saved_word.y;
+    actual_word.line = saved_word.line;
 
-  savedStaticTextCount = 0;
-  saved_word.x = 0;
-  saved_word.y = 0;
-  saved_word.line = 0;
+    savedStaticTextCount = 0;
+    saved_word.x = 0;
+    saved_word.y = 0;
+    saved_word.line = 0;
 
-  PrepareScreen();
-  DrawStaticTexts();
-  DisplayFrame();
+    PrepareScreen();
+    DrawStaticTexts();
+    DisplayFrame();
+  }
+}
+
+void _save_to_second_buffer()
+{
+  if (mutex_second_buffer)
+  {
+    ERROR_PRINT("Second buffer already in use\n");
+    return;
+  }
+  mutex_second_buffer = true;
+  memcpy(savedStaticTexts, staticTexts, sizeof(StaticText) * MAX_STATIC_TEXTS);
+
+  savedStaticTextCount = staticTextCount;
+  saved_word.x = actual_word.x;
+  saved_word.y = actual_word.y;
+  saved_word.line = actual_word.line;
+
+  staticTextCount = 0;
+  actual_word.x = 0;
+  actual_word.y = 0;
+  actual_word.line = 0;
+
+  ResetScreen();
 }
 
 void handle_escape_sequence(const char **ptr)
@@ -119,19 +145,7 @@ void handle_escape_sequence(const char **ptr)
     {
       if (**ptr == 'h')
       {
-        memcpy(savedStaticTexts, staticTexts, sizeof(StaticText) * MAX_STATIC_TEXTS);
-
-        savedStaticTextCount = staticTextCount;
-        saved_word.x = actual_word.x;
-        saved_word.y = actual_word.y;
-        saved_word.line = actual_word.line;
-
-        staticTextCount = 0;
-        actual_word.x = 0;
-        actual_word.y = 0;
-        actual_word.line = 0;
-
-        ResetScreen();
+        _save_to_second_buffer();
       }
       else if (**ptr == 'l')
       {
@@ -484,7 +498,6 @@ void handle_escape_sequence(const char **ptr)
       }
       token = strtok(NULL, ";");
     }
-
     if (reverse)
     {
       Color tmp_color = next_word.text_color;
@@ -509,13 +522,17 @@ void handle_escape_sequence(const char **ptr)
     if ('a' <= **ptr && **ptr <= 'z')
     {
       ERROR_PRINT("Unknown ANSI sequence: ESC [ %s\n", seq);
+      return;
     }
-    else
+    else if (**ptr == '\0')
     {
       snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^[[%s", seq);
+      DEBUG_PRINT("Adding to breakdown_ansi: %s\n", breakdown_ansi);
+      //return;
     }
     break;
   }
+
   (*ptr)++;
 }
 
@@ -553,28 +570,25 @@ void parse_ansi(const char *buffer)
       continue;
     }
 
+    if ((*ptr == '^' && *(ptr + 1) == '\0'))
+    {
+      ptr++;
+      snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^");
+      continue;
+    }
+
     if ((*ptr == '^' && *(ptr + 1) == 'M'))
     {
       AddOrMergeActualTextStatic();
       ptr += 2;
       actual_word.x = 0;
-      continue;
+      continue; 
     }
 
     if ((*ptr == '^' && *(ptr + 1) == 'H'))
     {
-      AddOrMergeActualTextStatic();
-      actual_word.x -= GetCharWidth(actual_word.font, ' ');
-      AppendCharToActualWord(' ');
-      AddOrMergeActualTextStatic();
+      DeleteCharH();
       ptr += 2;
-      continue;
-    }
-
-    if ((*ptr == '^' && *(ptr + 1) == '\0'))
-    {
-      ptr++;
-      snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^");
       continue;
     }
 
@@ -629,10 +643,8 @@ void ListenToFIFO(void)
           memcpy(buffer, breakdown_ansi, ansi_len);
 
           buffer[ansi_len + buf_len] = '\0';
-        }
-        else
-        {
-          DEBUG_PRINT("Not enough space to prepend breakdown_ansi!\n");
+        } else {
+          INFO_PRINT("Not enough space to prepend breakdown_ansi!\n");
         }
 
         breakdown_ansi[0] = '\0';
@@ -645,9 +657,9 @@ void ListenToFIFO(void)
     {
       INFO_PRINT("FIFO closed, reopening...\n");
 
-      if (staticTextCount > 0)
+      if (mutex_second_buffer)
       {
-        //_return_to_stand_buffer();
+        _return_to_stand_buffer();
       }
     }
     else if (bytesRead == -1)

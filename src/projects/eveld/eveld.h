@@ -16,7 +16,7 @@
 
 #define FIFO_PATH "/tmp/eve_pipe"
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #define DEBUG_PRINT(fmt, ...) fprintf(stderr, "\x1B[35mDEBUG:\x1B[m " fmt, ##__VA_ARGS__)
 #else
@@ -64,7 +64,7 @@ typedef struct
 #define MAX_STATIC_TEXTS 200
 
 extern bool isEveInitialized;
-extern bool mutex_newline;
+extern bool mutex_second_buffer;
 extern char breakdown_ansi[BD_ANSI_LEN];
 
 typedef struct
@@ -117,6 +117,7 @@ bool colors_are_equal(Color a, Color b);
 void SetActualNewLine(uint16_t line);
 
 void AppendCharToActualWord(char ch);
+void DeleteCharH(void);
 void AddOrMergeActualTextStatic(void);
 
 void DrawStaticTexts(void);

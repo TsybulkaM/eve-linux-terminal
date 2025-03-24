@@ -139,7 +139,7 @@ int GetCharWidth(uint16_t font_size, char ch) {
         case 'i': case '!': case '\'': case '"': case ',': case '.':
             return baseWidth * 0.8;
         case 'f': case '[': case 't': case 'j': return baseWidth * 0.9;
-        case '|': case '0': case '%': case 'b': case 'p': case 'v': case 'm': case 'w': return baseWidth * 1.2;
+        case '|': case ':': case '0': case '%': case 'b': case 'p': case 'v': case 'm': case 'w': return baseWidth * 1.2;
         case 'M': return baseWidth * 1.4;
         case 'W': return baseWidth * 1.5;
     }
@@ -201,77 +201,40 @@ bool is_valid_utf8(const char **ptr) {
 
 bool colors_are_equal(Color a, Color b) {
     return a.r == b.r && a.g == b.g && a.b == b.b;
-}
+} 
+
 
 void SetActualNewLine(uint16_t line) {
     DEBUG_PRINT("New line, y = %d x = %d\n", actual_word.y, actual_word.x);
     actual_word.line = line;
-    mutex_newline = true;
 }
-
 
 void AppendCharToActualWord(char ch) {
     if (actual_word_len < MAX_LENGTH - 1) {
-        actual_word.text[actual_word_len] = ch;
-        actual_word_len++;
-        actual_word.text[actual_word_len] = '\0';
+        //DEBUG_PRINT("Append char: %c\n", ch);
+        
+        actual_word.text[actual_word_len++] = ch;
         actual_word.width += GetCharWidth(actual_word.font, ch);
+        actual_word.text[actual_word_len] = '\0';
     } else {
         ERROR_PRINT("Error during append char: maximum length reached\n");
     }
 }
 
-void AddActualTextStatic(void) {
-    if (actual_word_len <= 0) {
-        return;
+void DeleteCharH(void) {
+    if (actual_word_len > 0) {
+        uint8_t last_char_width = GetCharWidth(actual_word.font, actual_word.text[actual_word_len - 1]);
+        actual_word.width -= last_char_width;
+        actual_word.x -= last_char_width;
+        actual_word_len--;
+    } else {
+        StaticText last = staticTexts[staticTextCount - 1];
+        uint8_t last_len = strlen(last.text);
+        uint8_t last_char_width = GetCharWidth(last.font, last.text[last_len - 1]);
+        staticTexts[staticTextCount - 1].width = last_char_width;
+        staticTexts[staticTextCount - 1].text[last_len] = '\0';
     }
-
-    if (staticTextCount >= MAX_STATIC_TEXTS) {
-        DEBUG_PRINT("Maximum number of static texts reached\n");
-        ClearLine();
-        return;
-    }
-
-    if (actual_word.font > 32 || actual_word.font < 15) {
-        ERROR_PRINT("Error during add static text: invalid font size\n");
-        return;
-    }
-
-    if (actual_word.y < 0) {
-        DEBUG_PRINT("Y position is too low, setting to 0\n");
-        actual_word.y = 0;
-    }
-
-    if (actual_word.y + GetFontHeight(actual_word.font) >= Display_Height()) {
-        actual_word.y = Display_Height() - GetFontHeight(actual_word.font);
-        DEBUG_PRINT("Y position is too high, setting to %d\n", actual_word.y);
-    }
-
-    if (actual_word.x < 0) {
-        actual_word.x = 0;
-    }
-
-    if (actual_word.x + actual_word.width >= Display_Width()) {
-        actual_word.x = Display_Width() - actual_word.width;
-    }
-
-    DEBUG_PRINT("Adding word: '%s' with width %d fg color " COLOR_FMT " and bg color " COLOR_FMT " at %d, %d position\n", 
-        actual_word.text, 
-        actual_word.width,
-        COLOR_ARGS(actual_word.text_color),
-        COLOR_ARGS(actual_word.bg_color),
-        actual_word.x, actual_word.y
-    );
-
-    actual_word.text[actual_word_len] = '\0';
-
-    staticTexts[staticTextCount++] = actual_word;
-
-    actual_word.x += actual_word.width;
-    actual_word_len = 0;
-    actual_word.width = 0;
 }
-
 
 void DrawStaticTexts(void) {
     for (int i = 0; i < staticTextCount; i++) {
@@ -321,8 +284,7 @@ void DeleteChatH(uint16_t count) {
             staticTexts[i].x -= count*GetCharWidth(staticTexts[i].font, ' ');
         }
     }
-} 
-
+}
 
 void ClearLine(void) {
     int j = 0;
@@ -335,7 +297,6 @@ void ClearLine(void) {
     }
     staticTextCount = j;
 }
-
 
 void ClearLineAfterX(void) {
     int j = 0;
@@ -360,7 +321,6 @@ void ClearLineBeforeX(void) {
     }
     staticTextCount = j;
 }
-
 
 void ClearPlaceForActual(void) {
     int j = 0;
@@ -433,6 +393,7 @@ void AddOrMergeActualTextStatic(void) {
         DEBUG_PRINT("Skipping empty text\n");
         return;
     }
+
     actual_word.text[actual_word_len] = '\0';
 
     if (IsOnlySpaces(actual_word.text)) {
