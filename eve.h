@@ -475,7 +475,12 @@ extern "C"
                              const char *str);
   void EVE_EXPORT
   Cmd_Text(uint16_t x, uint16_t y, uint16_t font, uint16_t options, const char *str);
-
+  void EVE_EXPORT Cmd_Text_Codepoints(uint16_t x,
+                                           uint16_t y,
+                                           uint16_t font,
+                                           uint16_t options,
+                                           const uint16_t *codepoints,
+                                           uint16_t count);
   void EVE_EXPORT Cmd_SetBitmap(uint32_t addr, uint16_t fmt, uint16_t width, uint16_t height);
   void EVE_EXPORT Cmd_Memcpy(uint32_t dest, uint32_t src, uint32_t num);
   void EVE_EXPORT Cmd_GetPtr(void);

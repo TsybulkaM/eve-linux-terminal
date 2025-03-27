@@ -16,7 +16,7 @@
 
 #define FIFO_PATH "/tmp/eve_pipe"
 
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #define DEBUG_PRINT(fmt, ...) fprintf(stderr, "\x1B[35mDEBUG:\x1B[m " fmt, ##__VA_ARGS__)
 #else

@@ -1248,6 +1248,66 @@ void Cmd_Text(uint16_t x, uint16_t y, uint16_t font, uint16_t options, const cha
   free(data);
 }
 
+void Cmd_Text_Codepoints(uint16_t x, uint16_t y, uint16_t font, uint16_t options, const uint16_t* codepoints, uint16_t count)
+{
+    if (!count)
+        return;
+
+    // Выделяем память для преобразованных символов (каждый символ может занимать до 4 байт в UTF-8)
+    uint8_t* utf8_buffer = (uint8_t*)malloc(count * 4);
+    uint16_t utf8_length = 0;
+
+    // Конвертируем коды символов в UTF-8
+    for (uint16_t i = 0; i < count; i++) {
+        uint16_t cp = codepoints[i];
+        
+        if (cp <= 0x7F) {
+            // 1 байт для ASCII
+            utf8_buffer[utf8_length++] = (uint8_t)cp;
+        }
+        else if (cp <= 0x7FF) {
+            // 2 байта для кириллицы и т.д.
+            utf8_buffer[utf8_length++] = 0xC0 | (cp >> 6);
+            utf8_buffer[utf8_length++] = 0x80 | (cp & 0x3F);
+        }
+        else if (cp <= 0xFFFF) {
+            // 3 байта для остальных символов BMP
+            utf8_buffer[utf8_length++] = 0xE0 | (cp >> 12);
+            utf8_buffer[utf8_length++] = 0x80 | ((cp >> 6) & 0x3F);
+            utf8_buffer[utf8_length++] = 0x80 | (cp & 0x3F);
+        }
+    }
+
+    // Оригинальная логика отправки (адаптированная под буфер)
+    uint32_t* data = (uint32_t*)calloc((utf8_length / 4) + 1, sizeof(uint32_t));
+    uint16_t StrPtr = 0;
+
+    for (uint16_t DataPtr = 0; DataPtr < (utf8_length / 4); ++DataPtr, StrPtr += 4) {
+        data[DataPtr] = (uint32_t)utf8_buffer[StrPtr + 3] << 24 | 
+                       (uint32_t)utf8_buffer[StrPtr + 2] << 16 |
+                       (uint32_t)utf8_buffer[StrPtr + 1] << 8 | 
+                       (uint32_t)utf8_buffer[StrPtr];
+    }
+
+    // Остаток
+    for (uint16_t LoopCount = 0; LoopCount < (utf8_length % 4); ++LoopCount, ++StrPtr) {
+        data[utf8_length / 4] |= (uint32_t)utf8_buffer[StrPtr] << (LoopCount * 8);
+    }
+
+    // Отправка команды
+    Send_CMD(CMD_TEXT);
+    Send_CMD(((uint32_t)y << 16) | x);
+    Send_CMD(((uint32_t)options << 16) | font);
+
+    // Отправка данных
+    for (uint16_t LoopCount = 0; LoopCount <= utf8_length / 4; LoopCount++) {
+        Send_CMD(data[LoopCount]);
+    }
+
+    free(data);
+    free(utf8_buffer);
+}
+
 // ******************** Miscellaneous Operation Coprocessor Command Functions
 // ******************************
 void Cmd_SetFont2(uint32_t handle, uint32_t addr, uint32_t firstChar)

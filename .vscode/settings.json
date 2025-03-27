@@ -13,7 +13,14 @@
         "string.h": "c",
         "hw_api.h": "c",
         "eve_export.h": "c",
-        "string_view": "c"
+        "string_view": "c",
+        "monospace821bt_64_astc.glyph.h": "c",
+        "monospace821bt_64_astc.xfont.h": "c",
+        "jetbrainsmono-italic-variablefont_wght_28_astc.glyph.h": "c",
+        "jetbrainsmono-italic-variablefont_wght_28_astc.xfont.h": "c",
+        "jetbrainsmono-italic-variablefont_16_astc.glyph.h": "c",
+        "jetbrainsmono-italic-variablefont_16_astc.xfont.h": "c",
+        "jetbrainsmono-italic-variablefont_wght_16_astc.glyph.h": "c"
     },
     "editor.formatOnSave": true,
     "editor.formatOnType": true,

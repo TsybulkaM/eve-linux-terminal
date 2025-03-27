@@ -33,6 +33,8 @@ StaticText staticTexts[MAX_STATIC_TEXTS];
 StaticText savedStaticTexts[MAX_STATIC_TEXTS];
 
 int main() {
+    DEBUG_PRINT("Привет\n");
+
     if (access(FIFO_PATH, F_OK) == -1) {
         if (mkfifo(FIFO_PATH, 0666) == -1) {
             perror("Error creating FIFO");
