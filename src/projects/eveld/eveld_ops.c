@@ -1,11 +1,13 @@
 #include "eveld.h"
+#include "Ubuntu_16.glyph.h"
+#include "Ubuntu_16.xfont.h"
 
 int OpenPipe(void)
 {
   int fd = open(FIFO_PATH, O_RDONLY);
   if (fd == -1)
   {
-    perror("Error opening FIFO");
+    ERROR_PRINT("Error opening FIFO");
     sleep(1);
   }
 
@@ -29,10 +31,21 @@ int InitializeScreen(int fd)
       ERROR_PRINT("EVE initialization failed\n");
       return -1;
     }
+
     isEveInitialized = true;
     INFO_PRINT("Monitor connected! Initializing EVE...\n");
+
     DrawLogoPNG();
     ResetScreen();
+
+    // Load custom font
+    StartCoProTransfer(RAM_G, 0);
+    HAL_SPI_WriteBuffer((uint8_t *)&Ubuntu_Italic_16_ASTC_xfont, Ubuntu_Italic_16_ASTC_xfont_len);
+    HAL_SPI_Disable();
+
+    StartCoProTransfer(RAM_G + 4096, 0);
+    HAL_SPI_WriteBuffer((uint8_t *)&Ubuntu_Italic_16_ASTC_glyph, Ubuntu_Italic_16_ASTC_glyph_len);
+    HAL_SPI_Disable();
   }
 
   return OpenPipe();

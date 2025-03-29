@@ -66,7 +66,7 @@ sudo bash uninstall.sh
 ### Realised 
 
 ```bash
-TERM=linux stty cols 54 rows 17; top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 56 rows 12; top | cat -v > /tmp/eve_pipe
 ```
 
 ### Known Issues
@@ -74,7 +74,7 @@ TERM=linux stty cols 54 rows 17; top | cat -v > /tmp/eve_pipe
 The following commands execute but may not work as expected:
 
 ```bash
-TERM=linux stty cols 54 rows 16; htop | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 50 rows 11; htop | cat -v > /tmp/eve_pipe
 ```
 
 ### Clear Screen 
@@ -118,16 +118,16 @@ Cowsay ASCII-art
 #### System commands 
 
 ```bash
-TERM=linux stty cols 57 rows 15; df -h | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 57 rows 12; df -h | cat -v > /tmp/eve_pipe
 ```
 Disks usage
 
 ## Planned Features
 
 ```bash
-TERM=linux stty cols 54 rows 15; sl | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 54 rows 12; sl | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
-TERM=linux stty cols 54 rows 15; cmatrix | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 54 rows 12; cmatrix | cat -v > /tmp/eve_pipe
 ```

@@ -1248,37 +1248,58 @@ void Cmd_Text(uint16_t x, uint16_t y, uint16_t font, uint16_t options, const cha
   free(data);
 }
 
-void Cmd_Text_Codepoints(uint16_t x, uint16_t y, uint16_t font, uint16_t options, const uint16_t* codepoints, uint16_t count)
+void Cmd_Text_Codepoints(uint16_t x, uint16_t y, uint16_t font, uint16_t options, const char* utf8_str)
 {
-    if (!count)
-        return;
+  size_t count = 0;
+  size_t arr_size = 16;
+  uint16_t* unicode_array = malloc(arr_size * sizeof(uint16_t));
+  
+  while (*utf8_str) {
+      uint32_t code_point = 0;
+      uint8_t first_byte = (uint8_t)*utf8_str++;
+      
+      if ((first_byte & 0x80) == 0) {
+          // 1-байтовый символ (ASCII)
+          code_point = first_byte;
+      } else if ((first_byte & 0xE0) == 0xC0) {
+          // 2-байтовый символ
+          code_point = (first_byte & 0x1F) << 6;
+          code_point |= (*utf8_str++ & 0x3F);
+      } else if ((first_byte & 0xF0) == 0xE0) {
+          // 3-байтовый символ
+          code_point = (first_byte & 0x0F) << 12;
+          code_point |= (*utf8_str++ & 0x3F) << 6;
+          code_point |= (*utf8_str++ & 0x3F);
+      }
 
-    // Выделяем память для преобразованных символов (каждый символ может занимать до 4 байт в UTF-8)
+      if (count >= arr_size) {
+          arr_size *= 2;
+          unicode_array = realloc(unicode_array, arr_size * sizeof(uint16_t));
+      }
+      
+      unicode_array[count++] = (uint16_t)code_point;
+  }
+
     uint8_t* utf8_buffer = (uint8_t*)malloc(count * 4);
     uint16_t utf8_length = 0;
 
-    // Конвертируем коды символов в UTF-8
     for (uint16_t i = 0; i < count; i++) {
-        uint16_t cp = codepoints[i];
+        uint16_t cp = unicode_array[i];
         
         if (cp <= 0x7F) {
-            // 1 байт для ASCII
             utf8_buffer[utf8_length++] = (uint8_t)cp;
         }
         else if (cp <= 0x7FF) {
-            // 2 байта для кириллицы и т.д.
             utf8_buffer[utf8_length++] = 0xC0 | (cp >> 6);
             utf8_buffer[utf8_length++] = 0x80 | (cp & 0x3F);
         }
         else if (cp <= 0xFFFF) {
-            // 3 байта для остальных символов BMP
             utf8_buffer[utf8_length++] = 0xE0 | (cp >> 12);
             utf8_buffer[utf8_length++] = 0x80 | ((cp >> 6) & 0x3F);
             utf8_buffer[utf8_length++] = 0x80 | (cp & 0x3F);
         }
     }
 
-    // Оригинальная логика отправки (адаптированная под буфер)
     uint32_t* data = (uint32_t*)calloc((utf8_length / 4) + 1, sizeof(uint32_t));
     uint16_t StrPtr = 0;
 
@@ -1289,23 +1310,21 @@ void Cmd_Text_Codepoints(uint16_t x, uint16_t y, uint16_t font, uint16_t options
                        (uint32_t)utf8_buffer[StrPtr];
     }
 
-    // Остаток
     for (uint16_t LoopCount = 0; LoopCount < (utf8_length % 4); ++LoopCount, ++StrPtr) {
         data[utf8_length / 4] |= (uint32_t)utf8_buffer[StrPtr] << (LoopCount * 8);
     }
 
-    // Отправка команды
     Send_CMD(CMD_TEXT);
     Send_CMD(((uint32_t)y << 16) | x);
     Send_CMD(((uint32_t)options << 16) | font);
 
-    // Отправка данных
     for (uint16_t LoopCount = 0; LoopCount <= utf8_length / 4; LoopCount++) {
         Send_CMD(data[LoopCount]);
     }
 
     free(data);
     free(utf8_buffer);
+    free(unicode_array);
 }
 
 // ******************** Miscellaneous Operation Coprocessor Command Functions

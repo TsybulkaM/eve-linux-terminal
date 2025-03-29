@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <locale.h>
 #ifdef _MSC_VER
 #include <conio.h>
 #endif
@@ -38,7 +39,7 @@ extern bool LINE_FEED;
 
 #define MAX_LINES 20
 #define MAX_LENGTH 512
-#define DEFAULT_FONT 16
+#define DEFAULT_FONT 20
 #define DEFAULT_OPTION 0
 
 #define DEFAULT_COLOR_R 255

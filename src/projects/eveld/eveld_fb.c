@@ -9,6 +9,7 @@ void PrepareScreen() {
     Send_CMD(VERTEXFORMAT(0));
     Send_CMD(CLEAR_COLOR_RGB(0, 0, 0));
     Send_CMD(CLEAR(1, 1, 1));
+    Cmd_SetFont2(1, RAM_G, 0);
 }
 
 void DisplayFrame() {
@@ -150,7 +151,8 @@ int GetCharWidth(uint16_t font_size, char ch) {
 }
 
 int GetFontHeight(int font) {
-    return font;
+    //return font;
+    return 22;
 }
 
 int GetTextWidth(const char* text, int font) {
@@ -211,7 +213,7 @@ void SetActualNewLine(uint16_t line) {
 
 void AppendCharToActualWord(char ch) {
     if (actual_word_len < MAX_LENGTH - 1) {
-        //DEBUG_PRINT("Append char: %c\n", ch);
+        DEBUG_PRINT("Append char: %c\n", ch);
         
         actual_word.text[actual_word_len++] = ch;
         actual_word.width += GetCharWidth(actual_word.font, ch);
@@ -228,9 +230,9 @@ void DeleteCharH(void) {
         actual_word.x -= last_char_width;
         actual_word_len--;
     } else {
-        StaticText last = staticTexts[staticTextCount - 1];
-        uint8_t last_len = strlen(last.text);
-        uint8_t last_char_width = GetCharWidth(last.font, last.text[last_len - 1]);
+        StaticText* last = &staticTexts[staticTextCount - 1];
+        uint8_t last_len = strlen(last->text);
+        uint8_t last_char_width = GetCharWidth(last->font, last->text[last_len - 1]);
         staticTexts[staticTextCount - 1].width = last_char_width;
         staticTexts[staticTextCount - 1].text[last_len] = '\0';
     }
@@ -255,7 +257,7 @@ void DrawStaticTexts(void) {
             ));
             Send_CMD(VERTEX2F(
                 staticTexts[i].x + GetTextWidth(staticTexts[i].text, staticTexts[i].font) - 5, 
-                staticTexts[i].y + GetFontHeight(staticTexts[i].font) - 10
+                staticTexts[i].y + GetFontHeight(staticTexts[i].font) -  (int)(0.3 * staticTexts[i].font)
             ));
             Send_CMD(END());
         }
@@ -266,9 +268,9 @@ void DrawStaticTexts(void) {
             staticTexts[i].text_color.b
         ));
         
-        Cmd_Text(
+        Cmd_Text_Codepoints(
             staticTexts[i].x, staticTexts[i].y, 
-            staticTexts[i].font, DEFAULT_OPTION, 
+            1, DEFAULT_OPTION, 
             staticTexts[i].text
         );
     }
