@@ -30,123 +30,27 @@ void ResetScreen(void) {
 }
 
 
-int GetCharWidthDev(uint16_t font_size, char ch) {
-    switch (ch) {
-        case 'a': return 8;
-        case 'b': return 9;
-        case 'c': return 8;
-        case 'd': return 9;
-        case 'e': return 8;
-        case 'f': return 6;
-        case 'g': return 9;
-        case 'h': return 9;
-        case 'i': return 4;
-        case 'j': return 5;
-        case 'k': return 9;
-        case 'l': return 4;
-        case 'm': return 14;
-        case 'n': return 9;
-        case 'o': return 9;
-        case 'p': return 9;
-        case 'q': return 9;
-        case 'r': return 6;
-        case 's': return 8;
-        case 't': return 6;
-        case 'u': return 9;
-        case 'v': return 8;
-        case 'w': return 12;
-        case 'x': return 8;
-        case 'y': return 8;
-        case 'z': return 8;
-        case 'A': return 12;
-        case 'B': return 11;
-        case 'C': return 11;
-        case 'D': return 11;
-        case 'E': return 10;
-        case 'F': return 9;
-        case 'G': return 12;
-        case 'H': return 12;
-        case 'I': return 5;
-        case 'J': return 7;
-        case 'K': return 11;
-        case 'L': return 9;
-        case 'M': return 14;
-        case 'N': return 12;
-        case 'O': return 12;
-        case 'P': return 11;
-        case 'Q': return 12;
-        case 'R': return 11;
-        case 'S': return 10;
-        case 'T': return 10;
-        case 'U': return 11;
-        case 'V': return 11;
-        case 'W': return 16;
-        case 'X': return 11;
-        case 'Y': return 11;
-        case 'Z': return 10;
-        case '0': return 9;
-        case '1': return 9;
-        case '2': return 9;
-        case '3': return 9;
-        case '4': return 9;
-        case '5': return 9;
-        case '6': return 9;
-        case '7': return 9;
-        case '8': return 9;
-        case '9': return 9;
-        case '!': return 5;
-        case '?': return 9;
-        case '.': return 5;
-        case ',': return 5;
-        case ':': return 5;
-        case ';': return 5;
-        case '(': return 6;
-        case ')': return 6;
-        case '[': return 6;
-        case ']': return 6;
-        case '{': return 6;
-        case '}': return 6;
-        case '<': return 9;
-        case '>': return 9;
-        case '+': return 9;
-        case '-': return 9;
-        case '*': return 9;
-        case '/': return 9;
-        case '\\': return 9;
-        case '|': return 9;
-        case '=': return 9;
-        case '&': return 9;
-        case '^': return 9;
-        case '%': return 9;
-        case '$': return 9;
-        case '#': return 9;
-        case '@': return 9;
-        case '~': return 9;
-        case '`': return 5;
-        case '\'': return 5;
-        case '"': return 7;
-        case ' ': return 5;
-        case '\n': return 0;
-        default: return 9;
-    }
-}
-
-int GetCharWidth(uint16_t font_size, char ch) {
+int GetCharWidth(uint16_t font_size, wchar_t ch) {
     int baseWidth = font_size * 0.5;
-    
+
     switch (ch) {
-        case 'I': return baseWidth * 0.1;
-        case 'e': return baseWidth * 0.7;
-        case 'i': case '!': case '\'': case '"': case ',': case '.':
+        case L'I': return baseWidth * 0.1;
+        case L',': return baseWidth * 0.2;
+        case L'e': return baseWidth * 0.7;
+        case L'i': case L'!': case L'\'': case L'"': case L'.':
             return baseWidth * 0.8;
-        case 'f': case '[': case 't': case 'j': return baseWidth * 0.9;
-        case '|': case ':': case '0': case '%': case 'b': case 'p': case 'v': case 'm': case 'w': return baseWidth * 1.2;
-        case 'M': return baseWidth * 1.4;
-        case 'W': return baseWidth * 1.5;
+        case L'f': case L'[': case L't': case L'j': return baseWidth * 0.9;
+        case L'|': case L':': case L'0': case L'%': case L'b': case L'p': case L'v': case L'm': case L'w': return baseWidth * 1.2;
+        case L'M': return baseWidth * 1.4;
+        case L'W': return baseWidth * 1.5;
     }
-    
-    if (ch >= 'A' && ch <= 'Z') return baseWidth * 1.4;
-    
+
+    if (ch >= L'A' && ch <= L'Z') return baseWidth * 1.4;
+
+    if ((ch >= L'А' && ch <= L'Я') || (ch >= L'а' && ch <= L'я')) {
+        return baseWidth * 0.05;
+    }
+
     return baseWidth;
 }
 
@@ -165,39 +69,39 @@ int GetTextWidth(const char* text, int font) {
 }
 
 
-bool is_valid_utf8(const char **ptr) {
+int is_valid_utf8(const char **ptr) {
     const unsigned char *bytes = (const unsigned char *)*ptr;
 
     if (bytes[0] == 'M' && bytes[1] == '-' && bytes[2] == 'b') {
         *ptr += 10;
-        return false;
+        return 0;
     }
 
     if (bytes[0] <= 0x7F) {
         // 1-byte character (ASCII)
-        return true;
+        return 1;
     } else if ((bytes[0] & 0xE0) == 0xC0) {
         // 2-byte character
         if ((bytes[1] & 0xC0) == 0x80) {
             *ptr += 1;
-            return true;
+            return 2;
         }
     } else if ((bytes[0] & 0xF0) == 0xE0) {
         // 3-byte character
         if ((bytes[1] & 0xC0) == 0x80 && (bytes[2] & 0xC0) == 0x80) {
             *ptr += 2;
-            return true;
+            return 3;
         }
     } else if ((bytes[0] & 0xF8) == 0xF0) {
         // 4-byte character
         if ((bytes[1] & 0xC0) == 0x80 && (bytes[2] & 0xC0) == 0x80 && (bytes[3] & 0xC0) == 0x80) {
             *ptr += 3;
-            return true;
+            return 4;
         }
     }
 
     *ptr += 1;
-    return false;
+    return 0;
 }
 
 
@@ -211,12 +115,18 @@ void SetActualNewLine(uint16_t line) {
     actual_word.line = line;
 }
 
-void AppendCharToActualWord(char ch) {
-    if (actual_word_len < MAX_LENGTH - 1) {
-        DEBUG_PRINT("Append char: %c\n", ch);
-        
-        actual_word.text[actual_word_len++] = ch;
-        actual_word.width += GetCharWidth(actual_word.font, ch);
+void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes) {
+    if (actual_word_len + num_bytes < MAX_LENGTH) {
+        DEBUG_PRINT("Append UTF8 bytes (count: %zu): %.*s\n",
+                    num_bytes, (int)num_bytes, bytes_to_append);
+
+        for (size_t i = 0; i < num_bytes; i++) {
+            DEBUG_PRINT("%02X\n", (unsigned char)bytes_to_append[i]);
+        }
+
+        memcpy(&actual_word.text[actual_word_len], bytes_to_append, num_bytes);
+        actual_word.width += GetCharWidth(actual_word.font, bytes_to_append[0]);
+        actual_word_len += num_bytes;
         actual_word.text[actual_word_len] = '\0';
     } else {
         ERROR_PRINT("Error during append char: maximum length reached\n");

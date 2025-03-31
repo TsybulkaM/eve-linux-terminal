@@ -118,7 +118,7 @@ Cowsay ASCII-art
 #### System commands 
 
 ```bash
-TERM=linux stty cols 57 rows 12; df -h | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 54 rows 12; df -h | cat -v > /tmp/eve_pipe
 ```
 Disks usage
 

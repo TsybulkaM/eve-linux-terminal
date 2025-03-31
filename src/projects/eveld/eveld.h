@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <locale.h>
+#include <wchar.h>
 #ifdef _MSC_VER
 #include <conio.h>
 #endif
@@ -108,16 +109,16 @@ void ClearScreen(void);
 void DisplayFrame(void);
 void ResetScreen(void);
 
-int GetCharWidth(uint16_t, char);
+int GetCharWidth(uint16_t, wchar_t);
 int GetTextWidth(const char *, int);
 int GetFontHeight(int font);
 
-bool is_valid_utf8(const char **bytes);
+int is_valid_utf8(const char **bytes);
 bool colors_are_equal(Color a, Color b);
 
 void SetActualNewLine(uint16_t line);
 
-void AppendCharToActualWord(char ch);
+void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes);
 void DeleteCharH(void);
 void AddOrMergeActualTextStatic(void);
 

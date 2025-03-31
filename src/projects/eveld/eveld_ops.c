@@ -549,13 +549,54 @@ void handle_escape_sequence(const char **ptr)
   (*ptr)++;
 }
 
-void parse_ansi(const char *buffer)
+void parse_meta_natation(char *buffer)
 {
-  const char *ptr = buffer;
+    char *ptr = buffer;
+    char *write_ptr = buffer;
+
+    while (*ptr != '\0')
+    {
+        size_t consumed_len = 0;
+
+        if (*ptr == 'M' && *(ptr + 1) == '-') {
+            if (*(ptr + 2) == '^') { // M-^X → X & 0x1F + 128
+                *write_ptr = (*(ptr + 3) & 0x1F) + 128;
+                consumed_len = 4;
+            } else { // M-X → X + 128
+                *write_ptr = *(ptr + 2) + 128;
+                consumed_len = 3;
+            }
+        } else {
+            *write_ptr = *ptr;
+            consumed_len = 1;
+        }
+
+        ptr += consumed_len;
+        write_ptr++;
+    }
+
+    *write_ptr = '\0';
+}
+
+size_t utf8_char_length(unsigned char first_byte) {
+  if ((first_byte & 0x80) == 0) return 1;  // 1 байт (ASCII)
+  if ((first_byte & 0xE0) == 0xC0) return 2;  // 2 байта
+  if ((first_byte & 0xF0) == 0xE0) return 3;  // 3 байта
+  if ((first_byte & 0xF8) == 0xF0) return 4;  // 4 байта
+  return 1;  // Неизвестный символ (лучше просто пропустить)
+}
+
+
+
+void parse_ansi(const char *buffer)
+{  
+  parse_meta_natation(buffer);
 
   DEBUG_PRINT("Parsing ANSI: '%s'\n", buffer);
 
-  while (*ptr)
+  const char *ptr = buffer;
+
+  while (*ptr != '\0')
   {
     // TODO: Scroll
     if (actual_word.y + GetFontHeight(actual_word.font) > Display_Height())
@@ -612,15 +653,10 @@ void parse_ansi(const char *buffer)
       continue;
     }
 
-    if (is_valid_utf8(&ptr))
-    {
-      AppendCharToActualWord(*ptr);
-      ptr++;
-    }
-    else
-    {
-      ERROR_PRINT("Invalid UTF-8 encoding %c\n", *ptr);
-    }
+    size_t char_len = utf8_char_length((unsigned char)*ptr);
+    AppendCharToActualWord(ptr, char_len);
+    ptr += char_len;
+
   }
 
   AddOrMergeActualTextStatic();
@@ -672,7 +708,7 @@ void ListenToFIFO(void)
 
       if (mutex_second_buffer)
       {
-        _return_to_stand_buffer();
+        //_return_to_stand_buffer();
       }
     }
     else if (bytesRead == -1)
