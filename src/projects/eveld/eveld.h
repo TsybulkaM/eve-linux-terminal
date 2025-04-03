@@ -18,6 +18,9 @@
 
 #define FIFO_PATH "/tmp/eve_pipe"
 
+#define max(a, b) ((a) > (b) ? (a) : (b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
 #define DEBUG 1
 #if DEBUG
 #define DEBUG_PRINT(fmt, ...) fprintf(stderr, "\x1B[35mDEBUG:\x1B[m " fmt, ##__VA_ARGS__)
@@ -78,12 +81,13 @@ typedef struct
   Color bg_color;
   uint16_t line;
   uint16_t width;
+  uint16_t symbol_len;
   char text[MAX_LENGTH];
 } StaticText;
 
 extern StaticText actual_word;
 extern StaticText saved_word;
-extern uint16_t actual_word_len;
+extern uint16_t actual_word_bytes;
 
 extern StaticText staticTexts[MAX_STATIC_TEXTS];
 extern uint16_t staticTextCount;
@@ -109,11 +113,11 @@ void ClearScreen(void);
 void DisplayFrame(void);
 void ResetScreen(void);
 
-int GetCharWidth(uint16_t, wchar_t);
+int GetCharWidth(uint16_t, char *);
 int GetTextWidth(const char *, int);
 int GetFontHeight(int font);
 
-int is_valid_utf8(const char **bytes);
+size_t utf8_char_length(uint8_t);
 bool colors_are_equal(Color a, Color b);
 
 void SetActualNewLine(uint16_t line);

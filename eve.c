@@ -1259,14 +1259,11 @@ void Cmd_Text_Codepoints(uint16_t x, uint16_t y, uint16_t font, uint16_t options
       uint8_t first_byte = (uint8_t)*utf8_str++;
       
       if ((first_byte & 0x80) == 0) {
-          // 1-байтовый символ (ASCII)
           code_point = first_byte;
       } else if ((first_byte & 0xE0) == 0xC0) {
-          // 2-байтовый символ
           code_point = (first_byte & 0x1F) << 6;
           code_point |= (*utf8_str++ & 0x3F);
       } else if ((first_byte & 0xF0) == 0xE0) {
-          // 3-байтовый символ
           code_point = (first_byte & 0x0F) << 12;
           code_point |= (*utf8_str++ & 0x3F) << 6;
           code_point |= (*utf8_str++ & 0x3F);

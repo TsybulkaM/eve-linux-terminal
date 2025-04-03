@@ -1,8 +1,5 @@
 #include "eveld.h"
 
-#define max(a, b) ((a) > (b) ? (a) : (b))
-#define min(a, b) ((a) < (b) ? (a) : (b))
-
 
 void PrepareScreen() {
     Send_CMD(CMD_DLSTART);
@@ -30,29 +27,39 @@ void ResetScreen(void) {
 }
 
 
-int GetCharWidth(uint16_t font_size, wchar_t ch) {
+int GetCharWidth(uint16_t font_size, char* ch) {
     int baseWidth = font_size * 0.5;
 
-    switch (ch) {
-        case L'I': return baseWidth * 0.1;
-        case L',': return baseWidth * 0.2;
-        case L'e': return baseWidth * 0.7;
-        case L'i': case L'!': case L'\'': case L'"': case L'.':
-            return baseWidth * 0.8;
-        case L'f': case L'[': case L't': case L'j': return baseWidth * 0.9;
-        case L'|': case L':': case L'0': case L'%': case L'b': case L'p': case L'v': case L'm': case L'w': return baseWidth * 1.2;
-        case L'M': return baseWidth * 1.4;
-        case L'W': return baseWidth * 1.5;
+    size_t char_length = utf8_char_length(ch[0]);
+
+    if (char_length == 1) {
+        switch (ch[0]) {
+            case 'I': return baseWidth * 0.1;
+            case ',': return baseWidth * 0.2;
+            case 'e': return baseWidth * 0.7;
+            case 'i': case '!': case '\'': case '"': case '.':
+                return baseWidth * 0.8;
+            case 'f': case '[': case 't': case 'j': return baseWidth * 0.9;
+            case '|': case ':': case '0': case '%': case 'b': case 'p': case 'v': case 'm': case 'w': return baseWidth * 1.2;
+            case 'M': return baseWidth * 1.4;
+            case 'W': return baseWidth * 1.5;
+        }
+
+        if (ch[0] >= 'A' && ch[0] <= 'Z') return baseWidth * 1.4;
+        return baseWidth;
     }
 
-    if (ch >= L'A' && ch <= L'Z') return baseWidth * 1.4;
-
-    if ((ch >= L'А' && ch <= L'Я') || (ch >= L'а' && ch <= L'я')) {
-        return baseWidth * 0.05;
+    if (char_length == 2) {
+        if ((ch[0] == (char)0xD0 && ch[1] >= 0x90 && ch[1] <= 0x99) || 
+            (ch[0] == (char)0xD1 && ch[1] >= 0x80 && ch[1] <= 0x8F)) {
+            return baseWidth * 1.4;
+        }
+        return baseWidth * 0.9;
     }
 
     return baseWidth;
 }
+
 
 int GetFontHeight(int font) {
     //return font;
@@ -63,45 +70,18 @@ int GetTextWidth(const char* text, int font) {
     int width = 0;
     while (*text) {
         width += GetCharWidth(font, *text);
-        text++;
+        text += utf8_char_length( *text);
     }
     return width;
 }
 
 
-int is_valid_utf8(const char **ptr) {
-    const unsigned char *bytes = (const unsigned char *)*ptr;
-
-    if (bytes[0] == 'M' && bytes[1] == '-' && bytes[2] == 'b') {
-        *ptr += 10;
-        return 0;
-    }
-
-    if (bytes[0] <= 0x7F) {
-        // 1-byte character (ASCII)
-        return 1;
-    } else if ((bytes[0] & 0xE0) == 0xC0) {
-        // 2-byte character
-        if ((bytes[1] & 0xC0) == 0x80) {
-            *ptr += 1;
-            return 2;
-        }
-    } else if ((bytes[0] & 0xF0) == 0xE0) {
-        // 3-byte character
-        if ((bytes[1] & 0xC0) == 0x80 && (bytes[2] & 0xC0) == 0x80) {
-            *ptr += 2;
-            return 3;
-        }
-    } else if ((bytes[0] & 0xF8) == 0xF0) {
-        // 4-byte character
-        if ((bytes[1] & 0xC0) == 0x80 && (bytes[2] & 0xC0) == 0x80 && (bytes[3] & 0xC0) == 0x80) {
-            *ptr += 3;
-            return 4;
-        }
-    }
-
-    *ptr += 1;
-    return 0;
+size_t utf8_char_length(uint8_t first_byte) {
+    if ((first_byte & 0x80) == 0) return 1;      // 0xxxxxxx (ASCII)
+    if ((first_byte & 0xE0) == 0xC0) return 2;   // 110xxxxx
+    if ((first_byte & 0xF0) == 0xE0) return 3;   // 1110xxxx
+    if ((first_byte & 0xF8) == 0xF0) return 4;   // 11110xxx
+    return 1;  // Invalid byte, treat as 1-byte character
 }
 
 
@@ -116,7 +96,7 @@ void SetActualNewLine(uint16_t line) {
 }
 
 void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes) {
-    if (actual_word_len + num_bytes < MAX_LENGTH) {
+    if (actual_word_bytes + num_bytes < MAX_LENGTH) {
         DEBUG_PRINT("Append UTF8 bytes (count: %zu): %.*s\n",
                     num_bytes, (int)num_bytes, bytes_to_append);
 
@@ -124,21 +104,24 @@ void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes) {
             DEBUG_PRINT("%02X\n", (unsigned char)bytes_to_append[i]);
         }
 
-        memcpy(&actual_word.text[actual_word_len], bytes_to_append, num_bytes);
-        actual_word.width += GetCharWidth(actual_word.font, bytes_to_append[0]);
-        actual_word_len += num_bytes;
-        actual_word.text[actual_word_len] = '\0';
+        memcpy(&actual_word.text[actual_word_bytes], bytes_to_append, num_bytes);
+
+        actual_word_bytes += num_bytes;
+        actual_word.text[actual_word_bytes] = '\0';
+
+        actual_word.symbol_len++;
+        actual_word.width += GetCharWidth(actual_word.font, bytes_to_append);
     } else {
         ERROR_PRINT("Error during append char: maximum length reached\n");
     }
 }
 
 void DeleteCharH(void) {
-    if (actual_word_len > 0) {
-        uint8_t last_char_width = GetCharWidth(actual_word.font, actual_word.text[actual_word_len - 1]);
+    if (actual_word_bytes > 0) {
+        uint8_t last_char_width = GetCharWidth(actual_word.font, actual_word.text[actual_word_bytes - 1]);
         actual_word.width -= last_char_width;
         actual_word.x -= last_char_width;
-        actual_word_len--;
+        actual_word_bytes--;
     } else {
         StaticText* last = &staticTexts[staticTextCount - 1];
         uint8_t last_len = strlen(last->text);
@@ -301,17 +284,17 @@ bool IsOnlySpaces(const char *text) {
 }
 
 void AddOrMergeActualTextStatic(void) {
-    if (actual_word_len <= 0) {
+    if (actual_word.symbol_len <= 0) {
         DEBUG_PRINT("Skipping empty text\n");
         return;
     }
 
-    actual_word.text[actual_word_len] = '\0';
+    actual_word.text[actual_word_bytes] = '\0';
 
     if (IsOnlySpaces(actual_word.text)) {
         DEBUG_PRINT("Text contains only spaces, moving x to %d\n", actual_word.x + actual_word.width);
         actual_word.x += actual_word.width;
-        actual_word_len = 0;
+        actual_word_bytes = 0;
         actual_word.width = 0;
         return;
     }
@@ -326,8 +309,16 @@ void AddOrMergeActualTextStatic(void) {
     actual_word.x = max(0, actual_word.x);
     actual_word.width = min(actual_word.width, Display_Width() - actual_word.x);
 
-    DEBUG_PRINT("Actual word: '%s' at [%d, %d] width: %d, font: %d\n", 
-        actual_word.text, actual_word.x, actual_word.y, actual_word.width, actual_word.font);
+    DEBUG_PRINT("Actual word: '%s' at [%d, %d] width: %d, font: %d\n",
+                actual_word.text,
+                actual_word.x,
+                actual_word.y,
+                actual_word.width,
+                actual_word.font);
+
+    for (int i = 0; i < actual_word_bytes; i++) {
+        DEBUG_PRINT("%d\n", (unsigned char)actual_word.text[i]);
+    }
 
     StaticText newStaticTexts[MAX_STATIC_TEXTS];
     int newCount = 0;
@@ -349,6 +340,7 @@ void AddOrMergeActualTextStatic(void) {
     if (intersectCount == 0) {
         DEBUG_PRINT("No intersections, adding new word: '%s'\n", actual_word.text);
         newStaticTexts[newCount++] = actual_word;
+        actual_word.x += actual_word.width;
     } else {
         StaticText *word;
         for (int i = 0; i < intersectCount; i++) {
@@ -378,9 +370,7 @@ void AddOrMergeActualTextStatic(void) {
                     }
                 }
             
-                DEBUG_PRINT("Calculated actual_index_start: %d\n", actual_index_start);
-            
-                if (actual_index_start + actual_word_len > MAX_LENGTH) {
+                if (actual_index_start + actual_word_bytes > MAX_LENGTH) {
                     ERROR_PRINT("Text merge out of bounds\n");
                     return;
                 }
@@ -388,7 +378,7 @@ void AddOrMergeActualTextStatic(void) {
                 if (actual_index_start >= 0 && actual_index_start < MAX_LENGTH) {
                     DEBUG_PRINT("actual_index_start: %d\n", actual_index_start);
                 
-                    int max_copy_len = min(actual_word_len, MAX_LENGTH - actual_index_start);
+                    int max_copy_len = min(actual_word_bytes, MAX_LENGTH - actual_index_start);
                 
                     for (int i = 0; i < max_copy_len; i++) {
                         word->text[actual_index_start + i] = actual_word.text[i];
@@ -404,8 +394,9 @@ void AddOrMergeActualTextStatic(void) {
                 }
             
                 word->x = min(word->x, actual_word.x);
-                word->width = GetTextWidth(word->text, word->font);
-            
+                word->width = min(GetTextWidth(word->text, word->font), Display_Width() - word->x);
+                actual_word.x = word->x + word->width;
+
                 DEBUG_PRINT("Merged result: '%s' at [%d, %d] width: %d\n", word->text, word->x, word->y, word->width);
             
                 merged = true;
@@ -444,7 +435,7 @@ void AddOrMergeActualTextStatic(void) {
     memcpy(staticTexts, newStaticTexts, newCount * sizeof(StaticText));
     staticTextCount = newCount;
 
-    actual_word.x += actual_word.width;
-    actual_word_len = 0;
+    DEBUG_PRINT("New x: %d\n", actual_word.x);
+    actual_word_bytes = 0;
     actual_word.width = 0;
 }

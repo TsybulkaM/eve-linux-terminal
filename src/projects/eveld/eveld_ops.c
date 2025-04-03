@@ -549,22 +549,28 @@ void handle_escape_sequence(const char **ptr)
   (*ptr)++;
 }
 
+
 void parse_meta_natation(char *buffer)
 {
     char *ptr = buffer;
     char *write_ptr = buffer;
-
+    
     while (*ptr != '\0')
     {
+        size_t remaining = strlen(ptr);
         size_t consumed_len = 0;
 
-        if (*ptr == 'M' && *(ptr + 1) == '-') {
-            if (*(ptr + 2) == '^') { // M-^X → X & 0x1F + 128
+        if (remaining >= 3 && *ptr == 'M' && *(ptr + 1) == '-') {
+            if (remaining >= 4 && *(ptr + 2) == '^') { // M-^X → X & 0x1F + 128
                 *write_ptr = (*(ptr + 3) & 0x1F) + 128;
                 consumed_len = 4;
-            } else { // M-X → X + 128
+            } else if (remaining >= 3) { // M-X → X + 128
                 *write_ptr = *(ptr + 2) + 128;
                 consumed_len = 3;
+            } else {
+                strncpy(write_ptr, ptr, remaining);
+                write_ptr += remaining;
+                break;
             }
         } else {
             *write_ptr = *ptr;
@@ -578,21 +584,14 @@ void parse_meta_natation(char *buffer)
     *write_ptr = '\0';
 }
 
-size_t utf8_char_length(unsigned char first_byte) {
-  if ((first_byte & 0x80) == 0) return 1;  // 1 байт (ASCII)
-  if ((first_byte & 0xE0) == 0xC0) return 2;  // 2 байта
-  if ((first_byte & 0xF0) == 0xE0) return 3;  // 3 байта
-  if ((first_byte & 0xF8) == 0xF0) return 4;  // 4 байта
-  return 1;  // Неизвестный символ (лучше просто пропустить)
-}
-
-
 
 void parse_ansi(const char *buffer)
 {  
   parse_meta_natation(buffer);
 
-  DEBUG_PRINT("Parsing ANSI: '%s'\n", buffer);
+  size_t num_bytes = strlen(buffer);
+
+  DEBUG_PRINT("Parsing buffer %d bytes : '%s'\n", num_bytes, buffer);
 
   const char *ptr = buffer;
 
@@ -628,7 +627,7 @@ void parse_ansi(const char *buffer)
     {
       ptr++;
       snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^");
-      continue;
+      break;
     }
 
     if ((*ptr == '^' && *(ptr + 1) == 'M'))
@@ -653,10 +652,15 @@ void parse_ansi(const char *buffer)
       continue;
     }
 
-    size_t char_len = utf8_char_length((unsigned char)*ptr);
+    size_t char_len = utf8_char_length((uint8_t)*ptr);
+    if (char_len > num_bytes) {
+      snprintf(breakdown_ansi, BD_ANSI_LEN - 1, ptr);
+      ptr += char_len;
+      break; 
+    }
     AppendCharToActualWord(ptr, char_len);
     ptr += char_len;
-
+    num_bytes -= char_len;
   }
 
   AddOrMergeActualTextStatic();

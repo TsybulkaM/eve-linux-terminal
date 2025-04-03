@@ -66,7 +66,7 @@ sudo bash uninstall.sh
 ### Realised 
 
 ```bash
-TERM=linux stty cols 56 rows 12; top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 56 rows 12;  top | cat -v > /tmp/eve_pipe
 ```
 
 ### Known Issues

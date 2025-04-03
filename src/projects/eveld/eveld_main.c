@@ -13,6 +13,7 @@ StaticText actual_word = {
     .bg_color = (Color){DEFAULT_COLOR_BG_R, DEFAULT_COLOR_BG_G, DEFAULT_COLOR_BG_B},
     .line = 0,
     .width = 0,
+    .symbol_len = 0,
 };
 
 StaticText saved_word = {
@@ -23,9 +24,10 @@ StaticText saved_word = {
     .bg_color = (Color){DEFAULT_COLOR_BG_R, DEFAULT_COLOR_BG_G, DEFAULT_COLOR_BG_B},
     .line = 0,
     .width = 0,
+    .symbol_len = 0,
 };
 
-uint16_t actual_word_len = 0;
+uint16_t actual_word_bytes = 0;
 uint16_t staticTextCount = 0;
 uint16_t savedStaticTextCount = 0;
 
