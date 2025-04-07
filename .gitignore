@@ -40,3 +40,7 @@ eveld_*
 
 # Log files
 *.log
+
+#VS Code
+.vscode/
+.vscode-test/

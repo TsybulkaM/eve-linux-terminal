@@ -1,6 +1,5 @@
 #include "eveld.h"
 
-
 void PrepareScreen() {
     Send_CMD(CMD_DLSTART);
     Send_CMD(VERTEXFORMAT(0));
@@ -27,54 +26,138 @@ void ResetScreen(void) {
 }
 
 
-int GetCharWidth(uint16_t font_size, char* ch) {
-    int baseWidth = font_size * 0.5;
+int GetCharWidth(uint32_t codepoint) {
+    int baseWidth = DEFAULT_FONT * 0.5;
+    
+    switch (codepoint) {
+        // Basic
 
-    size_t char_length = utf8_char_length(ch[0]);
+        case ',':
+        case '.':
+          return baseWidth * 0.4;
+        case 'l':
+        case 'I':
+          return baseWidth * 0.6;
+        case 'i': case '!': case '|': case ' ':
+          return baseWidth * 0.7;
+        case '\'': case '"': 
+        case 't': case 'e': case '?':
+        case 'r': case 'j': case '{': case '}':
+            return baseWidth * 0.8;
+        case '[': case ']': case 's': case 'd':
+        case 'x': case 'c': return baseWidth * 0.9;
+        case 'S': case 'L':
+          return baseWidth;
+        case 'y': case '0': case '6':
+          return baseWidth * 1.1;
+        case ':': case 'N': case 'C': case 'O':
+        case 'T':
+        case 'Y': case 'D': return baseWidth * 1.2;
+        case 'm': case '%': case 'H': case 'Q':
+        case 'U': case 'V': return baseWidth * 1.3;
+        case 'M': case 'w': return baseWidth * 1.4;
+        case 'W': return baseWidth * 1.7;
+        
+        // Cirillic
 
-    if (char_length == 1) {
-        switch (ch[0]) {
-            case 'I': return baseWidth * 0.1;
-            case ',': return baseWidth * 0.2;
-            case 'e': return baseWidth * 0.7;
-            case 'i': case '!': case '\'': case '"': case '.':
-                return baseWidth * 0.8;
-            case 'f': case '[': case 't': case 'j': return baseWidth * 0.9;
-            case '|': case ':': case '0': case '%': case 'b': case 'p': case 'v': case 'm': case 'w': return baseWidth * 1.2;
-            case 'M': return baseWidth * 1.4;
-            case 'W': return baseWidth * 1.5;
-        }
+        case 0x433: // г
+            return baseWidth * 0.8;
 
-        if (ch[0] >= 'A' && ch[0] <= 'Z') return baseWidth * 1.4;
-        return baseWidth;
-    }
+        case 0x044D: // э
+        case 0x0437: // з
+        case 0x0441: // с
+            return baseWidth * 0.9;
 
-    if (char_length == 2) {
-        if ((ch[0] == (char)0xD0 && ch[1] >= 0x90 && ch[1] <= 0x99) || 
-            (ch[0] == (char)0xD1 && ch[1] >= 0x80 && ch[1] <= 0x8F)) {
+        case 0x42D: // Э
+            return baseWidth * 0.95;
+
+        case 0x043F: // п
+            return baseWidth * 1.05;
+
+        case 0x0444: // ф
+        case 0x41D: // H
+            return baseWidth * 1.2;
+
+        case 0x043C: // м
+        case 0x0414: // Д
+        case 0x0426: // Ц
+        case 0x0418: // И
+        case 0x0419: // Й
+        case 0x041F: // П
+        case 0x041E: // О
+            return baseWidth * 1.3;
+
+        case 0x041C: // М
+        case 0x044E: // ю
+        case 0x0442: // т
             return baseWidth * 1.4;
-        }
-        return baseWidth * 0.9;
+   
+        case 0x0436: // ж
+        case 0x0449: // щ
+        case 0x0448: // ш
+        case 0x0416: // Ж
+        case 0x0424: // Ф
+            return baseWidth * 1.5;
+
+        case 0x042B: // Ы
+            return baseWidth * 1.5;
+
+        case 0x0428: // Ш
+        case 0x0429: // Щ
+        case 0x042E: // Ю
+            return baseWidth * 1.7;
     }
 
+    if (codepoint >= 'A' && codepoint <= 'Z') {
+        return baseWidth * 1.1;
+    }
+    
+    if ((codepoint >= 0x0410 && codepoint <= 0x042F) || codepoint == 0x0401) {
+        return baseWidth * 1.1;
+    }
+    
     return baseWidth;
 }
 
+int GetTextWidth(const char* str, int max_chars) {
+    int width = 0;
+    int chars_processed = 0;
+
+    while (*str && (max_chars < 0 || chars_processed < max_chars)) {
+        uint8_t c = (uint8_t)*str;
+        uint32_t codepoint = 0;
+        int char_len = 1;
+
+        if (c < 0x80) {
+            codepoint = c;
+        } else if ((c & 0xE0) == 0xC0) {
+            codepoint = ((str[0] & 0x1F) << 6) | (str[1] & 0x3F);
+            char_len = 2;
+        } else if ((c & 0xF0) == 0xE0) {
+            codepoint = ((str[0] & 0x0F) << 12) |
+                        ((str[1] & 0x3F) << 6) |
+                        (str[2] & 0x3F);
+            char_len = 3;
+        } else if ((c & 0xF8) == 0xF0) {
+            codepoint = ((str[0] & 0x07) << 18) |
+                        ((str[1] & 0x3F) << 12) |
+                        ((str[2] & 0x3F) << 6) |
+                        (str[3] & 0x3F);
+            char_len = 4;
+        }
+
+        str += char_len;
+        width += GetCharWidth(codepoint);
+        chars_processed++;
+    }
+
+    return width;
+}
 
 int GetFontHeight(int font) {
     //return font;
     return 22;
 }
-
-int GetTextWidth(const char* text, int font) {
-    int width = 0;
-    while (*text) {
-        width += GetCharWidth(font, *text);
-        text += utf8_char_length( *text);
-    }
-    return width;
-}
-
 
 size_t utf8_char_length(uint8_t first_byte) {
     if ((first_byte & 0x80) == 0) return 1;      // 0xxxxxxx (ASCII)
@@ -84,6 +167,16 @@ size_t utf8_char_length(uint8_t first_byte) {
     return 1;  // Invalid byte, treat as 1-byte character
 }
 
+const char* utf8_nth_char(const char* str, int index) {
+    int count = 0;
+    while (*str && count < index) {
+        uint8_t c = (uint8_t)*str;
+        str += utf8_char_length(c);
+        count++;
+    }
+
+    return *str ? str : NULL;
+}
 
 bool colors_are_equal(Color a, Color b) {
     return a.r == b.r && a.g == b.g && a.b == b.b;
@@ -100,17 +193,14 @@ void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes) {
         DEBUG_PRINT("Append UTF8 bytes (count: %zu): %.*s\n",
                     num_bytes, (int)num_bytes, bytes_to_append);
 
-        for (size_t i = 0; i < num_bytes; i++) {
-            DEBUG_PRINT("%02X\n", (unsigned char)bytes_to_append[i]);
-        }
-
         memcpy(&actual_word.text[actual_word_bytes], bytes_to_append, num_bytes);
 
         actual_word_bytes += num_bytes;
         actual_word.text[actual_word_bytes] = '\0';
 
         actual_word.symbol_len++;
-        actual_word.width += GetCharWidth(actual_word.font, bytes_to_append);
+        actual_word.width += GetTextWidth(bytes_to_append, 1);
+        DEBUG_PRINT("New width: %d\n", actual_word.width);
     } else {
         ERROR_PRINT("Error during append char: maximum length reached\n");
     }
@@ -118,16 +208,16 @@ void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes) {
 
 void DeleteCharH(void) {
     if (actual_word_bytes > 0) {
-        uint8_t last_char_width = GetCharWidth(actual_word.font, actual_word.text[actual_word_bytes - 1]);
+        uint8_t last_char_width = GetTextWidth(utf8_nth_char(actual_word.text, actual_word.symbol_len - 1), 1);
         actual_word.width -= last_char_width;
         actual_word.x -= last_char_width;
         actual_word_bytes--;
     } else {
+        /*
         StaticText* last = &staticTexts[staticTextCount - 1];
-        uint8_t last_len = strlen(last->text);
-        uint8_t last_char_width = GetCharWidth(last->font, last->text[last_len - 1]);
+        uint8_t last_char_width = GetTextWidth(utf8_nth_char(last->text, last->symbol_len - 1), 1);
         staticTexts[staticTextCount - 1].width = last_char_width;
-        staticTexts[staticTextCount - 1].text[last_len] = '\0';
+        staticTexts[staticTextCount - 1].text[strlen(last->text)] = '\0';*/
     }
 }
 
@@ -146,11 +236,11 @@ void DrawStaticTexts(void) {
             Send_CMD(BEGIN(RECTS));
             Send_CMD(VERTEX2F(
                 staticTexts[i].x, 
-                staticTexts[i].y
+                staticTexts[i].y + (int)(0.1 * staticTexts[i].font)
             ));
             Send_CMD(VERTEX2F(
-                staticTexts[i].x + GetTextWidth(staticTexts[i].text, staticTexts[i].font) - 5, 
-                staticTexts[i].y + GetFontHeight(staticTexts[i].font) -  (int)(0.3 * staticTexts[i].font)
+                staticTexts[i].x + GetTextWidth(staticTexts[i].text, -1),
+                staticTexts[i].y + GetFontHeight(staticTexts[i].font) - (int)(0.3 * staticTexts[i].font)
             ));
             Send_CMD(END());
         }
@@ -176,7 +266,7 @@ void DrawStaticTexts(void) {
 void DeleteChatH(uint16_t count) {
     for (int i = 0; i < staticTextCount; i++) {
         if (staticTexts[i].line != actual_word.line || staticTexts[i].x <= actual_word.x) {
-            staticTexts[i].x -= count*GetCharWidth(staticTexts[i].font, ' ');
+            staticTexts[i].x -= count*GetCharWidth(' ');
         }
     }
 }
@@ -235,7 +325,7 @@ void ClearPlaceForActual(void) {
 int GetTextOffset(StaticText *word, int xPos) {
     int offset = 0, px = word->x;
     while (px < xPos && word->text[offset] != '\0') {
-        int charWidth = GetCharWidth(word->font, word->text[offset]);
+        int charWidth = GetTextWidth(utf8_nth_char(word->text, offset), -1);
         if (px + charWidth > xPos) {
             break;
         }
@@ -250,6 +340,7 @@ StaticText CreateSubText(StaticText src, int newX, int newWidth) {
     subText.x = newX;
     subText.width = newWidth;
     
+    // Определяем смещение символов
     int charOffset = GetTextOffset(&src, newX);
     if (charOffset >= strlen(src.text)) {
         subText.text[0] = '\0';
@@ -259,7 +350,7 @@ StaticText CreateSubText(StaticText src, int newX, int newWidth) {
     int px = newX;
     int textLen = 0;
     for (int i = charOffset; src.text[i] != '\0' && px < newX + newWidth; i++) {
-        int charWidth = GetCharWidth(src.font, src.text[i]);
+        int charWidth = GetTextWidth(utf8_nth_char(src.text, i), -1);
         if (px + charWidth > newX + newWidth) {
             break;
         }
@@ -292,8 +383,9 @@ void AddOrMergeActualTextStatic(void) {
     actual_word.text[actual_word_bytes] = '\0';
 
     if (IsOnlySpaces(actual_word.text)) {
-        DEBUG_PRINT("Text contains only spaces, moving x to %d\n", actual_word.x + actual_word.width);
         actual_word.x += actual_word.width;
+        DEBUG_PRINT("Text contains only spaces, moving x to %d\n", actual_word.x);
+        actual_word.symbol_len = 0;
         actual_word_bytes = 0;
         actual_word.width = 0;
         return;
@@ -316,10 +408,6 @@ void AddOrMergeActualTextStatic(void) {
                 actual_word.width,
                 actual_word.font);
 
-    for (int i = 0; i < actual_word_bytes; i++) {
-        DEBUG_PRINT("%d\n", (unsigned char)actual_word.text[i]);
-    }
-
     StaticText newStaticTexts[MAX_STATIC_TEXTS];
     int newCount = 0;
     bool merged = false;
@@ -329,7 +417,7 @@ void AddOrMergeActualTextStatic(void) {
     for (int i = 0; i < staticTextCount; i++) {
         StaticText *word = &staticTexts[i];
 
-        if (word->line != actual_word.line || word->x + word->width < actual_word.x || word->x > actual_word.x + actual_word.width) {
+        if (word->line != actual_word.line || word->x + word->width <= actual_word.x || word->x >= actual_word.x + actual_word.width) {
             newStaticTexts[newCount++] = *word;
         } else {
             DEBUG_PRINT("Intersecting word: '%s' at [%d, %d] width: %d\n", word->text, word->x, word->y, word->width);
@@ -365,7 +453,7 @@ void AddOrMergeActualTextStatic(void) {
                             break;
                         }
                         DEBUG_PRINT("Char '%c' at %d\n", word->text[i], current_x);
-                        current_x += GetCharWidth(word->font, word->text[i]);
+                        current_x += GetTextWidth(utf8_nth_char(word->text, i), -1);
                         actual_index_start++;
                     }
                 }
@@ -394,7 +482,7 @@ void AddOrMergeActualTextStatic(void) {
                 }
             
                 word->x = min(word->x, actual_word.x);
-                word->width = min(GetTextWidth(word->text, word->font), Display_Width() - word->x);
+                word->width = min(GetTextWidth(word->text, -1), Display_Width() - word->x);
                 actual_word.x = word->x + word->width;
 
                 DEBUG_PRINT("Merged result: '%s' at [%d, %d] width: %d\n", word->text, word->x, word->y, word->width);

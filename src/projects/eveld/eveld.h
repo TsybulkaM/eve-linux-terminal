@@ -98,6 +98,13 @@ extern uint16_t saved_x, saved_y;
 
 int check_ftdi_device(void);
 
+// Font parameters
+extern const unsigned char Ubuntu_Italic_16_ASTC_xfont[];
+extern const unsigned int Ubuntu_Italic_16_ASTC_xfont_len;
+
+extern const unsigned char Ubuntu_Italic_16_ASTC_glyph[];
+extern const unsigned int Ubuntu_Italic_16_ASTC_glyph_len;
+
 // operations
 // eveld_ops.c
 int InitializeScreen(int fd);
@@ -113,7 +120,7 @@ void ClearScreen(void);
 void DisplayFrame(void);
 void ResetScreen(void);
 
-int GetCharWidth(uint16_t, char *);
+int GetCharWidth(uint32_t);
 int GetTextWidth(const char *, int);
 int GetFontHeight(int font);
 

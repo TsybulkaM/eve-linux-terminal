@@ -30,7 +30,8 @@
         "ubuntu_28.xfont.h": "c",
         "ubuntu_16_bold.glyph.h": "c",
         "ubuntu_16_bold.xfont.h": "c",
-        "locale.h": "c"
+        "locale.h": "c",
+        "wchar.h": "c"
     },
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
