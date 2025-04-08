@@ -3,8 +3,6 @@
 rows=$(tput lines)
 cols=$(tput cols)
 
-fifo=/tmp/eve_pipe
-
 x=1
 y=1
 
@@ -17,7 +15,7 @@ color_index=0
 while true; do
     echo -ne "\e[${y};${x}H"
 
-    echo -ne "\e[1;${colors[$color_index]}mDVD\e[0m"
+    echo -ne "\e[1;${colors[$color_index]}mДВД\e[0m"
 
     sleep 0.05
 

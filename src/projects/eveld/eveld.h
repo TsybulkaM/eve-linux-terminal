@@ -44,6 +44,7 @@ extern bool LINE_FEED;
 #define MAX_LINES 20
 #define MAX_LENGTH 512
 #define DEFAULT_FONT 20
+#define DEFUALT_CHAR_WIDTH 8
 #define DEFAULT_OPTION 0
 
 #define DEFAULT_COLOR_R 255
@@ -99,11 +100,11 @@ extern uint16_t saved_x, saved_y;
 int check_ftdi_device(void);
 
 // Font parameters
-extern const unsigned char Ubuntu_Italic_16_ASTC_xfont[];
-extern const unsigned int Ubuntu_Italic_16_ASTC_xfont_len;
+extern const unsigned char UbuntuMono_Regular_16_ASTC_xfont[];
+extern const unsigned int UbuntuMono_Regular_16_ASTC_xfont_len;
 
-extern const unsigned char Ubuntu_Italic_16_ASTC_glyph[];
-extern const unsigned int Ubuntu_Italic_16_ASTC_glyph_len;
+extern const unsigned char UbuntuMono_Regular_16_ASTC_glyph[];
+extern const unsigned int UbuntuMono_Regular_16_ASTC_glyph_len;
 
 // operations
 // eveld_ops.c

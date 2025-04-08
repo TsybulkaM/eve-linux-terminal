@@ -38,11 +38,11 @@ int InitializeScreen(int fd)
 
     // Load custom font
     StartCoProTransfer(RAM_G, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&Ubuntu_Italic_16_ASTC_xfont, Ubuntu_Italic_16_ASTC_xfont_len);
+    HAL_SPI_WriteBuffer((uint8_t *)&UbuntuMono_Regular_16_ASTC_xfont, UbuntuMono_Regular_16_ASTC_xfont_len);
     HAL_SPI_Disable();
 
     StartCoProTransfer(RAM_G + 4096, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&Ubuntu_Italic_16_ASTC_glyph, Ubuntu_Italic_16_ASTC_glyph_len);
+    HAL_SPI_WriteBuffer((uint8_t *)&UbuntuMono_Regular_16_ASTC_glyph, UbuntuMono_Regular_16_ASTC_glyph_len);
     HAL_SPI_Disable();
   }
 
@@ -247,7 +247,7 @@ void handle_escape_sequence(const char **ptr)
     AddOrMergeActualTextStatic();
 
     actual_word.y = (row > 0) ? row * GetFontHeight(actual_word.font) : 0;
-    actual_word.x = (col > 0) ? (col - 1) * GetCharWidth(' ') : 0;
+    actual_word.x = (col > 0) ? (col - 1) * DEFUALT_CHAR_WIDTH : 0;
 
     SetActualNewLine(actual_word.y / GetFontHeight(actual_word.font));
     DEBUG_PRINT("Sequence: %s, Move to row %d, column %d, X = %d, Y = %d\n",
@@ -289,14 +289,14 @@ void handle_escape_sequence(const char **ptr)
     break;
   case 'C':
     AddOrMergeActualTextStatic();
-    actual_word.x += (seq[0] != '\0') ? atoi(seq) * GetCharWidth(' ')
-                                      : GetCharWidth(' ');
+    actual_word.x += (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_WIDTH
+                                      : DEFUALT_CHAR_WIDTH;
     DEBUG_PRINT("Move right %d spaces, X = %d\n", atoi(seq), actual_word.x);
     break;
   case 'D':
     AddOrMergeActualTextStatic();
-    actual_word.x -= (seq[0] != '\0') ? atoi(seq) * GetCharWidth(' ')
-                                      : GetCharWidth(' ');
+    actual_word.x -= (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_WIDTH
+                                      : DEFUALT_CHAR_WIDTH;
     DEBUG_PRINT("Move left %d spaces, X = %d\n", atoi(seq), actual_word.x);
     break;
   case 'P':
@@ -307,7 +307,7 @@ void handle_escape_sequence(const char **ptr)
     break;
   case 'G':
     AddOrMergeActualTextStatic();
-    actual_word.x = (seq[0] != '\0') ? atoi(seq) * GetCharWidth(' ') : 0;
+    actual_word.x = (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_WIDTH : 0;
     DEBUG_PRINT("Move to column %d, X = %d\n", atoi(seq), actual_word.x);
     break;
   case 'J':
