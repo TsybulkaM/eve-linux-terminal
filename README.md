@@ -106,6 +106,10 @@ echo -e "\e[31mRed\e[mStandart." | cat -v > /tmp/eve_pipe
 ```
 
 ```bash
+echo -e "\e[31mПоддержка\e[m текста" | cat -v > /tmp/eve_pipe
+```
+
+```bash
 echo "Hello, Eve!" | pv -qL 10 | cat -v > /tmp/eve_pipe
 ```
 This will print "Hello, World!" with delay.

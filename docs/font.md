@@ -6,6 +6,6 @@
 To convert binary font's information to bit array:
 
 ```bash
-xxd -i *.glyph > Font_16.glyph.h
-xxd -i *.xfont > Font_16.xfont.h
+for file in *.glyph; do xxd -i "$file" > "$file.h"; done
+for file in *.xfont; do xxd -i "$file" > "$file.h"; done
 ```

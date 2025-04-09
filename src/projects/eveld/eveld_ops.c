@@ -38,11 +38,11 @@ int InitializeScreen(int fd)
 
     // Load custom font
     StartCoProTransfer(RAM_G, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&UbuntuMono_Regular_16_ASTC_xfont, UbuntuMono_Regular_16_ASTC_xfont_len);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_16_ASTC_xfont, ibm_plex_mono_16_ASTC_xfont_len);
     HAL_SPI_Disable();
 
     StartCoProTransfer(RAM_G + 4096, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&UbuntuMono_Regular_16_ASTC_glyph, UbuntuMono_Regular_16_ASTC_glyph_len);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_16_ASTC_glyph, ibm_plex_mono_16_ASTC_glyph_len);
     HAL_SPI_Disable();
   }
 
@@ -710,7 +710,7 @@ void ListenToFIFO(void)
 
       if (mutex_second_buffer)
       {
-        //_return_to_stand_buffer();
+        _return_to_stand_buffer();
       }
     }
     else if (bytesRead == -1)
