@@ -63,6 +63,13 @@ sudo bash uninstall.sh
 
 ## Commands
 
+## Change Font
+
+```bash
+echo -e "\e]50;IBM_Plex_Mono-16\a" | cat -v > /tmp/eve_pipe
+echo -e "\e]50;IBM_Plex_Mono-20\a" | cat -v > /tmp/eve_pipe
+```
+
 ### Realised 
 
 ```bash

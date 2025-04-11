@@ -37,13 +37,42 @@ int InitializeScreen(int fd)
     ResetScreen();
 
     // Load custom font
-    StartCoProTransfer(RAM_G, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_16_ASTC_xfont, ibm_plex_mono_16_ASTC_xfont_len);
-    HAL_SPI_Disable();
+    uint32_t offset = RAM_G;
 
-    StartCoProTransfer(RAM_G + 4096, 0);
+    /*StartCoProTransfer(offset, 0);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_12_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
+    HAL_SPI_Disable();
+    offset += CHANK_SIZE;
+    StartCoProTransfer(offset, 0);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_12_20_24_ASTC_glyph, ibm_plex_mono_12_20_24_ASTC_glyph_len);
+    HAL_SPI_Disable();
+    offset += ibm_plex_mono_12_20_24_ASTC_glyph_len;*/
+
+    StartCoProTransfer(offset, 0);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_20_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
+    HAL_SPI_Disable();
+    offset += CHANK_SIZE;
+    StartCoProTransfer(offset, 0);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_12_20_24_ASTC_glyph, ibm_plex_mono_12_20_24_ASTC_glyph_len);
+    HAL_SPI_Disable();
+    offset += ibm_plex_mono_12_20_24_ASTC_glyph_len;
+
+    StartCoProTransfer(offset, 0);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_16_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
+    HAL_SPI_Disable();
+    offset += CHANK_SIZE;
+    StartCoProTransfer(offset, 0);
     HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_16_ASTC_glyph, ibm_plex_mono_16_ASTC_glyph_len);
     HAL_SPI_Disable();
+    offset += ibm_plex_mono_16_ASTC_glyph_len;
+
+    /*StartCoProTransfer(offset, 0);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_24_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
+    HAL_SPI_Disable();
+    offset += CHANK_SIZE;
+    StartCoProTransfer(offset, 0);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_12_20_24_ASTC_glyph, ibm_plex_mono_12_20_24_ASTC_glyph_len);
+    HAL_SPI_Disable();*/
   }
 
   return OpenPipe();
@@ -102,7 +131,7 @@ void handle_escape_sequence(const char **ptr)
     return;
   }
 
-  if (**ptr == '(' && *(*ptr + 1) == 'B')
+  if (strncmp(*ptr, "(B", 2) == 0)
   {
     (*ptr) += 2;
     TODO_PRINT("Set character set to ASCII\n");
@@ -119,6 +148,50 @@ void handle_escape_sequence(const char **ptr)
     (*ptr)++;
     TODO_PRINT("Set numeric keypad mode\n");
     return;
+  }
+  else if (**ptr == ']') {
+    (*ptr)++;
+    if (strncmp(*ptr, "50;", 3) == 0) {
+        (*ptr) += 3;
+    
+        char fontSpec[128] = {0};
+        int i = 0;
+    
+        while (**ptr != '\x07' && **ptr != '\0' && i < sizeof(fontSpec) - 1) {
+            fontSpec[i++] = *((*ptr)++);
+        }
+        fontSpec[i] = '\0';
+    
+        char fontName[64] = {0};
+        int fontSize = 0;
+
+        char *dash = strrchr(fontSpec, '-');
+        if (dash && dash != fontSpec) {
+            strncpy(fontName, fontSpec, dash - fontSpec);
+            fontName[dash - fontSpec] = '\0';
+            fontSize = atoi(dash + 1);
+        } else {
+            strncpy(fontName, fontSpec, sizeof(fontName) - 1);
+        }
+    
+        if (strcmp(fontName, "IBM_Plex_Mono") == 0) {
+          switch (fontSize) {
+            case 16:
+              actual_word.font = 1;
+              break;
+            case 20:
+              actual_word.font = 2;
+              break;
+            default:
+              ERROR_PRINT("Unknown font size: %d\n", fontSize);
+              break;
+          }
+        } else {
+          ERROR_PRINT("Unknown font: %s\n", fontName);
+        }
+
+        return;
+    }
   }
 
   if (**ptr == '(')

@@ -5,7 +5,14 @@ void PrepareScreen() {
     Send_CMD(VERTEXFORMAT(0));
     Send_CMD(CLEAR_COLOR_RGB(0, 0, 0));
     Send_CMD(CLEAR(1, 1, 1));
-    Cmd_SetFont2(1, RAM_G, 0);
+    uint32_t offset = RAM_G;
+    Cmd_SetFont2(1, offset, 0);
+    offset += CHANK_SIZE + ibm_plex_mono_12_20_24_ASTC_glyph_len;
+    Cmd_SetFont2(2, offset, 0);
+    /*offset += CHANK_SIZE + ibm_plex_mono_16_ASTC_glyph_len;
+    Cmd_SetFont2(3, offset, 0);
+    offset += CHANK_SIZE + ibm_plex_mono_12_20_24_ASTC_glyph_len;
+    Cmd_SetFont2(4, offset, 0);*/
 }
 
 void DisplayFrame() {
@@ -161,7 +168,7 @@ void DrawStaticTexts(void) {
         
         Cmd_Text_Codepoints(
             staticTexts[i].x, staticTexts[i].y, 
-            1, DEFAULT_OPTION, 
+            staticTexts[i].font, DEFAULT_OPTION, 
             staticTexts[i].text
         );
     }
@@ -295,11 +302,6 @@ void AddOrMergeActualTextStatic(void) {
         actual_word.symbol_len = 0;
         actual_word_bytes = 0;
         actual_word.width = 0;
-        return;
-    }
-
-    if (actual_word.font > 32 || actual_word.font < 15) {
-        ERROR_PRINT("Error during add static text: invalid font size %d\n", actual_word.font);
         return;
     }
 
