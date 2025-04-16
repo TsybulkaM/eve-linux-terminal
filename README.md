@@ -63,13 +63,6 @@ sudo bash uninstall.sh
 
 ## Commands
 
-## Change Font
-
-```bash
-echo -e "\e]50;IBM_Plex_Mono-16\a" | cat -v > /tmp/eve_pipe
-echo -e "\e]50;IBM_Plex_Mono-20\a" | cat -v > /tmp/eve_pipe
-```
-
 ### Realised 
 
 ```bash
@@ -118,6 +111,7 @@ echo -e "\e[31mПоддержка\e[m текста" | cat -v > /tmp/eve_pipe
 
 ```bash
 echo "Hello, Eve!" | pv -qL 10 | cat -v > /tmp/eve_pipe
+echo "Hello, Eve!" | cat -v > /tmp/eve_pipe
 ```
 This will print "Hello, World!" with delay.
 
@@ -134,6 +128,13 @@ TERM=linux stty cols 55 rows 11; df -h | cat -v > /tmp/eve_pipe
 Disks usage
 
 ## Planned Features
+
+## Change Font
+
+```bash
+echo -e "\e]50;IBM_Plex_Mono-16\a" | cat -v > /tmp/eve_pipe
+echo -e "\e]50;IBM_Plex_Mono-20\a" | cat -v > /tmp/eve_pipe
+```
 
 ```bash
 TERM=linux stty cols 55 rows 11; sl | cat -v > /tmp/eve_pipe

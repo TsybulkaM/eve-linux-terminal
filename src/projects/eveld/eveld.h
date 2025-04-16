@@ -43,8 +43,9 @@ extern bool LINE_FEED;
 
 #define MAX_LINES 20
 #define MAX_LENGTH 512
-#define DEFAULT_FONT 2
-#define DEFUALT_CHAR_WIDTH 10
+#define DEFAULT_FONT 1
+#define DEFUALT_CHAR_WIDTH 8
+#define DEFUALT_CHAR_HIGHT 22
 #define DEFAULT_OPTION 0
 
 #define DEFAULT_COLOR_R 255
@@ -55,7 +56,7 @@ extern bool LINE_FEED;
 #define DEFAULT_COLOR_BG_G 0
 #define DEFAULT_COLOR_BG_B 0
 
-#define BD_ANSI_LEN 10
+#define BD_ANSI_LEN 64
 
 typedef struct
 {
@@ -103,6 +104,7 @@ int check_ftdi_device(void);
 #define CHANK_SIZE 4096
 
 extern const unsigned char ibm_plex_mono_12_ASTC_xfont[];
+extern const unsigned char ibm_plex_mono_14_ASTC_xfont[];
 extern const unsigned char ibm_plex_mono_16_ASTC_xfont[];
 extern const unsigned char ibm_plex_mono_20_ASTC_xfont[];
 extern const unsigned char ibm_plex_mono_24_ASTC_xfont[];
@@ -111,15 +113,15 @@ extern const unsigned int ibm_plex_mono_ASTC_xfont_len;
 extern const unsigned char ibm_plex_mono_12_20_24_ASTC_glyph[];
 extern const unsigned int ibm_plex_mono_12_20_24_ASTC_glyph_len;
 
-extern const unsigned char ibm_plex_mono_16_ASTC_glyph[];
-extern const unsigned int ibm_plex_mono_16_ASTC_glyph_len;
+extern const unsigned char ibm_plex_mono_14_16_ASTC_glyph[];
+extern const unsigned int ibm_plex_mono_14_16_ASTC_glyph_len;
 
 // operations
 // eveld_ops.c
-int InitializeScreen(int fd);
+int InitializeScreen(int);
 int OpenPipe(void);
-void handle_escape_sequence(const char **ptr);
-void parse_ansi(const char *buffer);
+void handle_escape_sequence(const char**);
+void parse_ansi(char*);
 void ListenToFIFO();
 
 // framebuffer operations
@@ -131,31 +133,26 @@ void ResetScreen(void);
 
 int GetCharWidth(uint32_t);
 int GetTextWidth(const char *, int);
-int GetFontHeight(int font);
+int GetFontHeight(int);
 
 size_t utf8_char_length(uint8_t);
-bool colors_are_equal(Color a, Color b);
+bool colors_are_equal(Color, Color);
 
-void SetActualNewLine(uint16_t line);
+void SetActualNewLine(uint16_t);
 
-void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes);
+void AppendCharToActualWord(const char*, size_t);
 void DeleteCharH(void);
 void AddOrMergeActualTextStatic(void);
 
 void DrawStaticTexts(void);
 
-void DeleteChatH(uint16_t count);
+void DeleteChatH(uint16_t);
 
 void ClearLineBeforeX(void);
 void ClearLineAfterX(void);
 void ClearLine(void);
 void ClearPlaceForActual(void);
 void ClearPlaceForActualDev(void);
-
-// memory management
-// eveld_mem.c
-uint32_t monitor_display_list_memory(void);
-void check_display_list_memory(void);
 
 // initial logo
 // logo.c

@@ -5,11 +5,11 @@ void PrepareScreen() {
     Send_CMD(VERTEXFORMAT(0));
     Send_CMD(CLEAR_COLOR_RGB(0, 0, 0));
     Send_CMD(CLEAR(1, 1, 1));
-    uint32_t offset = RAM_G;
-    Cmd_SetFont2(1, offset, 0);
-    offset += CHANK_SIZE + ibm_plex_mono_12_20_24_ASTC_glyph_len;
+    //uint32_t offset = RAM_G;
+    Cmd_SetFont2(1, RAM_G, 0);
+    /*offset += CHANK_SIZE + ibm_plex_mono_12_20_24_ASTC_glyph_len;
     Cmd_SetFont2(2, offset, 0);
-    /*offset += CHANK_SIZE + ibm_plex_mono_16_ASTC_glyph_len;
+    offset += CHANK_SIZE + ibm_plex_mono_16_ASTC_glyph_len;
     Cmd_SetFont2(3, offset, 0);
     offset += CHANK_SIZE + ibm_plex_mono_12_20_24_ASTC_glyph_len;
     Cmd_SetFont2(4, offset, 0);*/
@@ -68,12 +68,6 @@ int GetTextWidth(const char* str, int max_chars) {
     return width;
 }
 
-
-int GetFontHeight(int font) {
-    //return font;
-    return 22;
-}
-
 size_t utf8_char_length(uint8_t first_byte) {
     if ((first_byte & 0x80) == 0) return 1;      // 0xxxxxxx (ASCII)
     if ((first_byte & 0xE0) == 0xC0) return 2;   // 110xxxxx
@@ -105,9 +99,6 @@ void SetActualNewLine(uint16_t line) {
 
 void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes) {
     if (actual_word_bytes + num_bytes < MAX_LENGTH) {
-        DEBUG_PRINT("Append UTF8 bytes (count: %zu): %.*s\n",
-                    num_bytes, (int)num_bytes, bytes_to_append);
-
         memcpy(&actual_word.text[actual_word_bytes], bytes_to_append, num_bytes);
 
         actual_word_bytes += num_bytes;
@@ -151,11 +142,11 @@ void DrawStaticTexts(void) {
             Send_CMD(BEGIN(RECTS));
             Send_CMD(VERTEX2F(
                 staticTexts[i].x, 
-                staticTexts[i].y + (int)(0.1 * staticTexts[i].font)
+                staticTexts[i].y + (int)(0.1 * DEFUALT_CHAR_WIDTH)
             ));
             Send_CMD(VERTEX2F(
                 staticTexts[i].x + GetTextWidth(staticTexts[i].text, -1),
-                staticTexts[i].y + GetFontHeight(staticTexts[i].font) - (int)(0.3 * staticTexts[i].font)
+                staticTexts[i].y + DEFUALT_CHAR_HIGHT - (int)(0.1 * DEFUALT_CHAR_WIDTH)
             ));
             Send_CMD(END());
         }
@@ -222,20 +213,6 @@ void ClearLineBeforeX(void) {
     staticTextCount = j;
 }
 
-void ClearPlaceForActual(void) {
-    int j = 0;
-    for (int i = 0; i < staticTextCount; i++) {
-        if (staticTexts[i].line != actual_word.line || 
-            (staticTexts[i].x + staticTexts[i].width <= actual_word.x || 
-             staticTexts[i].x >= actual_word.x + actual_word.width)) {
-            staticTexts[j++] = staticTexts[i];
-        } else {
-            DEBUG_PRINT("Cleared Place X=%d: %s\n", actual_word.x, staticTexts[i].text);
-        }
-    }
-    staticTextCount = j;
-}
-
 
 int GetTextOffset(StaticText *word, int xPos) {
     int offset = 0, px = word->x;
@@ -289,7 +266,7 @@ bool IsOnlySpaces(const char *text) {
 }
 
 void AddOrMergeActualTextStatic(void) {
-    if (actual_word.symbol_len <= 0) {
+    if (actual_word.symbol_len == 0) {
         DEBUG_PRINT("Skipping empty text\n");
         return;
     }
@@ -305,9 +282,7 @@ void AddOrMergeActualTextStatic(void) {
         return;
     }
 
-    actual_word.y = max(0, actual_word.y);
-    actual_word.y = min(actual_word.y, Display_Height() - GetFontHeight(actual_word.font));
-    actual_word.x = max(0, actual_word.x);
+    actual_word.y = min(actual_word.y, Display_Height() - DEFUALT_CHAR_HIGHT);
     actual_word.width = min(actual_word.width, Display_Width() - actual_word.x);
 
     DEBUG_PRINT("Actual word: '%s' at [%d, %d] width: %d, font: %d\n",
@@ -319,7 +294,6 @@ void AddOrMergeActualTextStatic(void) {
 
     StaticText newStaticTexts[MAX_STATIC_TEXTS];
     int newCount = 0;
-    bool merged = false;
     StaticText *intersectingWords[MAX_STATIC_TEXTS];
     int intersectCount = 0;
 
@@ -339,6 +313,7 @@ void AddOrMergeActualTextStatic(void) {
         newStaticTexts[newCount++] = actual_word;
     } else {
         StaticText *word;
+        bool merged = false;
         for (int i = 0; i < intersectCount; i++) {
             word = intersectingWords[i];
 
@@ -356,12 +331,11 @@ void AddOrMergeActualTextStatic(void) {
                     actual_index_start = word_length;
                     current_x = word->x + word->width;
                 } else {
-                    for (int i = 0; i < word_length; i++) {
+                    for (int j = 0; j < word_length; j++) {
                         if (current_x >= actual_word.x) {
                             break;
                         }
-                        DEBUG_PRINT("Char '%c' at %d\n", word->text[i], current_x);
-                        current_x += GetTextWidth(utf8_nth_char(word->text, i), 1);
+                        current_x += GetTextWidth(utf8_nth_char(word->text, j), 1);
                         actual_index_start++;
                     }
                 }
@@ -371,13 +345,13 @@ void AddOrMergeActualTextStatic(void) {
                     return;
                 }
             
-                if (actual_index_start >= 0 && actual_index_start < MAX_LENGTH) {
+                if (actual_index_start < MAX_LENGTH) {
                     DEBUG_PRINT("actual_index_start: %d\n", actual_index_start);
                 
                     int max_copy_len = min(actual_word_bytes, MAX_LENGTH - actual_index_start);
                 
-                    for (int i = 0; i < max_copy_len; i++) {
-                        word->text[actual_index_start + i] = actual_word.text[i];
+                    for (int e = 0; e < max_copy_len; e++) {
+                        word->text[actual_index_start + e] = actual_word.text[e];
                     }
                 
                     int new_length = max(word_length, actual_index_start + max_copy_len);
@@ -431,7 +405,6 @@ void AddOrMergeActualTextStatic(void) {
     memcpy(staticTexts, newStaticTexts, newCount * sizeof(StaticText));
     staticTextCount = newCount;
 
-    DEBUG_PRINT("New x: %d\n", actual_word.x);
     actual_word.x += actual_word.width;
     actual_word_bytes = 0;
     actual_word.width = 0;

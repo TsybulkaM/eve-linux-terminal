@@ -49,25 +49,25 @@ int InitializeScreen(int fd)
     offset += ibm_plex_mono_12_20_24_ASTC_glyph_len;*/
 
     StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_20_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_14_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
     HAL_SPI_Disable();
     offset += CHANK_SIZE;
     StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_12_20_24_ASTC_glyph, ibm_plex_mono_12_20_24_ASTC_glyph_len);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_14_16_ASTC_glyph, ibm_plex_mono_14_16_ASTC_glyph_len);
     HAL_SPI_Disable();
-    offset += ibm_plex_mono_12_20_24_ASTC_glyph_len;
+    offset += ibm_plex_mono_14_16_ASTC_glyph_len;
 
-    StartCoProTransfer(offset, 0);
+    /*StartCoProTransfer(offset, 0);
     HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_16_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
     HAL_SPI_Disable();
     offset += CHANK_SIZE;
     StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_16_ASTC_glyph, ibm_plex_mono_16_ASTC_glyph_len);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_14_16_ASTC_glyph, ibm_plex_mono_14_16_ASTC_glyph_len);
     HAL_SPI_Disable();
-    offset += ibm_plex_mono_16_ASTC_glyph_len;
+    offset += ibm_plex_mono_14_16_ASTC_glyph_len;*/
 
     /*StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_24_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
+    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_20_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
     HAL_SPI_Disable();
     offset += CHANK_SIZE;
     StartCoProTransfer(offset, 0);
@@ -176,12 +176,12 @@ void handle_escape_sequence(const char **ptr)
     
         if (strcmp(fontName, "IBM_Plex_Mono") == 0) {
           switch (fontSize) {
-            case 16:
+            /*case 16:
               actual_word.font = 1;
               break;
             case 20:
               actual_word.font = 2;
-              break;
+              break;*/
             default:
               ERROR_PRINT("Unknown font size: %d\n", fontSize);
               break;
@@ -319,10 +319,10 @@ void handle_escape_sequence(const char **ptr)
 
     AddOrMergeActualTextStatic();
 
-    actual_word.y = (row > 0) ? row * GetFontHeight(actual_word.font) : 0;
+    actual_word.y = (row > 0) ? row * DEFUALT_CHAR_HIGHT : 0;
     actual_word.x = (col > 0) ? (col - 1) * DEFUALT_CHAR_WIDTH : 0;
 
-    SetActualNewLine(actual_word.y / GetFontHeight(actual_word.font));
+    SetActualNewLine(actual_word.y / DEFUALT_CHAR_HIGHT);
     DEBUG_PRINT("Sequence: %s, Move to row %d, column %d, X = %d, Y = %d\n",
                 seq,
                 row,
@@ -341,22 +341,22 @@ void handle_escape_sequence(const char **ptr)
     break;
   case 'd':
     AddOrMergeActualTextStatic();
-    actual_word.y = (seq[0] != '\0') ? atoi(seq) * GetFontHeight(actual_word.font) : 0;
+    actual_word.y = (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_HIGHT : 0;
     SetActualNewLine(atoi(seq));
     actual_word.x = 0;
     DEBUG_PRINT("Move to line: %d, Y = %d\n", atoi(seq), actual_word.y);
     break;
   case 'A':
     AddOrMergeActualTextStatic();
-    actual_word.y -= (seq[0] != '\0') ? atoi(seq) * GetFontHeight(actual_word.font)
-                                      : GetFontHeight(actual_word.font);
+    actual_word.y -= (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_HIGHT
+                                      : DEFUALT_CHAR_HIGHT;
     SetActualNewLine(atoi(seq));
     DEBUG_PRINT("Move up %d lines, Y = %d\n", atoi(seq), actual_word.y);
     break;
   case 'B':
     AddOrMergeActualTextStatic();
-    actual_word.y += (seq[0] != '\0') ? atoi(seq) * GetFontHeight(actual_word.font)
-                                      : GetFontHeight(actual_word.font);
+    actual_word.y += (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_HIGHT
+                                      : DEFUALT_CHAR_HIGHT;
     SetActualNewLine(atoi(seq));
     DEBUG_PRINT("Move down %d lines, Y = %d\n", atoi(seq), actual_word.y);
     break;
@@ -610,7 +610,12 @@ void handle_escape_sequence(const char **ptr)
     }
     else if (**ptr == '\0')
     {
-      snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^[[%s", seq);
+      if (strlen(seq) < BD_ANSI_LEN - 4) {  // Ensure enough space for "^[["
+          snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^[[%s", seq);
+      } else {
+          strncpy(breakdown_ansi, "^[[", BD_ANSI_LEN - 1);
+          strncat(breakdown_ansi, seq, BD_ANSI_LEN - strlen(breakdown_ansi) - 1);
+      }
       DEBUG_PRINT("Adding to breakdown_ansi: %s\n", breakdown_ansi);
       return;
     }
@@ -625,23 +630,20 @@ void parse_meta_natation(char *buffer)
 {
     char *ptr = buffer;
     char *write_ptr = buffer;
-    
-    while (*ptr != '\0')
-    {
+
+    while (*ptr != '\0') {
         size_t remaining = strlen(ptr);
         size_t consumed_len = 0;
 
-        if (remaining >= 3 && *ptr == 'M' && *(ptr + 1) == '-') {
-            if (remaining >= 4 && *(ptr + 2) == '^') { // M-^X → X & 0x1F + 128
-                *write_ptr = (*(ptr + 3) & 0x1F) + 128;
+        if (remaining >= 3 && ptr[0] == 'M' && ptr[1] == '-') {
+            if (remaining >= 4 && ptr[2] == '^') {
+                // M-^X → X & 0x1F + 128
+                *write_ptr = (ptr[3] & 0x1F) + 128;
                 consumed_len = 4;
-            } else if (remaining >= 3) { // M-X → X + 128
-                *write_ptr = *(ptr + 2) + 128;
-                consumed_len = 3;
             } else {
-                strncpy(write_ptr, ptr, remaining);
-                write_ptr += remaining;
-                break;
+                // M-X → X + 128
+                *write_ptr = ptr[2] + 128;
+                consumed_len = 3;
             }
         } else {
             *write_ptr = *ptr;
@@ -655,21 +657,20 @@ void parse_meta_natation(char *buffer)
     *write_ptr = '\0';
 }
 
-
-void parse_ansi(const char *buffer)
+void parse_ansi(char *buffer)
 {  
   parse_meta_natation(buffer);
 
   size_t num_bytes = strlen(buffer);
 
-  DEBUG_PRINT("Parsing buffer %d bytes : '%s'\n", num_bytes, buffer);
+  DEBUG_PRINT("Parsing buffer %zu bytes : '%s'\n", num_bytes, buffer);
 
   const char *ptr = buffer;
 
   while (*ptr != '\0')
   {
     // TODO: Scroll
-    if (actual_word.y + GetFontHeight(actual_word.font) > Display_Height())
+    if (actual_word.y + DEFUALT_CHAR_HIGHT > Display_Height())
     {
       DEBUG_PRINT("Scrolling screen\n");
       ResetScreen();
@@ -682,7 +683,7 @@ void parse_ansi(const char *buffer)
     {
       AddOrMergeActualTextStatic();
 
-      actual_word.y += GetFontHeight(actual_word.font);
+      actual_word.y += DEFUALT_CHAR_HIGHT;
       actual_word.x = 0;
       SetActualNewLine(actual_word.line + 1);
       
@@ -696,7 +697,6 @@ void parse_ansi(const char *buffer)
 
     if ((*ptr == '^' && *(ptr + 1) == '\0'))
     {
-      ptr++;
       snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^");
       break;
     }
@@ -725,7 +725,7 @@ void parse_ansi(const char *buffer)
 
     size_t char_len = utf8_char_length((uint8_t)*ptr);
     if (char_len > num_bytes) {
-      snprintf(breakdown_ansi, BD_ANSI_LEN - 1, ptr);
+      snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "%s", ptr);
       ptr += char_len;
       break; 
     }
@@ -748,7 +748,7 @@ void ListenToFIFO(void)
   {
     fd = InitializeScreen(fd);
 
-    size_t bytesRead = read(fd, buffer, sizeof(buffer) - BD_ANSI_LEN - 1);
+    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - BD_ANSI_LEN - 1);
 
     if (bytesRead > 0)
     {

@@ -558,7 +558,7 @@ void DrawLogoPNG(void)
   Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
                          // command.
 
-  uint32_t ptr = rd32(props_start_address + RAM_CMD + 4);     // Read back the ptr variable
+  //uint32_t ptr = rd32(props_start_address + RAM_CMD + 4);     // Read back the ptr variable
   uint32_t width = rd32(props_start_address + RAM_CMD + 8);   // Read back the width variable
   uint32_t height = rd32(props_start_address + RAM_CMD + 12); // Read back the height variable
 
