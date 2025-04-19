@@ -22,8 +22,7 @@ int InitializeScreen(int fd)
     sleep(1);
   }
 
-  if (!isEveInitialized)
-  {
+  if (!isEveInitialized) {
     if (EVE_Init(DEMO_DISPLAY, DEMO_BOARD, DEMO_TOUCH) <= 1)
     {
       ERROR_PRINT("EVE initialization failed\n");
@@ -39,40 +38,17 @@ int InitializeScreen(int fd)
     // Load custom font
     uint32_t offset = RAM_G;
 
-    /*StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_12_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
-    HAL_SPI_Disable();
-    offset += CHANK_SIZE;
-    StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_12_20_24_ASTC_glyph, ibm_plex_mono_12_20_24_ASTC_glyph_len);
-    HAL_SPI_Disable();
-    offset += ibm_plex_mono_12_20_24_ASTC_glyph_len;*/
-
-    StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_14_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
-    HAL_SPI_Disable();
-    offset += CHANK_SIZE;
-    StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_14_16_ASTC_glyph, ibm_plex_mono_14_16_ASTC_glyph_len);
-    HAL_SPI_Disable();
-    offset += ibm_plex_mono_14_16_ASTC_glyph_len;
-
-    /*StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_16_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
-    HAL_SPI_Disable();
-    offset += CHANK_SIZE;
-    StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_14_16_ASTC_glyph, ibm_plex_mono_14_16_ASTC_glyph_len);
-    HAL_SPI_Disable();
-    offset += ibm_plex_mono_14_16_ASTC_glyph_len;*/
-
-    /*StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_20_ASTC_xfont, ibm_plex_mono_ASTC_xfont_len);
-    HAL_SPI_Disable();
-    offset += CHANK_SIZE;
-    StartCoProTransfer(offset, 0);
-    HAL_SPI_WriteBuffer((uint8_t *)&ibm_plex_mono_12_20_24_ASTC_glyph, ibm_plex_mono_12_20_24_ASTC_glyph_len);
-    HAL_SPI_Disable();*/
+    for (int i = 0; i < fonts_len; i++) {
+      StartCoProTransfer(offset, 0);
+      HAL_SPI_WriteBuffer((uint8_t *)fonts[i].xfont, fonts[i].xfont_size);
+      HAL_SPI_Disable();
+      offset += CHANK_SIZE;
+      DEBUG_PRINT("Font %d loading to %d\n", fonts[i].size, offset);
+      StartCoProTransfer(offset, 0);
+      HAL_SPI_WriteBuffer((uint8_t *)fonts[i].glyph, fonts[i].glyph_size);
+      HAL_SPI_Disable();
+      offset += fonts[i].glyph_size;
+    }
   }
 
   return OpenPipe();
@@ -175,19 +151,14 @@ void handle_escape_sequence(const char **ptr)
         }
     
         if (strcmp(fontName, "IBM_Plex_Mono") == 0) {
-          switch (fontSize) {
-            /*case 16:
-              actual_word.font = 1;
+          for (int i = 0; i < fonts_len; i++) {
+            if (fonts[i].size == fontSize) {
+              actual_word.font = fonts[i].id;
               break;
-            case 20:
-              actual_word.font = 2;
-              break;*/
-            default:
-              ERROR_PRINT("Unknown font size: %d\n", fontSize);
-              break;
+            }
           }
         } else {
-          ERROR_PRINT("Unknown font: %s\n", fontName);
+          ERROR_PRINT("Unknown font format: %s\n", fontName);
         }
 
         return;
@@ -319,10 +290,10 @@ void handle_escape_sequence(const char **ptr)
 
     AddOrMergeActualTextStatic();
 
-    actual_word.y = (row > 0) ? row * DEFUALT_CHAR_HIGHT : 0;
-    actual_word.x = (col > 0) ? (col - 1) * DEFUALT_CHAR_WIDTH : 0;
+    actual_word.y = (row > 0) ? row * get_font_by_id(actual_word.font)->height : 0;
+    actual_word.x = (col > 0) ? (col - 1) * get_font_by_id(actual_word.font)->width : 0;
 
-    SetActualNewLine(actual_word.y / DEFUALT_CHAR_HIGHT);
+    SetActualNewLine(actual_word.y / get_font_by_id(actual_word.font)->height);
     DEBUG_PRINT("Sequence: %s, Move to row %d, column %d, X = %d, Y = %d\n",
                 seq,
                 row,
@@ -341,35 +312,35 @@ void handle_escape_sequence(const char **ptr)
     break;
   case 'd':
     AddOrMergeActualTextStatic();
-    actual_word.y = (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_HIGHT : 0;
+    actual_word.y = (seq[0] != '\0') ? atoi(seq) * get_font_by_id(actual_word.font)->height : 0;
     SetActualNewLine(atoi(seq));
     actual_word.x = 0;
     DEBUG_PRINT("Move to line: %d, Y = %d\n", atoi(seq), actual_word.y);
     break;
   case 'A':
     AddOrMergeActualTextStatic();
-    actual_word.y -= (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_HIGHT
-                                      : DEFUALT_CHAR_HIGHT;
+    actual_word.y -= (seq[0] != '\0') ? atoi(seq) * get_font_by_id(actual_word.font)->height
+                                      : get_font_by_id(actual_word.font)->height;
     SetActualNewLine(atoi(seq));
     DEBUG_PRINT("Move up %d lines, Y = %d\n", atoi(seq), actual_word.y);
     break;
   case 'B':
     AddOrMergeActualTextStatic();
-    actual_word.y += (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_HIGHT
-                                      : DEFUALT_CHAR_HIGHT;
+    actual_word.y += (seq[0] != '\0') ? atoi(seq) * get_font_by_id(actual_word.font)->height
+                                      : get_font_by_id(actual_word.font)->height;
     SetActualNewLine(atoi(seq));
     DEBUG_PRINT("Move down %d lines, Y = %d\n", atoi(seq), actual_word.y);
     break;
   case 'C':
     AddOrMergeActualTextStatic();
-    actual_word.x += (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_WIDTH
-                                      : DEFUALT_CHAR_WIDTH;
+    actual_word.x += (seq[0] != '\0') ? atoi(seq) * get_font_by_id(actual_word.font)->width
+                                      : get_font_by_id(actual_word.font)->width;
     DEBUG_PRINT("Move right %d spaces, X = %d\n", atoi(seq), actual_word.x);
     break;
   case 'D':
     AddOrMergeActualTextStatic();
-    actual_word.x -= (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_WIDTH
-                                      : DEFUALT_CHAR_WIDTH;
+    actual_word.x -= (seq[0] != '\0') ? atoi(seq) * get_font_by_id(actual_word.font)->width
+                                      : get_font_by_id(actual_word.font)->width;
     DEBUG_PRINT("Move left %d spaces, X = %d\n", atoi(seq), actual_word.x);
     break;
   case 'P':
@@ -380,7 +351,7 @@ void handle_escape_sequence(const char **ptr)
     break;
   case 'G':
     AddOrMergeActualTextStatic();
-    actual_word.x = (seq[0] != '\0') ? atoi(seq) * DEFUALT_CHAR_WIDTH : 0;
+    actual_word.x = (seq[0] != '\0') ? atoi(seq) * get_font_by_id(actual_word.font)->width : 0;
     DEBUG_PRINT("Move to column %d, X = %d\n", atoi(seq), actual_word.x);
     break;
   case 'J':
@@ -683,7 +654,7 @@ void parse_ansi(char *buffer)
     {
       AddOrMergeActualTextStatic();
 
-      actual_word.y += DEFUALT_CHAR_HIGHT;
+      actual_word.y += get_font_by_id(actual_word.font)->height;
       actual_word.x = 0;
       SetActualNewLine(actual_word.line + 1);
       

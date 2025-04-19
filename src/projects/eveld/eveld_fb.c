@@ -5,14 +5,12 @@ void PrepareScreen() {
     Send_CMD(VERTEXFORMAT(0));
     Send_CMD(CLEAR_COLOR_RGB(0, 0, 0));
     Send_CMD(CLEAR(1, 1, 1));
-    //uint32_t offset = RAM_G;
-    Cmd_SetFont2(1, RAM_G, 0);
-    /*offset += CHANK_SIZE + ibm_plex_mono_12_20_24_ASTC_glyph_len;
-    Cmd_SetFont2(2, offset, 0);
-    offset += CHANK_SIZE + ibm_plex_mono_16_ASTC_glyph_len;
-    Cmd_SetFont2(3, offset, 0);
-    offset += CHANK_SIZE + ibm_plex_mono_12_20_24_ASTC_glyph_len;
-    Cmd_SetFont2(4, offset, 0);*/
+    uint32_t offset = RAM_G;
+    for (int i = 0; i < fonts_len; i++) {
+        DEBUG_PRINT("Font %d setting to %d\n", fonts[i].id, offset);
+        Cmd_SetFont2(fonts[i].id, offset, 0);
+        offset += CHANK_SIZE + fonts[i].glyph_size;
+    }
 }
 
 void DisplayFrame() {
@@ -33,7 +31,9 @@ void ResetScreen(void) {
 }
 
 
-int GetTextWidth(const char* str, int max_chars) {
+int GetTextWidth(const char* str, uint8_t font, int max_chars) {
+    if (!str) return 0;
+    
     int width = 0;
     int chars_processed = 0;
 
@@ -61,7 +61,7 @@ int GetTextWidth(const char* str, int max_chars) {
         }
 
         str += char_len;
-        width += DEFUALT_CHAR_WIDTH;
+        width += get_font_by_id(font)->width;
         chars_processed++;
     }
 
@@ -105,7 +105,7 @@ void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes) {
         actual_word.text[actual_word_bytes] = '\0';
 
         actual_word.symbol_len++;
-        actual_word.width += GetTextWidth(bytes_to_append, 1);
+        actual_word.width += GetTextWidth(bytes_to_append, actual_word.font, 1);
     } else {
         ERROR_PRINT("Error during append char: maximum length reached\n");
     }
@@ -113,7 +113,7 @@ void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes) {
 
 void DeleteCharH(void) {
     if (actual_word_bytes > 0) {
-        uint8_t last_char_width = GetTextWidth(utf8_nth_char(actual_word.text, actual_word.symbol_len - 1), 1);
+        uint8_t last_char_width = GetTextWidth(utf8_nth_char(actual_word.text, actual_word.symbol_len - 1), actual_word.font, 1);
         actual_word.width -= last_char_width;
         actual_word.x -= last_char_width;
         actual_word_bytes--;
@@ -142,11 +142,12 @@ void DrawStaticTexts(void) {
             Send_CMD(BEGIN(RECTS));
             Send_CMD(VERTEX2F(
                 staticTexts[i].x, 
-                staticTexts[i].y + (int)(0.1 * DEFUALT_CHAR_WIDTH)
+                staticTexts[i].y + get_font_by_id(staticTexts[i].font)->width - 9
             ));
+
             Send_CMD(VERTEX2F(
-                staticTexts[i].x + GetTextWidth(staticTexts[i].text, -1),
-                staticTexts[i].y + DEFUALT_CHAR_HIGHT - (int)(0.1 * DEFUALT_CHAR_WIDTH)
+                staticTexts[i].x + GetTextWidth(staticTexts[i].text, staticTexts[i].font, -1),
+                staticTexts[i].y + get_font_by_id(staticTexts[i].font)->height
             ));
             Send_CMD(END());
         }
@@ -172,7 +173,7 @@ void DrawStaticTexts(void) {
 void DeleteChatH(uint16_t count) {
     for (int i = 0; i < staticTextCount; i++) {
         if (staticTexts[i].line != actual_word.line || staticTexts[i].x <= actual_word.x) {
-            staticTexts[i].x -= count*DEFUALT_CHAR_WIDTH;
+            staticTexts[i].x -= count*get_font_by_id(staticTexts[i].font)->width;
         }
     }
 }
@@ -217,7 +218,7 @@ void ClearLineBeforeX(void) {
 int GetTextOffset(StaticText *word, int xPos) {
     int offset = 0, px = word->x;
     while (px < xPos && word->text[offset] != '\0') {
-        int charWidth = GetTextWidth(utf8_nth_char(word->text, offset), 1);
+        int charWidth = GetTextWidth(utf8_nth_char(word->text, offset), word->font, 1);
         if (px + charWidth > xPos) {
             break;
         }
@@ -241,7 +242,7 @@ StaticText CreateSubText(StaticText src, int newX, int newWidth) {
     int px = newX;
     int textLen = 0;
     for (int i = charOffset; src.text[i] != '\0' && px < newX + newWidth; i++) {
-        int charWidth = GetTextWidth(utf8_nth_char(src.text, i), -1);
+        int charWidth = GetTextWidth(utf8_nth_char(src.text, i), src.font, -1);
         if (px + charWidth > newX + newWidth) {
             break;
         }
@@ -282,7 +283,7 @@ void AddOrMergeActualTextStatic(void) {
         return;
     }
 
-    actual_word.y = min(actual_word.y, Display_Height() - DEFUALT_CHAR_HIGHT);
+    actual_word.y = min(actual_word.y, Display_Height() - get_font_by_id(actual_word.font)->height);
     actual_word.width = min(actual_word.width, Display_Width() - actual_word.x);
 
     DEBUG_PRINT("Actual word: '%s' at [%d, %d] width: %d, font: %d\n",
@@ -335,7 +336,7 @@ void AddOrMergeActualTextStatic(void) {
                         if (current_x >= actual_word.x) {
                             break;
                         }
-                        current_x += GetTextWidth(utf8_nth_char(word->text, j), 1);
+                        current_x += GetTextWidth(utf8_nth_char(word->text, j), word->font, 1);
                         actual_index_start++;
                     }
                 }
@@ -364,7 +365,7 @@ void AddOrMergeActualTextStatic(void) {
                 }
             
                 word->x = min(word->x, actual_word.x);
-                word->width = min(GetTextWidth(word->text, -1), Display_Width() - word->x);
+                word->width = min(GetTextWidth(word->text, word->font, -1), Display_Width() - word->x);
                 //actual_word.x = word->x + word->width;
 
                 DEBUG_PRINT("Merged result: '%s' at [%d, %d] width: %d\n", word->text, word->x, word->y, word->width);

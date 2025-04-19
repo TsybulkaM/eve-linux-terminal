@@ -44,8 +44,7 @@ extern bool LINE_FEED;
 #define MAX_LINES 20
 #define MAX_LENGTH 512
 #define DEFAULT_FONT 1
-#define DEFUALT_CHAR_WIDTH 8
-#define DEFUALT_CHAR_HIGHT 22
+#define DEFUALT_CHAR_HIGHT 24
 #define DEFAULT_OPTION 0
 
 #define DEFAULT_COLOR_R 255
@@ -103,18 +102,21 @@ int check_ftdi_device(void);
 // Font parameters
 #define CHANK_SIZE 4096
 
-extern const unsigned char ibm_plex_mono_12_ASTC_xfont[];
-extern const unsigned char ibm_plex_mono_14_ASTC_xfont[];
-extern const unsigned char ibm_plex_mono_16_ASTC_xfont[];
-extern const unsigned char ibm_plex_mono_20_ASTC_xfont[];
-extern const unsigned char ibm_plex_mono_24_ASTC_xfont[];
-extern const unsigned int ibm_plex_mono_ASTC_xfont_len;
+typedef struct
+{
+  uint8_t id;
+  uint8_t size;
+  uint8_t width;
+  uint8_t height;
+  size_t xfont_size;
+  size_t glyph_size;
+  const unsigned char* xfont;
+  const unsigned char* glyph; 
+} font_t;
 
-extern const unsigned char ibm_plex_mono_12_20_24_ASTC_glyph[];
-extern const unsigned int ibm_plex_mono_12_20_24_ASTC_glyph_len;
-
-extern const unsigned char ibm_plex_mono_14_16_ASTC_glyph[];
-extern const unsigned int ibm_plex_mono_14_16_ASTC_glyph_len;
+extern const font_t fonts[];
+extern const size_t fonts_len;
+const font_t* get_font_by_id(uint8_t);
 
 // operations
 // eveld_ops.c
@@ -131,8 +133,8 @@ void ClearScreen(void);
 void DisplayFrame(void);
 void ResetScreen(void);
 
-int GetCharWidth(uint32_t);
-int GetTextWidth(const char *, int);
+uint8_t GetCharWidth(uint8_t);
+int GetTextWidth(const char *, uint8_t, int);
 int GetFontHeight(int);
 
 size_t utf8_char_length(uint8_t);

@@ -66,7 +66,7 @@ sudo bash uninstall.sh
 ### Realised 
 
 ```bash
-TERM=linux stty cols 55 rows 12;  top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 55 rows 11;  top | cat -v > /tmp/eve_pipe
 ```
 
 ### Known Issues
@@ -74,7 +74,7 @@ TERM=linux stty cols 55 rows 12;  top | cat -v > /tmp/eve_pipe
 The following commands execute but may not work as expected:
 
 ```bash
-TERM=linux stty cols 57 rows 11; htop | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 57 rows 10; htop | cat -v > /tmp/eve_pipe
 ```
 
 ### Clear Screen 
@@ -86,6 +86,14 @@ clear | cat -v > /tmp/eve_pipe
 ### Test commands
 
 #### Text
+
+## Change Font
+
+```bash
+echo -e "\e]50;IBM_Plex_Mono-16\a" | cat -v > /tmp/eve_pipe
+echo -e "\e]50;IBM_Plex_Mono-20\a" | cat -v > /tmp/eve_pipe
+echo -e "\e]50;IBM_Plex_Mono-26\a" | cat -v > /tmp/eve_pipe
+```
 
 ```bash
 echo "AC/DC" | cat -v > /tmp/eve_pipe
@@ -128,13 +136,6 @@ TERM=linux stty cols 55 rows 11; df -h | cat -v > /tmp/eve_pipe
 Disks usage
 
 ## Planned Features
-
-## Change Font
-
-```bash
-echo -e "\e]50;IBM_Plex_Mono-16\a" | cat -v > /tmp/eve_pipe
-echo -e "\e]50;IBM_Plex_Mono-20\a" | cat -v > /tmp/eve_pipe
-```
 
 ```bash
 TERM=linux stty cols 55 rows 11; sl | cat -v > /tmp/eve_pipe
