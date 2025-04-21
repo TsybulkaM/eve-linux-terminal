@@ -2,7 +2,7 @@
 
 int OpenPipe(void)
 {
-  int fd = open(FIFO_PATH, O_RDONLY);
+  int fd = open(FIFO_PATH, O_RDWR | O_NONBLOCK);
   if (fd == -1)
   {
     ERROR_PRINT("Error opening FIFO");
@@ -756,11 +756,6 @@ void ListenToFIFO(void)
       {
         _return_to_stand_buffer();
       }
-    }
-    else if (bytesRead == -1)
-    {
-      INFO_PRINT("FIFO error, reopening...\n");
-      sleep(1);
     }
   }
 }
