@@ -31,7 +31,7 @@ int InitializeScreen(int fd)
     }
 
     isEveInitialized = true;
-    INFO_PRINT("Monitor connected! Initializing EVE...\n");
+    INFO_PRINT("Monitor connected! Initializing EVE with v%s.\n", VERSION);
 
     DrawLogoPNG();
     ResetScreen();

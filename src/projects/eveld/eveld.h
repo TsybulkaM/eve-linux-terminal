@@ -16,6 +16,8 @@
 #include <conio.h>
 #endif
 
+#define VERSION "1.0.4"
+
 #define FIFO_PATH "/tmp/eve_pipe"
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
