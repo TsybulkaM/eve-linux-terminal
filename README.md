@@ -51,13 +51,13 @@ New binary pull up from latest GitHub Release.
 Download installer:
 
 ``` bash
-curl -L -o install.sh https://github.com/TsybukloN/EVE-project/releases/latest/download/uninstall.sh
+curl -L -o install.sh https://github.com/TsybulkaM/EVE-project/releases/download/v1.0.1/install.sh
 ```
 
 Run the installation script:
 
 ``` bash
-sudo bash uninstall.sh
+sudo bash install.sh
 ```
 
 

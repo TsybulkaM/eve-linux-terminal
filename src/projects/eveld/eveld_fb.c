@@ -98,14 +98,15 @@ void SetActualNewLine(uint16_t line) {
 }
 
 void AppendCharToActualWord(const char *bytes_to_append, size_t num_bytes) {
-    if (actual_word_bytes + num_bytes < MAX_LENGTH) {
+    uint8_t actual_word_width = GetTextWidth(bytes_to_append, actual_word.font, 1);
+    if (actual_word_bytes + num_bytes < MAX_LENGTH && actual_word.width + actual_word_width <= Display_Width()) {
         memcpy(&actual_word.text[actual_word_bytes], bytes_to_append, num_bytes);
 
         actual_word_bytes += num_bytes;
         actual_word.text[actual_word_bytes] = '\0';
 
         actual_word.symbol_len++;
-        actual_word.width += GetTextWidth(bytes_to_append, actual_word.font, 1);
+        actual_word.width += actual_word_width;
     } else {
         ERROR_PRINT("Error during append char: maximum length reached\n");
     }
@@ -282,6 +283,8 @@ void AddOrMergeActualTextStatic(void) {
         actual_word.width = 0;
         return;
     }
+
+
 
     actual_word.y = min(actual_word.y, Display_Height() - get_font_by_id(actual_word.font)->height);
     actual_word.width = min(actual_word.width, Display_Width() - actual_word.x);

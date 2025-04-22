@@ -2,7 +2,7 @@
 
 int OpenPipe(void)
 {
-  int fd = open(FIFO_PATH, O_RDWR | O_NONBLOCK);
+  int fd = open(FIFO_PATH, O_RDWR);
   if (fd == -1)
   {
     ERROR_PRINT("Error opening FIFO");
@@ -22,7 +22,8 @@ int InitializeScreen(int fd)
     sleep(1);
   }
 
-  if (!isEveInitialized) {
+  if (!isEveInitialized)
+  {
     if (EVE_Init(DEMO_DISPLAY, DEMO_BOARD, DEMO_TOUCH) <= 1)
     {
       ERROR_PRINT("EVE initialization failed\n");
@@ -38,7 +39,8 @@ int InitializeScreen(int fd)
     // Load custom font
     uint32_t offset = RAM_G;
 
-    for (int i = 0; i < fonts_len; i++) {
+    for (int i = 0; i < fonts_len; i++)
+    {
       StartCoProTransfer(offset, 0);
       HAL_SPI_WriteBuffer((uint8_t *)fonts[i].xfont, fonts[i].xfont_size);
       HAL_SPI_Disable();
@@ -50,13 +52,18 @@ int InitializeScreen(int fd)
       offset += fonts[i].glyph_size;
     }
   }
+  else
+  {
+    return fd;
+  }
 
   return OpenPipe();
 }
 
 void _return_to_stand_buffer()
 {
-  if (mutex_second_buffer) {
+  if (mutex_second_buffer)
+  {
     mutex_second_buffer = false;
     memcpy(staticTexts, savedStaticTexts, sizeof(StaticText) * MAX_STATIC_TEXTS);
 
@@ -125,43 +132,54 @@ void handle_escape_sequence(const char **ptr)
     TODO_PRINT("Set numeric keypad mode\n");
     return;
   }
-  else if (**ptr == ']') {
+  else if (**ptr == ']')
+  {
     (*ptr)++;
-    if (strncmp(*ptr, "50;", 3) == 0) {
-        (*ptr) += 3;
-    
-        char fontSpec[128] = {0};
-        int i = 0;
-    
-        while (**ptr != '\x07' && **ptr != '\0' && i < sizeof(fontSpec) - 1) {
-            fontSpec[i++] = *((*ptr)++);
-        }
-        fontSpec[i] = '\0';
-    
-        char fontName[64] = {0};
-        int fontSize = 0;
+    if (strncmp(*ptr, "50;", 3) == 0)
+    {
+      (*ptr) += 3;
 
-        char *dash = strrchr(fontSpec, '-');
-        if (dash && dash != fontSpec) {
-            strncpy(fontName, fontSpec, dash - fontSpec);
-            fontName[dash - fontSpec] = '\0';
-            fontSize = atoi(dash + 1);
-        } else {
-            strncpy(fontName, fontSpec, sizeof(fontName) - 1);
-        }
-    
-        if (strcmp(fontName, "IBM_Plex_Mono") == 0) {
-          for (int i = 0; i < fonts_len; i++) {
-            if (fonts[i].size == fontSize) {
-              actual_word.font = fonts[i].id;
-              break;
-            }
+      char fontSpec[128] = {0};
+      int i = 0;
+
+      while (**ptr != '\x07' && **ptr != '\0' && i < sizeof(fontSpec) - 1)
+      {
+        fontSpec[i++] = *((*ptr)++);
+      }
+      fontSpec[i] = '\0';
+
+      char fontName[64] = {0};
+      int fontSize = 0;
+
+      char *dash = strrchr(fontSpec, '-');
+      if (dash && dash != fontSpec)
+      {
+        strncpy(fontName, fontSpec, dash - fontSpec);
+        fontName[dash - fontSpec] = '\0';
+        fontSize = atoi(dash + 1);
+      }
+      else
+      {
+        strncpy(fontName, fontSpec, sizeof(fontName) - 1);
+      }
+
+      if (strcmp(fontName, "IBM_Plex_Mono") == 0)
+      {
+        for (int i = 0; i < fonts_len; i++)
+        {
+          if (fonts[i].size == fontSize)
+          {
+            actual_word.font = fonts[i].id;
+            break;
           }
-        } else {
-          ERROR_PRINT("Unknown font format: %s\n", fontName);
         }
+      }
+      else
+      {
+        ERROR_PRINT("Unknown font format: %s\n", fontName);
+      }
 
-        return;
+      return;
     }
   }
 
@@ -241,19 +259,22 @@ void handle_escape_sequence(const char **ptr)
       if (**ptr == 'h')
       {
         TODO_PRINT("Enable line wrap\n");
-        //LINE_FEED = true;
+        // LINE_FEED = true;
       }
       else if (**ptr == 'l')
       {
         LINE_FEED = false;
       }
       (*ptr)++;
-
     }
-    else if (strcmp(seq, "?1006;1000")) {
-      if (**ptr == 'h') {
+    else if (strcmp(seq, "?1006;1000"))
+    {
+      if (**ptr == 'h')
+      {
         TODO_PRINT("Enable mouse tracking\n");
-      } else if (**ptr == 'l') {
+      }
+      else if (**ptr == 'l')
+      {
         TODO_PRINT("Disable mouse tracking\n");
       }
       (*ptr)++;
@@ -581,11 +602,14 @@ void handle_escape_sequence(const char **ptr)
     }
     else if (**ptr == '\0')
     {
-      if (strlen(seq) < BD_ANSI_LEN - 4) {  // Ensure enough space for "^[["
-          snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^[[%s", seq);
-      } else {
-          strncpy(breakdown_ansi, "^[[", BD_ANSI_LEN - 1);
-          strncat(breakdown_ansi, seq, BD_ANSI_LEN - strlen(breakdown_ansi) - 1);
+      if (strlen(seq) < BD_ANSI_LEN - 4)
+      { // Ensure enough space for "^[["
+        snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^[[%s", seq);
+      }
+      else
+      {
+        strncpy(breakdown_ansi, "^[[", BD_ANSI_LEN - 1);
+        strncat(breakdown_ansi, seq, BD_ANSI_LEN - strlen(breakdown_ansi) - 1);
       }
       DEBUG_PRINT("Adding to breakdown_ansi: %s\n", breakdown_ansi);
       return;
@@ -596,40 +620,46 @@ void handle_escape_sequence(const char **ptr)
   (*ptr)++;
 }
 
-
 void parse_meta_natation(char *buffer)
 {
-    char *ptr = buffer;
-    char *write_ptr = buffer;
+  char *ptr = buffer;
+  char *write_ptr = buffer;
 
-    while (*ptr != '\0') {
-        size_t remaining = strlen(ptr);
-        size_t consumed_len = 0;
+  while (*ptr != '\0')
+  {
+    size_t remaining = strlen(ptr);
+    size_t consumed_len = 0;
 
-        if (remaining >= 3 && ptr[0] == 'M' && ptr[1] == '-') {
-            if (remaining >= 4 && ptr[2] == '^') {
-                // M-^X → X & 0x1F + 128
-                *write_ptr = (ptr[3] & 0x1F) + 128;
-                consumed_len = 4;
-            } else {
-                // M-X → X + 128
-                *write_ptr = ptr[2] + 128;
-                consumed_len = 3;
-            }
-        } else {
-            *write_ptr = *ptr;
-            consumed_len = 1;
-        }
-
-        ptr += consumed_len;
-        write_ptr++;
+    if (remaining >= 3 && ptr[0] == 'M' && ptr[1] == '-')
+    {
+      if (remaining >= 4 && ptr[2] == '^')
+      {
+        // M-^X → X & 0x1F + 128
+        *write_ptr = (ptr[3] & 0x1F) + 128;
+        consumed_len = 4;
+      }
+      else
+      {
+        // M-X → X + 128
+        *write_ptr = ptr[2] + 128;
+        consumed_len = 3;
+      }
+    }
+    else
+    {
+      *write_ptr = *ptr;
+      consumed_len = 1;
     }
 
-    *write_ptr = '\0';
+    ptr += consumed_len;
+    write_ptr++;
+  }
+
+  *write_ptr = '\0';
 }
 
 void parse_ansi(char *buffer)
-{  
+{
   parse_meta_natation(buffer);
 
   size_t num_bytes = strlen(buffer);
@@ -657,7 +687,7 @@ void parse_ansi(char *buffer)
       actual_word.y += get_font_by_id(actual_word.font)->height;
       actual_word.x = 0;
       SetActualNewLine(actual_word.line + 1);
-      
+
       if (*ptr == '\n')
       {
         ptr++;
@@ -677,7 +707,7 @@ void parse_ansi(char *buffer)
       AddOrMergeActualTextStatic();
       ptr += 2;
       actual_word.x = 0;
-      continue; 
+      continue;
     }
 
     if ((*ptr == '^' && *(ptr + 1) == 'H'))
@@ -695,10 +725,11 @@ void parse_ansi(char *buffer)
     }
 
     size_t char_len = utf8_char_length((uint8_t)*ptr);
-    if (char_len > num_bytes) {
+    if (char_len > num_bytes)
+    {
       snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "%s", ptr);
       ptr += char_len;
-      break; 
+      break;
     }
     AppendCharToActualWord(ptr, char_len);
     ptr += char_len;
@@ -719,43 +750,44 @@ void ListenToFIFO(void)
   {
     fd = InitializeScreen(fd);
 
-    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - BD_ANSI_LEN - 1);
+      ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - BD_ANSI_LEN - 1);
 
-    if (bytesRead > 0)
-    {
-      buffer[bytesRead] = '\0';
-
-      if (breakdown_ansi[0] != '\0')
+      if (bytesRead > 0)
       {
-        DEBUG_PRINT("Breakdown ANSI added to buffer: %s\n", breakdown_ansi);
+        buffer[bytesRead] = '\0';
 
-        size_t ansi_len = strlen(breakdown_ansi);
-        size_t buf_len = strlen(buffer);
-
-        if (ansi_len + buf_len < MAX_LENGTH - 1)
+        if (breakdown_ansi[0] != '\0')
         {
-          memmove(buffer + ansi_len, buffer, buf_len + 1);
-          memcpy(buffer, breakdown_ansi, ansi_len);
+          DEBUG_PRINT("Breakdown ANSI added to buffer: %s\n", breakdown_ansi);
 
-          buffer[ansi_len + buf_len] = '\0';
-        } else {
-          INFO_PRINT("Not enough space to prepend breakdown_ansi!\n");
+          size_t ansi_len = strlen(breakdown_ansi);
+          size_t buf_len = strlen(buffer);
+
+          if (ansi_len + buf_len < MAX_LENGTH - 1)
+          {
+            memmove(buffer + ansi_len, buffer, buf_len + 1);
+            memcpy(buffer, breakdown_ansi, ansi_len);
+
+            buffer[ansi_len + buf_len] = '\0';
+          }
+          else
+          {
+            INFO_PRINT("Not enough space to prepend breakdown_ansi!\n");
+          }
+
+          breakdown_ansi[0] = '\0';
         }
 
-        breakdown_ansi[0] = '\0';
+        PrepareScreen();
+        parse_ansi(buffer);
       }
-
-      PrepareScreen();
-      parse_ansi(buffer);
-    }
-    else if (bytesRead == 0)
-    {
-      INFO_PRINT("FIFO closed, reopening...\n");
-
-      if (mutex_second_buffer)
+      else if (bytesRead == 0)
       {
-        _return_to_stand_buffer();
+        INFO_PRINT("FIFO closed, reopening...\n");
+
+        if (mutex_second_buffer)
+          _return_to_stand_buffer();
+        
       }
     }
   }
-}
