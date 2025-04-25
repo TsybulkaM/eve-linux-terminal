@@ -44,3 +44,7 @@ eveld_*
 #VS Code
 .vscode/
 .vscode-test/
+
+# Intellij
+.idea/
+*.iml

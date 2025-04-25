@@ -43,8 +43,7 @@
 
 extern bool LINE_FEED;
 
-#define MAX_LINES 20
-#define MAX_LENGTH 512
+#define MAX_LENGTH 1024
 #define DEFAULT_FONT 1
 #define DEFUALT_CHAR_HIGHT 24
 #define DEFAULT_OPTION 0
@@ -124,6 +123,7 @@ const font_t* get_font_by_id(uint8_t);
 // eveld_ops.c
 int InitializeScreen(int);
 int OpenPipe(void);
+void parse_meta_notation(char*);
 void handle_escape_sequence(const char**);
 void parse_ansi(char*);
 void ListenToFIFO();
@@ -154,6 +154,8 @@ void DeleteChatH(uint16_t);
 
 void ClearLineBeforeX(void);
 void ClearLineAfterX(void);
+void ClearAfterX(void);
+void ClearBeforeX(void);
 void ClearLine(void);
 void ClearPlaceForActual(void);
 void ClearPlaceForActualDev(void);

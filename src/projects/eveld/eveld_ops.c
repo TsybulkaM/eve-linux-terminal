@@ -45,11 +45,18 @@ int InitializeScreen(int fd)
       HAL_SPI_WriteBuffer((uint8_t *)fonts[i].xfont, fonts[i].xfont_size);
       HAL_SPI_Disable();
       offset += CHANK_SIZE;
+
+      UpdateFIFO();
+      Wait4CoProFIFOEmpty();
+
       DEBUG_PRINT("Font %d loading to %d\n", fonts[i].size, offset);
       StartCoProTransfer(offset, 0);
       HAL_SPI_WriteBuffer((uint8_t *)fonts[i].glyph, fonts[i].glyph_size);
       HAL_SPI_Disable();
       offset += fonts[i].glyph_size;
+
+      UpdateFIFO();
+      Wait4CoProFIFOEmpty();
     }
   }
   else
@@ -376,10 +383,22 @@ void handle_escape_sequence(const char **ptr)
     DEBUG_PRINT("Move to column %d, X = %d\n", atoi(seq), actual_word.x);
     break;
   case 'J':
-    if (atoi(seq) == 2)
+    int code = atoi(seq);
+    switch (code)
     {
-      ResetScreen();
-      DEBUG_PRINT("Clear screen\n");
+      case 0:
+        ClearAfterX();
+        break;
+      case 1:
+        ClearBeforeX();
+        break;
+      case 2:
+        ResetScreen();
+        DEBUG_PRINT("Clear screen\n");
+        break;
+      default:
+        ERROR_PRINT("Unknown ESC [ n J code: %d\n", code);
+        break;
     }
     break;
   case 'K':
@@ -387,18 +406,18 @@ void handle_escape_sequence(const char **ptr)
     int code = atoi(seq);
     switch (code)
     {
-    case 0:
-      ClearLineAfterX();
-      break;
-    case 1:
-      ClearLineBeforeX();
-      break;
-    case 2:
-      ClearLine();
-      break;
-    default:
-      ERROR_PRINT("Unknown ESC [ n K code: %d\n", code);
-      break;
+      case 0:
+        ClearLineAfterX();
+        break;
+      case 1:
+        ClearLineBeforeX();
+        break;
+      case 2:
+        ClearLine();
+        break;
+      default:
+        ERROR_PRINT("Unknown ESC [ n K code: %d\n", code);
+        break;
     }
     break;
   }
@@ -620,39 +639,57 @@ void handle_escape_sequence(const char **ptr)
   (*ptr)++;
 }
 
-void parse_meta_natation(char *buffer)
+void parse_meta_notation(char *buffer)
 {
-  char *ptr = buffer;
+  if (buffer == NULL) {
+      return;
+  }
+
+  char *read_ptr = buffer;
   char *write_ptr = buffer;
 
-  while (*ptr != '\0')
-  {
-    size_t remaining = strlen(ptr);
-    size_t consumed_len = 0;
+  breakdown_ansi[0] = '\0';
 
-    if (remaining >= 3 && ptr[0] == 'M' && ptr[1] == '-')
+  while (*read_ptr != '\0')
+  {
+    if (read_ptr[0] == 'M' && read_ptr[1] == '-')
     {
-      if (remaining >= 4 && ptr[2] == '^')
+      if (read_ptr[2] == '^')
       {
-        // M-^X → X & 0x1F + 128
-        *write_ptr = (ptr[3] & 0x1F) + 128;
-        consumed_len = 4;
+        if (read_ptr[3] != '\0')
+        {
+          *write_ptr++ = (read_ptr[3] & 0x1F) | 0x80;
+          read_ptr += 4;
+        }
+        else
+        {
+          size_t fragment_len = 3;
+          size_t copy_len = (fragment_len < BD_ANSI_LEN) ? fragment_len : (BD_ANSI_LEN - 1);
+          strncpy(breakdown_ansi, read_ptr, copy_len);
+          breakdown_ansi[copy_len] = '\0';
+          read_ptr += 3;
+          break;
+        }
+      }
+      else if (read_ptr[2] != '\0')
+      {
+        *write_ptr++ = read_ptr[2] | 0x80;
+        read_ptr += 3;
       }
       else
       {
-        // M-X → X + 128
-        *write_ptr = ptr[2] + 128;
-        consumed_len = 3;
+         size_t fragment_len = 2;
+         size_t copy_len = (fragment_len < BD_ANSI_LEN) ? fragment_len : (BD_ANSI_LEN - 1);
+         strncpy(breakdown_ansi, read_ptr, copy_len);
+         breakdown_ansi[copy_len] = '\0';
+         read_ptr += 2;
+         break;
       }
     }
     else
     {
-      *write_ptr = *ptr;
-      consumed_len = 1;
+      *write_ptr++ = *read_ptr++;
     }
-
-    ptr += consumed_len;
-    write_ptr++;
   }
 
   *write_ptr = '\0';
@@ -660,7 +697,7 @@ void parse_meta_natation(char *buffer)
 
 void parse_ansi(char *buffer)
 {
-  parse_meta_natation(buffer);
+  parse_meta_notation(buffer);
 
   size_t num_bytes = strlen(buffer);
 
@@ -725,6 +762,8 @@ void parse_ansi(char *buffer)
     }
 
     size_t char_len = utf8_char_length((uint8_t)*ptr);
+    DEBUG_PRINT("Char %c; Length %zu; Bytes %zu\n",*ptr, char_len, num_bytes);
+    DEBUG_PRINT("%s\n", ptr);
     if (char_len > num_bytes)
     {
       snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "%s", ptr);
@@ -755,6 +794,8 @@ void ListenToFIFO(void)
       if (bytesRead > 0)
       {
         buffer[bytesRead] = '\0';
+
+        DEBUG_PRINT("Read %zu bytes from FIFO: %s\n", bytesRead, buffer);
 
         if (breakdown_ansi[0] != '\0')
         {

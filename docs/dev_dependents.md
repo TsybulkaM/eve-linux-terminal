@@ -18,19 +18,3 @@ For Fedora:
 ```bash
 sudo dnf install pkgconf
 ```
-
-### libftdi1
-
-For Debian/Ubuntu:
-```bash
-sudo apt install libftdi1-dev
-```
-For Arch Linux (or Manjaro):
-```bash
-sudo pacman -S libftdi
-```
-
-For Fedora:
-```bash
-sudo dnf install libftdi-devel
-```

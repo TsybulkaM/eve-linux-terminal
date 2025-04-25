@@ -20,9 +20,10 @@ if [ ! -f "$EVE_BINARY" ]; then
     exit 1
   fi
 else
-  echo "Given binary already exists."
+  echo "Binary already exists in directory."
 fi
 
+mkdir -p /usr/local/bin
 cp -f $EVE_BINARY /usr/local/bin
 chmod +x /usr/local/bin/$EVE_BINARY
 

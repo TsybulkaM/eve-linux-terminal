@@ -2,21 +2,44 @@
 
 ## Overview
 
-This guide provides commands for interacting with the EVE controller to display text and manage the screen.
+This guide provides commands for interacting with the EVE controller to display terminal text and manage the screen from Linux.
+
+![htop](docs/htop_demo.jpg)
 
 ---
 
 ## Precondition
 
-In folder need to be: 
+### Installing libftdi and libusb
+
+For Debian/Ubuntu:
+```bash
+sudo apt install libftdi1-dev
+sudo apt install libusb-1.0-0-dev
+```
+For Arch Linux (or Manjaro):
+```bash
+sudo pacman -S libftdi
+sudo pacman -S libusb
+```
+
+For Fedora:
+```bash
+sudo dnf install libftdi-devel
+sudo dnf install libusb1-devel
+```
+
+---
+
+### Installation
+
+#### In folder need to be: 
 
 ``` bash
 > eveld_43_480x272_EVE3_TPC
 > install.sh
 > uninstall.sh
 ```
-
-### Installation
 
 Download installer:
 
@@ -29,6 +52,13 @@ Run the installation script:
 ``` bash
 sudo bash install.sh
 ```
+
+#### The installer performs 4 tasks:
+
+- Dowload binary file from latest Github release if does not find it in directory.
+- Place the binary file in the `/usr/local/bin` directory.
+- Create a service `eveld` that runs `/usr/local/bin/eveld_43_480x272_EVE3_TPC`.
+- Create a udev rule in `/etc/udev/rules.d/99-eve.rules` to restart the `eveld` service when the monitor is plugged in.
 
 ### Update
 
@@ -66,7 +96,7 @@ sudo bash install.sh
 ### Realised 
 
 ```bash
-TERM=linux stty cols 55 rows 11;  top | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 46 rows 14; top | cat -v > /tmp/eve_pipe
 ```
 
 ### Known Issues
@@ -74,7 +104,7 @@ TERM=linux stty cols 55 rows 11;  top | cat -v > /tmp/eve_pipe
 The following commands execute but may not work as expected:
 
 ```bash
-TERM=linux stty cols 57 rows 10; htop | cat -v > /tmp/eve_pipe
+TERM=linux stty cols 47 rows 13; htop | cat -v > /tmp/eve_pipe
 ```
 
 ### Clear Screen 

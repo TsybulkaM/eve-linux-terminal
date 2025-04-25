@@ -10,6 +10,9 @@ void PrepareScreen() {
         DEBUG_PRINT("Font %d setting to %d\n", fonts[i].id, offset);
         Cmd_SetFont2(fonts[i].id, offset, 0);
         offset += CHANK_SIZE + fonts[i].glyph_size;
+
+        UpdateFIFO();
+        Wait4CoProFIFOEmpty();
     }
 }
 
@@ -203,10 +206,38 @@ void ClearLineAfterX(void) {
     staticTextCount = j;
 }
 
+void ClearAfterX(void) {
+    int j = 0;
+    for (int i = 0; i < staticTextCount; i++) {
+        if (staticTexts[i].line < actual_word.line ||
+            (staticTexts[i].line == actual_word.line && staticTexts[i].x < actual_word.x))
+        {
+            staticTexts[j++] = staticTexts[i];
+        } else {
+            DEBUG_PRINT("Cleared After X=%d: %s\n", actual_word.x, staticTexts[i].text);
+        }
+    }
+    staticTextCount = j;
+}
+
 void ClearLineBeforeX(void) {
     int j = 0;
     for (int i = 0; i < staticTextCount; i++) {
         if (staticTexts[i].line != actual_word.line || staticTexts[i].x > actual_word.x) {
+            staticTexts[j++] = staticTexts[i];
+        } else {
+            DEBUG_PRINT("Cleared Before X=%d: %s\n", actual_word.x, staticTexts[i].text);
+        }
+    }
+    staticTextCount = j;
+}
+
+void ClearBeforeX(void) {
+    int j = 0;
+    for (int i = 0; i < staticTextCount; i++) {
+        if (staticTexts[i].line > actual_word.line ||
+            (staticTexts[i].line == actual_word.line && staticTexts[i].x > actual_word.x))
+        {
             staticTexts[j++] = staticTexts[i];
         } else {
             DEBUG_PRINT("Cleared Before X=%d: %s\n", actual_word.x, staticTexts[i].text);
