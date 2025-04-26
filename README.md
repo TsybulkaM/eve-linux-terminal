@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide provides commands for interacting with the EVE controller to display terminal text and manage the screen from Linux.
+This guide provides commands for interacting with the EVE controller to display terminal text and manage by ANSI commands the screen from Linux.
 
 ![htop](docs/htop_demo.jpg)
 
@@ -120,9 +120,9 @@ clear | cat -v > /tmp/eve_pipe
 ## Change Font
 
 ```bash
-echo -e "\e]50;IBM_Plex_Mono-16\a" | cat -v > /tmp/eve_pipe
-echo -e "\e]50;IBM_Plex_Mono-20\a" | cat -v > /tmp/eve_pipe
-echo -e "\e]50;IBM_Plex_Mono-26\a" | cat -v > /tmp/eve_pipe
+echo -ne "\e]50;IBM_Plex_Mono-16\a" | cat -v > /tmp/eve_pipe
+echo -ne "\e]50;IBM_Plex_Mono-20\a" | cat -v > /tmp/eve_pipe
+echo -ne "\e]50;IBM_Plex_Mono-26\a" | cat -v > /tmp/eve_pipe
 ```
 
 ```bash

@@ -149,10 +149,11 @@ void handle_escape_sequence(const char **ptr)
       char fontSpec[128] = {0};
       int i = 0;
 
-      while (**ptr != '\x07' && **ptr != '\0' && i < sizeof(fontSpec) - 1)
+      while (**ptr != '^' && **ptr != 'G' && i < sizeof(fontSpec) - 1)
       {
         fontSpec[i++] = *((*ptr)++);
       }
+      (*ptr) += 2; // Skip the 'G' character
       fontSpec[i] = '\0';
 
       char fontName[64] = {0};
@@ -762,8 +763,8 @@ void parse_ansi(char *buffer)
     }
 
     size_t char_len = utf8_char_length((uint8_t)*ptr);
-    DEBUG_PRINT("Char %c; Length %zu; Bytes %zu\n",*ptr, char_len, num_bytes);
-    DEBUG_PRINT("%s\n", ptr);
+    //DEBUG_PRINT("Char %c; Length %zu; Bytes %zu\n",*ptr, char_len, num_bytes);
+    //DEBUG_PRINT("%s\n", ptr);
     if (char_len > num_bytes)
     {
       snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "%s", ptr);
@@ -795,7 +796,7 @@ void ListenToFIFO(void)
       {
         buffer[bytesRead] = '\0';
 
-        DEBUG_PRINT("Read %zu bytes from FIFO: %s\n", bytesRead, buffer);
+        //DEBUG_PRINT("Read %zu bytes from FIFO: %s\n", bytesRead, buffer);
 
         if (breakdown_ansi[0] != '\0')
         {
