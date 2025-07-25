@@ -2,10 +2,10 @@
 
 set -e
 
-EVE_BINARY="eveld_43_480x272_EVE3_TPC"
+EVE_BINARY="eveld"
 VENDOR_ID="1b3d"
 PRODUCT_ID="0200"
-GITHUB_RELEASE_URL="https://github.com/TsybukloN/EVE-project/releases/latest/download/eveld_43_480x272_EVE3_TPC"
+GITHUB_RELEASE_URL="https://github.com/TsybulkaM/eve-linux-terminal/releases/latest/download/$EVE_BINARY"
 
 echo "Installing EVE device support..."
 

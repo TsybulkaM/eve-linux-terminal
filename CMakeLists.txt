@@ -1,86 +1,30 @@
-cmake_minimum_required(VERSION 3.13)
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
-project(Matrix_Orbital_EVE_examples)
-include(CMake/macros.cmake)
-if(UNIX)
-	SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
-	SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-	SET(CMAKE_INSTALL_RPATH "\${ORIGIN};${CMAKE_BINARY_DIR}/bin/bin")
-endif()
+cmake_minimum_required(VERSION 3.10)
 
-if(MSVC)
-  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-endif()
+project(Eve-linux-driver VERSION 1.0 LANGUAGES C)
 
-if(WIN32)
-	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/bin/\${BUILD_TYPE} CACHE PATH "default install path" FORCE)
-else()
-	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/bin CACHE PATH "default install path" FORCE)
-endif()
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-if(WIN32)
-	set(CPACK_GENERATOR ZIP)
-	set(PROJECT_DESCRIPTION  "Matrix Orbital EVE examples")
-	set(PROJECT_COPYRIGHT    "Copyright (C) 2018-${CURRENT_YEAR} Matrix Orbital")
-	set(PROJECT_CONTACT      "support@matrixorbital.com")
-	set(PROJECT_VENDOR       "Matrix Orbital")
-	set(CPACK_PACKAGE_VERSION_MAJOR 1)
-	set(CPACK_PACKAGE_VERSION_MINOR 0)
-	if(PATCH_LEVEL)
-		set(CPACK_PACKAGE_VERSION_PATCH ${PATCH_LEVEL})
-	else()
-		set(CPACK_PACKAGE_VERSION_PATCH 0)
-	endif()
-	include(CPack)
+file(GLOB SOURCES "src/*.c")
 
-	set(CMAKE_C_FLAGS_DEBUG            "/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1")
-	set(CMAKE_C_FLAGS_MINSIZEREL       "/MT /O1 /Ob1 /D NDEBUG")
-	set(CMAKE_C_FLAGS_RELEASE          "/MT /O2 /Ob2 /D NDEBUG")
-	set(CMAKE_C_FLAGS_RELWITHDEBINFO   "/MT /Zi /O2 /Ob1 /D NDEBUG")
-	set(CMAKE_CXX_FLAGS_DEBUG          "/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1")
-	set(CMAKE_CXX_FLAGS_MINSIZEREL     "/MT /O1 /Ob1 /D NDEBUG")
-	set(CMAKE_CXX_FLAGS_RELEASE        "/MT /O2 /Ob2 /D NDEBUG")
-	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/MT /Zi /O2 /Ob1 /D NDEBUG")
-else()
-	add_compile_options(-fPIC)
-endif()
+add_executable(eveld ${SOURCES})
 
-set(EVE2_EXAMPLES_DISPLAY_SIZES 70_800x480 50_800x480 43_480x272 39_480x128 38_480x116 35_320x240 29_320x102 CACHE STRING "EVE2 Screensizes to build binaries for")
-set(EVE3_EXAMPLES_DISPLAY_SIZES 70_800x480 50_800x480 43_480x272 43_800480 39_480x128 38_480x116 35_320x240 29_320x102 24_320x240 CACHE STRING "EVE3 Screensizes to build binaries for")
-set(EVE4_EXAMPLES_DISPLAY_SIZES 101_1280x800 40_720x720 70_1024x600 70_1024x600_WG CACHE STRING "EVE4 Screensizes to build binaries for")
-set(EVE_EXAMPLES_PLATFORMS EVE2 EVE3 EVE4 CACHE STRING "Platforms build binaries for")
-set(EVE_EXAMPLES_TOUCH TPN TPR TPC CACHE STRING "Touch technologies to build binaries for")
-
-# Create a target for importing the d2xx headers
-if(WIN32)
-	add_library(d2xx INTERFACE)
-	set_target_properties(d2xx PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/ftdi_mpsse")
-	add_subdirectory(ThirdParty/ftdi_mpsse)
-else()
-	find_package(libftdi REQUIRED)
-endif()
-
-include(GenerateExportHeader)
-set(LIB_SRC_FILES 
-	eve.c 
-	eve.h 
-	hw_api.h
+target_include_directories(eveld PUBLIC
+    "${PROJECT_SOURCE_DIR}/include"
 )
-add_library(eve STATIC ${LIB_SRC_FILES})
-add_library(evedll SHARED ${LIB_SRC_FILES})
-set_target_properties(eve PROPERTIES OUTPUT_NAME "eve_static")
-set_target_properties(evedll PROPERTIES OUTPUT_NAME "eve")
-target_compile_options(eve PUBLIC -DEVE_STATIC_DEFINE )
-target_compile_options(evedll PUBLIC -DEVE_MO_INTERNAL_BUILD )
-target_include_directories(eve PUBLIC "${CMAKE_SOURCE_DIR}")
-target_include_directories(evedll PUBLIC "${CMAKE_SOURCE_DIR}")
-target_link_libraries(eve PUBLIC usb_bridge)
-target_link_libraries(evedll PUBLIC usb_bridge)
-target_include_directories(eve PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(evedll PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-generate_export_header(evedll BASE_NAME EVE NO_DEPRECATED_MACRO_NAME )
-install(FILES ${LIB_SRC_FILES} DESTINATION ./EVE-Library)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/eve/ DESTINATION ./EVE-Library FILES_MATCHING PATTERN "*.h")
-install(TARGETS evedll DESTINATION ./bin)
 
-add_subdirectory(src)
+set(CMAKE_MODULE_PATH 
+    "${PROJECT_SOURCE_DIR}/cmake;${PROJECT_SOURCE_DIR}/lib/EVE-Library/CMake;${CMAKE_MODULE_PATH}"
+)
+
+set(EVE_BUILD_EXAMPLES OFF CACHE BOOL "Build EVE examples")
+set(EVE_BUILD_TESTS OFF CACHE BOOL "Build EVE tests")
+option(BUILD_EXAMPLES "Build examples" OFF)
+option(BUILD_DEMOS "Build demos" OFF)
+
+add_subdirectory(lib/EVE-Library EXCLUDE_FROM_ALL)
+
+target_include_directories(eveld PRIVATE 
+    "${PROJECT_SOURCE_DIR}/lib/EVE-Library"
+)
+
+target_link_libraries(eveld PRIVATE eve)

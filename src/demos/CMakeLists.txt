@@ -1,6 +1,0 @@
-file(GLOB samples *)
-foreach(sample ${samples})
-  if(IS_DIRECTORY ${sample})
-    add_subdirectory(${sample})
-  endif()
-endforeach()

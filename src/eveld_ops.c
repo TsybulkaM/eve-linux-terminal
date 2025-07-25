@@ -12,6 +12,19 @@ int OpenPipe(void)
   return fd;
 }
 
+int OpenOutPipe(void)
+{
+  int fd = open(FIFO_OUT_PATH, O_RDONLY);
+  if (fd == -1)
+  {
+    ERROR_PRINT("Error opening FIFO_OUT");
+    exit(EXIT_FAILURE);
+  }
+
+  return fd;
+}
+
+
 int InitializeScreen(int fd)
 {
   while (!check_ftdi_device())
@@ -119,6 +132,11 @@ void handle_escape_sequence(const char **ptr)
   {
     snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^[");
     return;
+  } else if ((*ptr)[1] == '\0')
+  {
+    snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^[%c", **ptr);
+    (*ptr)++;
+    return;
   }
 
   if (strncmp(*ptr, "(B", 2) == 0)
@@ -191,20 +209,69 @@ void handle_escape_sequence(const char **ptr)
     }
   }
 
-  if (**ptr == '(')
-  {
-    (*ptr)++;
-    snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^[(");
+  if (**ptr != '[') {
+    TODO_PRINT("Unknown escape sequence: %c\n", **ptr);
     return;
   }
 
-  if (**ptr != '[')
-    return;
   (*ptr)++;
 
   if (**ptr == '\0')
   {
-    snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^[[");
+    snprintf(breakdown_ansi, BD_ANSI_LEN - 1, "^[%c", **ptr);
+    return;
+  }
+
+  if (strncmp(*ptr, "18t", 3) == 0) {
+    (*ptr) += 3;
+    int fd = OpenOutPipe();
+    char message[32];
+    snprintf(message,
+             sizeof(message),
+             "\033[8;%d;%dt",
+             Display_Height() / get_font_by_id(actual_word.font)->height + 1,
+             Display_Width() / get_font_by_id(actual_word.font)->width + 1);
+    write(fd, message, strlen(message));
+    close(fd);
+    return;
+  }
+
+  if ((*ptr)[1] == 'n')
+  {
+    if (**ptr == '6')
+    {
+      int fd = OpenOutPipe();
+      char message[32];
+      snprintf(message, sizeof(message), "\033[%d;%dR", 
+        actual_word.y / get_font_by_id(actual_word.font)->height,
+        actual_word.x / get_font_by_id(actual_word.font)->width);
+      write(fd, message, strlen(message));
+      close(fd);
+    }
+    else if (**ptr == '5')
+    {
+      (*ptr)++;
+      int fd = OpenOutPipe();
+      const char *message;
+      if (check_ftdi_device())
+      {
+        message = "\033[0n";
+      }
+      else
+      {
+        message = "\033[1n";
+        ERROR_PRINT("Monitor disconnected!\n");
+        return;
+      }
+
+      write(fd, message, strlen(message));
+      TODO_PRINT("Send device status\n");
+    }
+    else
+    {
+      ERROR_PRINT("Unknown escape sequence: %c\n", **ptr);
+    }
+
     return;
   }
 

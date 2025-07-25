@@ -36,7 +36,7 @@ sudo dnf install libusb1-devel
 #### In folder need to be: 
 
 ``` bash
-> eveld_43_480x272_EVE3_TPC
+> eveld
 > install.sh
 > uninstall.sh
 ```
@@ -164,6 +164,24 @@ Cowsay ASCII-art
 TERM=linux stty cols 55 rows 11; df -h | cat -v > /tmp/eve_pipe
 ```
 Disks usage
+
+## Requests
+
+To get respones from monitor: `cat /tmp/eve_pipe_out`
+
+#### Where cursor?
+Request: `echo -ne "\e[6n" | cat -v > /tmp/eve_pipe`
+Response: `\e[<rows>;<cols>R`
+
+
+#### Monitor status
+Request: `echo -ne "\e[5n" | cat -v > /tmp/eve_pipe`
+Response: If OK - `\e[0n`, else problems - `\e[1n`
+
+#### Size of monitor (amount in actual font symbols)
+Request: `echo -ne "\e[18t" | cat -v > /tmp/eve_pipe`
+Response: `\e[8;<rows>;<cols>t`
+
 
 ## Planned Features
 

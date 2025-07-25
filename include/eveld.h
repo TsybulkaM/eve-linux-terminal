@@ -5,20 +5,26 @@
 #include "hw_api.h"
 #include <ctype.h>
 #include <fcntl.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <locale.h>
 #include <wchar.h>
 #ifdef _MSC_VER
 #include <conio.h>
 #endif
 
-#define VERSION "1.0.4"
+#define VERSION "1.0.5"
+
+// Конфигурация дисплея EVE - можно изменить под ваш дисплей
+#define DEMO_DISPLAY DISPLAY_43_480x272 // 4.3" 480x272 дисплей
+#define DEMO_BOARD BOARD_EVE3           // EVE3 плата
+#define DEMO_TOUCH TOUCH_TPC            // Capacitive touch
 
 #define FIFO_PATH "/tmp/eve_pipe"
+#define FIFO_OUT_PATH "/tmp/eve_pipe_out"
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define min(a, b) ((a) < (b) ? (a) : (b))
@@ -98,8 +104,6 @@ extern StaticText savedStaticTexts[MAX_STATIC_TEXTS];
 extern uint16_t savedStaticTextCount;
 extern uint16_t saved_x, saved_y;
 
-int check_ftdi_device(void);
-
 // Font parameters
 #define CHANK_SIZE 4096
 
@@ -111,21 +115,22 @@ typedef struct
   uint8_t height;
   size_t xfont_size;
   size_t glyph_size;
-  const unsigned char* xfont;
-  const unsigned char* glyph; 
+  const unsigned char *xfont;
+  const unsigned char *glyph;
 } font_t;
 
 extern const font_t fonts[];
 extern const size_t fonts_len;
-const font_t* get_font_by_id(uint8_t);
+const font_t *get_font_by_id(uint8_t);
 
 // operations
 // eveld_ops.c
 int InitializeScreen(int);
 int OpenPipe(void);
-void parse_meta_notation(char*);
-void handle_escape_sequence(const char**);
-void parse_ansi(char*);
+int OpenOutPipe(void);
+void parse_meta_notation(char *);
+void handle_escape_sequence(const char **);
+void parse_ansi(char *);
 void ListenToFIFO();
 
 // framebuffer operations
@@ -144,7 +149,7 @@ bool colors_are_equal(Color, Color);
 
 void SetActualNewLine(uint16_t);
 
-void AppendCharToActualWord(const char*, size_t);
+void AppendCharToActualWord(const char *, size_t);
 void DeleteCharH(void);
 void AddOrMergeActualTextStatic(void);
 
@@ -159,6 +164,9 @@ void ClearBeforeX(void);
 void ClearLine(void);
 void ClearPlaceForActual(void);
 void ClearPlaceForActualDev(void);
+
+// HAL функции
+bool check_ftdi_device(void);
 
 // initial logo
 // logo.c

@@ -1,11 +1,6 @@
-#ifdef _MSC_VER
-#include <conio.h>
-#endif
-#include "eve.h"
-#include "hw_api.h"
-#include <stdio.h>
+#include "eveld.h"
 
-uint8_t matrix_orbital_png[] = {
+unsigned char logo_png[] = {
     0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
     0x00, 0x00, 0x00, 0xD0, 0x00, 0x00, 0x00, 0x2D, 0x08, 0x06, 0x00, 0x00, 0x00, 0xDF, 0xA8, 0xE5,
     0xB3, 0x00, 0x00, 0x20, 0x00, 0x49, 0x44, 0x41, 0x54, 0x78, 0x5E, 0xED, 0x7D, 0x79, 0x78, 0x4D,
@@ -533,16 +528,16 @@ uint8_t matrix_orbital_png[] = {
     0x26, 0xF8, 0x22, 0x25, 0xF0, 0xFF, 0x00, 0xC0, 0x80, 0xEA, 0xF1, 0x9D, 0x0E, 0xD7, 0x20, 0x00,
     0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82, 0x00};
 
-void DrawLogoPNG()
+void DrawLogoPNG(void)
 {
-  uint32_t Reference = 0; // Reference ID for the bitmap we will be using
+  uint32_t Reference = 0;
 
   // Loading the Image
   Send_CMD(CMD_LOADIMAGE); // Tell the CoProcessor to prepare for compressed data
   Send_CMD(RAM_G);         // This is the address where decompressed data will go
   Send_CMD(0);             // Send options 0 = RGB565 for a jpeg image
-  CoProWrCmdBuf(matrix_orbital_png,
-                sizeof(matrix_orbital_png)); // write image to the coprocessor
+  CoProWrCmdBuf(logo_png,
+                sizeof(logo_png)); // write image to the coprocessor
   Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
                          // command.
 
@@ -563,7 +558,7 @@ void DrawLogoPNG()
   Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
                          // command.
 
-  uint32_t ptr = rd32(props_start_address + RAM_CMD + 4);     // Read back the ptr variable
+  //uint32_t ptr = rd32(props_start_address + RAM_CMD + 4);     // Read back the ptr variable
   uint32_t width = rd32(props_start_address + RAM_CMD + 8);   // Read back the width variable
   uint32_t height = rd32(props_start_address + RAM_CMD + 12); // Read back the height variable
 
@@ -590,17 +585,6 @@ void DrawLogoPNG()
 
   UpdateFIFO();          // Trigger the CoProcessor to start processing commands out of the FIFO
   Wait4CoProFIFOEmpty(); // wait here until the coprocessor has read and executed every pending
-                         // command.
-}
 
-int main()
-{
-  // Initialize the EVE graphics controller
-  if (EVE_Init(DEMO_DISPLAY, DEMO_BOARD, DEMO_TOUCH) <= 1)
-  {
-    printf("ERROR: Eve not detected.\n");
-    return -1;
-  }
-  DrawLogoPNG(); // Draw the JPG embedded in this code file
-  HAL_Close();   // Close the comminucations with the unit.
+  sleep(2);
 }

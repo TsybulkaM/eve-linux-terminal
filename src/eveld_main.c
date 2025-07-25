@@ -43,6 +43,13 @@ int main() {
             return -1;
         }
     }
+
+    if (access(FIFO_OUT_PATH, F_OK) == -1) {
+        if (mkfifo(FIFO_OUT_PATH, 0666) == -1) {
+            perror("Error creating FIFO_OUT");
+            return -1;
+        }
+    }
     
     ListenToFIFO();
 

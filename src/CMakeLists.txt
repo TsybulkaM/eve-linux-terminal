@@ -1,3 +1,0 @@
-add_subdirectory(usb_bridge)
-add_subdirectory(demos)
-add_subdirectory(projects)

@@ -1,0 +1,3 @@
+[submodule "lib/EVE-Library"]
+	path = lib/EVE-Library
+	url = https://github.com/TsybulkaM/EVE-Library
