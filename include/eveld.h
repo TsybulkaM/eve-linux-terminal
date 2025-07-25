@@ -18,10 +18,10 @@
 
 #define VERSION "1.0.5"
 
-// Конфигурация дисплея EVE - можно изменить под ваш дисплей
-#define DEMO_DISPLAY DISPLAY_43_480x272 // 4.3" 480x272 дисплей
-#define DEMO_BOARD BOARD_EVE3           // EVE3 плата
-#define DEMO_TOUCH TOUCH_TPC            // Capacitive touch
+// Configuration of the EVE display
+#define DEMO_DISPLAY DISPLAY_43_480x272 // 4.3" 480x272 display
+#define DEMO_BOARD BOARD_EVE3           // EVE3 board
+#define DEMO_TOUCH TOUCH_TPR           // Touch Panel Resistive
 
 #define FIFO_PATH "/tmp/eve_pipe"
 #define FIFO_OUT_PATH "/tmp/eve_pipe_out"
